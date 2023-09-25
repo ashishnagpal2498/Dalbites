@@ -1,0 +1,8 @@
+Backend/target/
+Backend/.classpath
+Backend/.settings/
+.metadata/
+
+Backend/.mvn/wrapper/maven-wrapper.jar
+**/src/main/**/target/
+**/src/test/**/target/
