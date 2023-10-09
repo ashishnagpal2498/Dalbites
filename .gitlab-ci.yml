@@ -41,6 +41,8 @@ deploy-main:
   only:
     - main
   script:
+    - cd Frontend
+    - npm install react-scripts
     # Deploy your application to production environment here
 
 deploy-develop:
@@ -48,4 +50,6 @@ deploy-develop:
   only:
     - develop
   script:
+    - cd Frontend
+    - npm install react-scripts
     # Deploy your application to development environment here
