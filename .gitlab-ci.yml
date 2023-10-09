@@ -12,6 +12,7 @@ variables:
 
 frontend:
   stage: build-frontend
+  image: $FRONTEND_IMAGE
   script:
     - cd Frontend
     - npm install react-scripts
@@ -19,12 +20,14 @@ frontend:
 
 backend:
   stage: build-backend
+  image: $BACKEND_IMAGE
   script:
     - cd Backend
     - mvn clean install
 
 frontend-test:
   stage: test-frontend
+  image: $FRONTEND_IMAGE
   script:
     - cd Frontend
     - npm install react-scripts
@@ -32,12 +35,14 @@ frontend-test:
 
 backend-test:
   stage: test-backend
+  image: $BACKEND_IMAGE
   script:
     - cd Backend
     - mvn test
 
 deploy-main:
   stage: deploy
+  image: $FRONTEND_IMAGE
   only:
     - main
   script:
@@ -47,6 +52,7 @@ deploy-main:
 
 deploy-develop:
   stage: deploy
+  image: $BACKEND_IMAGE
   only:
     - develop
   script:
