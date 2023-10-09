@@ -1,6 +1,7 @@
 Backend/target/
 Backend/.classpath
 Backend/.settings/
+Backend/.project
 .metadata/
 
 Backend/.mvn/wrapper/maven-wrapper.jar

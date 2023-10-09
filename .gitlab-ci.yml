@@ -1,0 +1,51 @@
+stages:
+  - build-frontend
+  - build-backend
+  - test-frontend
+  - test-backend
+  - deploy
+
+variables:
+  # Define your environment-specific variables here
+  FRONTEND_IMAGE: node:18.12.1  # Base image for the frontend
+  BACKEND_IMAGE: maven:3-jdk-8  # Base image for the backend
+
+frontend:
+  stage: build-frontend
+  script:
+    - cd Frontend
+    - npm install react-scripts
+    - npm run build
+
+backend:
+  stage: build-backend
+  script:
+    - cd Backend
+    - mvn clean install
+
+frontend-test:
+  stage: test-frontend
+  script:
+    - cd Frontend
+    - npm install react-scripts
+    - npm test
+
+backend-test:
+  stage: test-backend
+  script:
+    - cd Backend
+    - mvn test
+
+deploy-main:
+  stage: deploy
+  only:
+    - main
+  script:
+    # Deploy your application to production environment here
+
+deploy-develop:
+  stage: deploy
+  only:
+    - develop
+  script:
+    # Deploy your application to development environment here
