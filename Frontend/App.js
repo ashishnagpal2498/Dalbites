@@ -1,36 +1,22 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { useState, useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
 
-import tw from 'twrnc';
-
-import WelcomeScreen from './screens/WelcomeScreen';
-import LoginScreen from './screens/LoginScreen';
-import SignupScreen from './screens/SignupScreen';
-
-const Stack = createStackNavigator();
+import WelcomeStack from "./src/Components/WelcomeStack";
+import Loading from "./screens/Loading";
+import HomeTabGroup from "./src/Components/HomeTabGroup";
 
 const App = () => {
-  const screenOptions = {
-    headerStyle: {
-      backgroundColor: 'black', // Set the background color to black
-    },
-    headerTintColor: 'white', // Set the text color to white
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-  };
+  const [isLoading, setLoading] = useState(true);
+  const [isAuth, setAuth] = useState(false);
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 3000);
+  });
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome" screenOptions={screenOptions}>
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-      </Stack.Navigator>
+      {isLoading ? <Loading /> : isAuth ? <HomeTabGroup /> : <WelcomeStack />}
     </NavigationContainer>
   );
 };
 
 export default App;
-

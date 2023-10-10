@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "my-app-four",
-    "slug": "my-app-four",
+    "name": "DalBite",
+    "slug": "DalBite",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
