@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React from "react";
 
-import WelcomeStack from "./src/Components/WelcomeStack";
-import Loading from "./screens/Loading";
-import HomeTabGroup from "./src/Components/HomeTabGroup";
+import { Provider } from "react-redux";
+import store from "./redux/store";
+import AppStack from "./src/Components/AppStack";
 
 const App = () => {
-  const [isLoading, setLoading] = useState(true);
-  const [isAuth, setAuth] = useState(false);
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 3000);
-  });
-
   return (
-    <NavigationContainer>
-      {isLoading ? <Loading /> : isAuth ? <HomeTabGroup /> : <WelcomeStack />}
-    </NavigationContainer>
+    <Provider store={store}>
+      <AppStack />
+    </Provider>
   );
 };
 
