@@ -1,13 +1,13 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import WelcomeScreen from "../../screens/WelcomeScreen";
+import AuthScreen from "../../screens/AuthScreen";
 import LoginScreen from "../../screens/LoginScreen";
 import SignupScreen from "../../screens/SignupScreen";
 
 const Stack = createStackNavigator();
 
-const WelcomeStack = () => {
+const AuthStack = () => {
   const screenOptions = {
     headerStyle: {
       backgroundColor: "black",
@@ -16,14 +16,15 @@ const WelcomeStack = () => {
     headerTitleStyle: {
       fontWeight: "bold",
     },
+    headerTitle: "",
   };
   return (
-    <Stack.Navigator initialRouteName="Welcome" screenOptions={screenOptions}>
-      <Stack.Screen name="Welcome" component={WelcomeScreen} />
+    <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen name="Auth" component={AuthScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
     </Stack.Navigator>
   );
 };
 
-export default WelcomeStack;
+export default AuthStack;

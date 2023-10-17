@@ -1,23 +1,52 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import tw from 'twrnc';
+import React, { useEffect, useState } from "react";
+import { View, Text, TextInput, Pressable } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { login, setError } from "../redux/actions/Authentication";
+import { userIdRegex } from "../src/Utils/Regex";
+import tw from "twrnc";
 
 const LoginScreen = () => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const dispatch = useDispatch();
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // Handle login logic here
+  const error = useSelector((store) => store.authentication.error);
+
+  const [userIdError, setUserIdError] = useState("");
+
+  const validateCredentials = () => {
+    const invalidUserId = !userIdRegex.test(userId);
+    invalidUserId && setUserIdError("Invalid B00 Id");
+    return invalidUserId;
   };
 
+  const handleLogin = async () => {
+    if (validateCredentials()) {
+      setTimeout(() => setUserIdError(""), 4000);
+      return;
+    }
+    dispatch(login({ userId, password }));
+  };
+
+  useEffect(() => {
+    error &&
+      setTimeout(
+        () => dispatch(setError({ error: null, errorType: null })),
+        5000
+      );
+  }, [error]);
   return (
     <View style={tw`flex-1 justify-center items-center bg-white`}>
-      <Text style={tw`text-black text-4xl font-bold mb-8`}>Login</Text>
+      <Text style={tw`text-black text-4xl font-bold mb-4`}>Login</Text>
+      <Text style={{ color: "red" }}>
+        {error && "Invalid Credentials Entered"}
+      </Text>
+      <Text style={tw`text-red-600 mb-1`}> {userIdError}</Text>
       <TextInput
         style={tw`bg-gray-200 rounded-lg py-2 px-4 w-80 mb-4`}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
+        placeholder="Banner Id"
+        value={userId}
+        onChangeText={setUserId}
       />
       <TextInput
         style={tw`bg-gray-200 rounded-lg py-2 px-4 w-80 mb-4`}
@@ -26,12 +55,12 @@ const LoginScreen = () => {
         value={password}
         onChangeText={setPassword}
       />
-      <TouchableOpacity
+      <Pressable
         style={tw`bg-yellow-500 rounded-lg py-2 px-4`}
         onPress={handleLogin}
       >
         <Text style={tw`text-black text-lg font-semibold`}>Login</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };

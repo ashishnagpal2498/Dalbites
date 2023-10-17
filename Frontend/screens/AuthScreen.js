@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import tw from "twrnc";
-
+import { useSelector } from "react-redux";
 const WelcomeScreen = ({ navigation }) => {
+  const errorType = useSelector((store) => store.authentication.errorType);
+  const error = useSelector((store) => store.authentication.error);
+
+  useEffect(() => {
+    if (error) {
+      if (errorType === "Signup") {
+        navigation.navigate("Signup");
+      } else {
+        navigation.navigate("Login");
+      }
+    }
+  }, []);
   return (
     <View style={tw`flex-1 justify-center items-center bg-white`}>
       <Image
