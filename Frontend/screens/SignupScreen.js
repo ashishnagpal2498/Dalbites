@@ -13,7 +13,7 @@ import {
 import tw from "twrnc";
 import { useSelector } from "react-redux";
 
-import { emailRegex, userIdRegex, passwordRegex } from "../src/Utils/Regex";
+import { emailRegex, usernameRegex, passwordRegex } from "../src/Utils/Regex";
 import { setError, signUp } from "../redux/actions/Authentication";
 
 const SignupScreen = () => {
@@ -21,15 +21,16 @@ const SignupScreen = () => {
   const error = useSelector((store) => store.authentication.error);
   const [disabled, setDisabled] = useState(true);
   const [signUpFormData, setSignUpFormData] = useState({
-    userId: "",
+    username: "",
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
+    role: "user", // Keeping it constant - Change while Demo
   });
 
   const [errors, setValidationErrors] = useState({
-    userId: "",
+    username: "",
     name: "",
     email: "",
     password: "",
@@ -44,10 +45,10 @@ const SignupScreen = () => {
   };
 
   const validateCredentials = () => {
-    const { userId, name, email, password, confirmPassword } = signUpFormData;
+    const { username, name, email, password, confirmPassword } = signUpFormData;
     const isError = { ...errors };
 
-    if (!userIdRegex.test(userId)) isError.userId = "Invalid B00 Id";
+    if (!usernameRegex.test(username)) isError.username = "Invalid B00 Id";
 
     if (!emailRegex.test(email)) isError.email = "Please enter a valid email";
 
@@ -73,7 +74,9 @@ const SignupScreen = () => {
       return;
     }
     // Dispatch the Reducer Action
-    dispatch(signUp(signUpFormData));
+    let payload = { ...signUpFormData };
+    delete payload["confirmPassword"];
+    dispatch(signUp(payload));
   };
 
   useEffect(() => {
@@ -113,12 +116,12 @@ const SignupScreen = () => {
             onChangeText={(text) => handleSignUpState("name", text)}
           />
 
-          <Text style={tw`text-red-600 mb-1`}>{errors.userId}</Text>
+          <Text style={tw`text-red-600 mb-1`}>{errors.username}</Text>
           <TextInput
             style={tw`bg-gray-200 rounded-lg py-2 px-4 w-80 mb-2`}
             placeholder="Banner Id"
-            value={signUpFormData.userId}
-            onChangeText={(text) => handleSignUpState("userId", text)}
+            value={signUpFormData.username}
+            onChangeText={(text) => handleSignUpState("username", text)}
           />
 
           <Text style={tw`text-red-600 mb-1`}>{errors.email}</Text>

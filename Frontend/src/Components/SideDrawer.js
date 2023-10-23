@@ -8,13 +8,10 @@ const Drawer = createDrawerNavigator();
 
 const SideDrawer = () => {
   return (
-    <Drawer.Navigator
-      screenOptions={{ headerTitle: "" }}
-      useLegacyImplementation
-      drawerContent={(props) => <CustomLogout {...props} />}
-    >
+    <Drawer.Navigator screenOptions={{ headerTitle: "" }}>
       <Drawer.Screen name="HomeStackGroup" component={HomeTabGroup} />
       <Drawer.Screen name="Profile" component={Profile} />
+      <Drawer.Screen name="Logout" component={CustomLogout} />
     </Drawer.Navigator>
   );
 };

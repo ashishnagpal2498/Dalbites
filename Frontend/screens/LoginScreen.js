@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { login, setError } from "../redux/actions/Authentication";
-import { userIdRegex } from "../src/Utils/Regex";
+import { usernameRegex } from "../src/Utils/Regex";
 import tw from "twrnc";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +15,7 @@ const LoginScreen = () => {
   const [userIdError, setUserIdError] = useState("");
 
   const validateCredentials = () => {
-    const invalidUserId = !userIdRegex.test(userId);
+    const invalidUserId = !usernameRegex.test(userId);
     invalidUserId && setUserIdError("Invalid B00 Id");
     return invalidUserId;
   };
@@ -29,11 +29,7 @@ const LoginScreen = () => {
   };
 
   useEffect(() => {
-    error &&
-      setTimeout(
-        () => dispatch(setError({ error: null, errorType: null })),
-        5000
-      );
+    error && setTimeout(() => dispatch(setError({ error: null })), 5000);
   }, [error]);
   return (
     <View style={tw`flex-1 justify-center items-center bg-white`}>
@@ -55,6 +51,12 @@ const LoginScreen = () => {
         value={password}
         onChangeText={setPassword}
       />
+      <Text
+        onPress={() => navigation.navigate("ForgetPassword")}
+        style={tw`underline text-blue-600 mb-3`}
+      >
+        Forgot Password ?
+      </Text>
       <Pressable
         style={tw`bg-yellow-500 rounded-lg py-2 px-4`}
         onPress={handleLogin}

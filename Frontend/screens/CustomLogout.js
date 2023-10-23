@@ -2,18 +2,20 @@ import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/actions/Authentication";
-import { DrawerContentScrollView } from "@react-navigation/drawer";
+import tw from "twrnc";
 
 const CustomLogout = () => {
   const dispatch = useDispatch();
 
   return (
-    <DrawerContentScrollView>
-      <View style={styles.container}>
-        <Text>Logout Screen</Text>
-        <Pressable title="Logout" onPress={dispatch(logout())} />
-      </View>
-    </DrawerContentScrollView>
+    <View style={styles.container}>
+      <Pressable
+        style={tw`bg-yellow-500 rounded-lg py-2 px-4 my-3`}
+        onPress={() => dispatch(logout())}
+      >
+        <Text style={tw`text-black text-lg font-semibold`}>Logout</Text>
+      </Pressable>
+    </View>
   );
 };
 

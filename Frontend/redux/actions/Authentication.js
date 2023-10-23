@@ -5,6 +5,9 @@ import {
   SET_LOADING,
   SET_TOKEN,
   SIGNUP,
+  VALIDATE_OTP,
+  SET_SUCCESS_MESSAGE,
+  FORGET_PASSWORD,
 } from "../Types/AuthenticationTypes";
 
 export const setLoading = (payload) => {
@@ -38,5 +41,20 @@ export const logout = () => ({
 
 export const signUp = (payload) => ({
   type: SIGNUP,
+  payload,
+});
+
+export const validateOTP = (payload) => ({
+  type: VALIDATE_OTP,
+  payload,
+});
+
+export const setSuccessMessage = (payload) => ({
+  type: SET_SUCCESS_MESSAGE,
+  payload,
+});
+
+export const forgetPassword = (payload) => ({
+  type: FORGET_PASSWORD,
   payload,
 });
