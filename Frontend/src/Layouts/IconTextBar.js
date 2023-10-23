@@ -8,20 +8,40 @@ import {
 } from "@expo/vector-icons";
 import Colors from "../Utils/Colors";
 
-const NavIcon = ({ iconName, iconType }) => {
+const NavIcon = ({ iconName, iconType, ...extraProps }) => {
   switch (iconType) {
     case "Ini": // IonIcons
-      return <Ionicons name={iconName} size={25} color="black" />;
+      return (
+        <Ionicons name={iconName} size={25} color="black" {...extraProps} />
+      );
 
     case "Mci": // Material Community Icons
-      return <MaterialCommunityIcons name={iconName} size={25} color="black" />;
+      return (
+        <MaterialCommunityIcons
+          name={iconName}
+          size={25}
+          color="black"
+          {...extraProps}
+        />
+      );
 
     case "Fai": // FontAwesomeIcon
-      return <FontAwesome5 name={iconName} size={25} color="black" />;
+      return (
+        <FontAwesome5 name={iconName} size={25} color="black" {...extraProps} />
+      );
     case "Ati":
-      return <AntDesign name={iconName} size={25} color="black" />;
+      return (
+        <AntDesign name={iconName} size={25} color="black" {...extraProps} />
+      );
     default:
-      return <MaterialCommunityIcons name={iconName} size={25} color="black" />;
+      return (
+        <MaterialCommunityIcons
+          name={iconName}
+          size={25}
+          color="black"
+          {...extraProps}
+        />
+      );
   }
 };
 
@@ -31,8 +51,10 @@ const IconTextBar = ({
   iconText = "",
   iconColor = "black",
   iconOnly = false,
+  iconProps,
 }) => {
-  if (iconOnly) return <NavIcon iconType={iconType} iconName={iconName} />;
+  if (iconOnly)
+    return <NavIcon iconType={iconType} iconName={iconName} {...iconProps} />;
   else
     return (
       <TouchableHighlight
@@ -40,7 +62,7 @@ const IconTextBar = ({
         onPress={() => navigation.navigate(iconText)}
       >
         <View>
-          <NavIcon iconType={iconType} iconName={iconName} />
+          <NavIcon iconType={iconType} iconName={iconName} {...iconProps} />
           <Text style={styles.iconText}>{iconText}</Text>
         </View>
       </TouchableHighlight>

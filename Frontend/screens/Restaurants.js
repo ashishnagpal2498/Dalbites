@@ -1,10 +1,7 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, FlatList } from "react-native";
-import tw from "twrnc";
-import Icon from "react-native-vector-icons/FontAwesome";
 import RestaurantCard from "../src/Components/RestaurantCard";
-import IconTextBar from "../src/Layouts/IconTextBar";
-
+import RestaurantHeader from "../src/Components/RestaurantHeader";
 
 const restaurantData = [
   {
@@ -99,59 +96,24 @@ const restaurantData = [
   },
 ];
 
-
-const handleSearchPress = () => {
-  navigation.navigate("SearchScreen");
-  //Code to get the output of SearchScreen
-};
-
-
 // const handleCardPress = (restaurantcard) => {
 //   navigation.navigate("RestaurantDetailsScreen");
 // };
 
-
 const Restaurants = ({ navigation }) => {
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={tw`mt-2 bg-yellow-500 rounded-lg py-2 px-6`}
-          onPress={() => navigation.navigate("FilterScreen")}
-        >
-            <IconTextBar
-              iconType= "Fai"
-              iconName="filter"
-              iconOnly = {true}
-            />
-        </TouchableOpacity>
-
-
-        <TouchableOpacity
-          style={tw`mt-2 bg-yellow-500 rounded-lg py-2 px-29`}
-          onPress={handleSearchPress}
-        >
-          <View style={styles.searchButtonContent}>
-            <IconTextBar
-              iconType= "Fai"
-              iconName="search"
-              iconOnly = {true}
-            />
-            <Text style={tw`text-black text-lg font-semibold`}>
-              {/* Building name */}
-              </Text>
-          </View>
-        </TouchableOpacity>
+    <>
+      <RestaurantHeader navigation={navigation} />
+      <View style={{ flex: 1 }}>
+        <FlatList
+          style={styles.flatlistConatiner}
+          data={restaurantData}
+          renderItem={RestaurantCard}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.scrollViewContent}
+        />
       </View>
-
-
-      <FlatList style={styles.flatlistConatiner}
-        data={restaurantData}
-        renderItem={RestaurantCard}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.scrollViewContent}
-      />
-    </View>
+    </>
   );
 };
 
@@ -164,7 +126,6 @@ const styles = {
     elevation: 5,
     paddingTop: 0,
     paddingBottom: 10,
-   
   },
   searchButtonContent: {
     flexDirection: "row",
@@ -173,14 +134,13 @@ const styles = {
   searchIcon: {
     marginRight: 10,
   },
-  flatlistConatiner:{
-    padding: 5
+  flatlistConatiner: {
+    padding: 5,
   },
- 
+
   scrollViewContent: {
     padding: 10,
   },
 };
-
 
 export default Restaurants;
