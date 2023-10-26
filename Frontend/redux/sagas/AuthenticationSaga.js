@@ -100,12 +100,16 @@ function* signUpSaga(action) {
       });
     }
   } catch (error) {
-    console.log("Here in ERROR SAGA");
-    console.log(error.message);
-    yield put({
-      type: SIGNUP_FAILURE,
-      payload: { error: error.message, errorType: "Signup" },
-    });
+    if (error.response.status == 409) {
+      yield put({
+        type: SIGNUP_FAILURE,
+        payload: { error: "User already exist, try login", redirect: "Signup" },
+      });
+    } else
+      yield put({
+        type: SIGNUP_FAILURE,
+        payload: { error: error.message, redirect: "Signup" },
+      });
   } finally {
     yield put({ type: SET_LOADING, payload: { loading: false } });
   }
@@ -210,7 +214,7 @@ function* forgetPassword(action) {
     console.log(error.message);
     yield put({
       type: FORGET_PASSWORD_FAILURE,
-      payload: { error: error.message, redirect: "ForgetPassword" },
+      payload: { error: "B00 Id doesn't exist", redirect: "ForgetPassword" },
     });
   } finally {
     yield put({ type: SET_LOADING, payload: { loading: false } });
