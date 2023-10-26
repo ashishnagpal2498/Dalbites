@@ -96,10 +96,11 @@ const VerifyAccount = () => {
     }
     const enteredOTP = otp.join("");
     console.log("entered OTP", enteredOTP);
+    console.log("TempUser", tempUser);
     const payload = {
       otp: enteredOTP,
       tempToken,
-      ...(tempToken.forgetPassword && { password: newPassword.password }),
+      ...(tempUser.forgetPassword && { password: newPassword.password }),
     };
     dispatch(validateOTP(payload));
   };
@@ -158,11 +159,7 @@ const VerifyAccount = () => {
           <Text> An OTP has been sent to your email - </Text>
           <Text>{maskEmail(tempUser.email)}</Text>
           <Text style={error ? tw`text-red-600` : tw`text-green-600`}>
-            {error
-              ? error
-              : successMessage && tempUser.forgetPassword
-              ? "Password reset succesfully"
-              : successMessage}
+            {error ? error : successMessage}
           </Text>
           <Text style={tw`text-green-600`}>
             {successMessage && "You will be redirected in 3 seconds"}
