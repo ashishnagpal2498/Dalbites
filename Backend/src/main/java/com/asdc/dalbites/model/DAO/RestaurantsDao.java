@@ -18,7 +18,79 @@ public class RestaurantsDao {
     @Column(name="restaurant_id")
     private Long id;
 
-    @Column(name="name", nullable = false)
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public short getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(short isActive) {
+		this.isActive = isActive;
+	}
+
+	public short getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(short isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public BuildingDao getBuildingDao() {
+		return buildingDao;
+	}
+
+	public void setBuildingDao(BuildingDao buildingDao) {
+		this.buildingDao = buildingDao;
+	}
+
+	@Column(name="name", nullable = false)
     private String name;
 
     @Column(name="address", nullable = true)

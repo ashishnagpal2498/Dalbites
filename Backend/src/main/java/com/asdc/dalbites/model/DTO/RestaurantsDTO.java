@@ -8,5 +8,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RestaurantsDTO {
-    private List<Long> buildings;
+    public List<Long> getBuildings() {
+		return buildings;
+	}
+
+	public void setBuildings(List<Long> buildings) {
+		this.buildings = buildings;
+	}
+
+	private List<Long> buildings;
 }

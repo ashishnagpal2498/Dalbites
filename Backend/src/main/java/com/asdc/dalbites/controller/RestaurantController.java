@@ -1,6 +1,8 @@
 package com.asdc.dalbites.controller;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.Collections;
 
 import com.asdc.dalbites.exception.ResourceNotFoundException;
 import com.asdc.dalbites.model.DAO.RestaurantDao;
@@ -27,10 +29,17 @@ public class RestaurantController {
     @Autowired
     private RestaurantService restaurantService;
 
-    @PostMapping("/get-restaurants")
-    public ResponseEntity<List<RestaurantDao>> getAllRestaurants(@RequestBody HashMap<String, List<Long>> buildings) {
-        List<Long> buildingList= buildings.get("id");
-        List<RestaurantDao> restaurants = restaurantService.getAllRestaurants(buildingList);
+
+    @GetMapping("/restaurants")
+    public ResponseEntity<List<RestaurantDao>> getAllRestaurants(@RequestParam("id") String building) {
+    	List<RestaurantDao> restaurants;
+    	if(building.equals("")) {
+    		 restaurants = restaurantService.getAllRestaurants(Collections.emptyList());
+    	}
+    	else {
+        List<Long> buildingList = Arrays.stream(building.split(",")).map(Long::parseLong).collect(Collectors.toList());
+         restaurants = restaurantService.getAllRestaurants(buildingList);
+    	}
         return ResponseEntity.ok().body(restaurants);
     }
 
