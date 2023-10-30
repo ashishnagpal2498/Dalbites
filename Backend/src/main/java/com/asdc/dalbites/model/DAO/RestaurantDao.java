@@ -44,6 +44,19 @@ public class RestaurantDao {
     @JoinColumn(name = "login_id")
     private LoginDao loginDao;
 
+    @Column(name="restaurant_name", nullable = true)
+    private String restaurantName;
+
+    @Column(name="restaurant_description", nullable = true)
+    private String restaurantDescription;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "building_id", referencedColumnName = "id")
+    private BuildingDao buildingDao;
+
+    @Column(name="restaurant_image", nullable = true)
+    private String restaurantImage;
+
     public RestaurantDao() {
     }
 
