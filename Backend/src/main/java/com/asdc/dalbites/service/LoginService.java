@@ -20,7 +20,7 @@ public interface LoginService extends UserDetailsService {
 
     public Object verifyAccount(String bearerToken, VerifyAccountDTO verifyAccountDTO) throws Exception;
 
-    public HashMap<String, Object> forgetPasswordRequest(ForgetPasswordDTO forgetPasswordDTO) throws Exception;;
+    public HashMap<String, Object> forgetPasswordRequest(ForgetPasswordDTO forgetPasswordDTO) throws Exception;
 
     public HashMap<String, Object> forgetPasswordVerification(String bearerToken, ForgetPasswordDTO forgetPasswordDTO) throws Exception;
 }

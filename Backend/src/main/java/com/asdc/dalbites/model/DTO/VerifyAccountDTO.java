@@ -6,5 +6,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class VerifyAccountDTO {
-    String otp;
+    public String getOtp() {
+		return otp;
+	}
+
+	public void setOtp(String otp) {
+		this.otp = otp;
+	}
+
+	String otp;
 }
