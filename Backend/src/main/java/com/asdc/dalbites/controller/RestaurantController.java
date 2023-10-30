@@ -1,13 +1,18 @@
 package com.asdc.dalbites.controller;
 
+import java.util.HashMap;
+
 import com.asdc.dalbites.exception.ResourceNotFoundException;
 import com.asdc.dalbites.model.DAO.RestaurantDao;
+import com.asdc.dalbites.model.DTO.SetupRestaurantAccountDTO;
 import com.asdc.dalbites.repository.RestaurantRepository;
 import com.asdc.dalbites.service.RestaurantService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -22,9 +27,11 @@ public class RestaurantController {
     @Autowired
     private RestaurantService restaurantService;
 
-    @GetMapping("/restaurants")
-    public List<RestaurantDao> getAllRestaurants() {
-        return restaurantService.getAllRestaurants();
+    @PostMapping("/get-restaurants")
+    public ResponseEntity<List<RestaurantDao>> getAllRestaurants(@RequestBody HashMap<String, List<Long>> buildings) {
+        List<Long> buildingList= buildings.get("id");
+        List<RestaurantDao> restaurants = restaurantService.getAllRestaurants(buildingList);
+        return ResponseEntity.ok().body(restaurants);
     }
 
     @GetMapping("/restaurants/{id}")
@@ -70,6 +77,19 @@ public class RestaurantController {
         restaurant.setIsDeleted((short) 1);
         final RestaurantDao updatedRestaurant = restaurantRepository.save(restaurant);
         return ResponseEntity.ok(updatedRestaurant);
+    }
+
+    @PostMapping("/restaurant/{id}/setup")
+    public ResponseEntity<?> setupRestaurantAccount(@PathVariable String id, @RequestParam("file") MultipartFile file, @RequestPart("building") String buildingId, @RequestPart("name") String name, @RequestPart("description") String description) throws Exception {
+        try {
+            return ResponseEntity.ok(restaurantService.setupRestaurantAccount(file, new SetupRestaurantAccountDTO(Long.parseLong(id), name, Long.parseLong(buildingId), description, file.getOriginalFilename())));
+        } catch (ResourceNotFoundException exception) {
+            exception.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseEntity.internalServerError().body(exception);
+        }
     }
 
 }
