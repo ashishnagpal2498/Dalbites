@@ -5,6 +5,7 @@ import Home from "../../screens/Home";
 import Food from "../../screens/Food";
 import Restaurants from "../../screens/Restaurants";
 import Notifications from "../../screens/Notifications";
+import RestaurantStack from "./RestaurantStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -45,7 +46,7 @@ const HomeTabGroup = () => (
   >
     <Tab.Screen name="Home" component={Home} />
     <Tab.Screen name="Food" component={Food} />
-    <Tab.Screen name="Restaurants" component={Restaurants} />
+    <Tab.Screen name="Restaurants" component={RestaurantStack} />
     <Tab.Screen name="Notifications" component={Notifications} />
   </Tab.Navigator>
 );

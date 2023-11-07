@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,16 +10,29 @@ import {
   Button,
 } from "react-native";
 import tw from "twrnc";
-const RestaurantDetails = () => {
-  const [activeTab, setActiveTab] = useState("items");
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getRestaurantById,
+  getRestaurantMenu,
+} from "../redux/actions/RestaurantAction";
+import Loading from "./Loading";
 
-  const restaurant = {
-    id: 1,
-    name: "Sample Restaurant Nae",
-    description:
-      "The Restaurant card size will increase with repect to the length of the description",
-    image: require("../assets/images/placeholder.png"),
-  };
+const RestaurantDetails = ({ route }) => {
+  const { id } = route.params;
+  const token = useSelector((store) => store.authentication.token);
+  const [activeTab, setActiveTab] = useState("items");
+  const restaurant = useSelector((store) => store.restaurant.restaurant);
+  const restaurantMenu = useSelector(
+    (store) => store.restaurant.restaurantMenu
+  );
+  const loading = useSelector((store) => store.restaurant.restaurantLoading);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // payload - id and token
+    dispatch(getRestaurantById({ id, token }));
+    dispatch(getRestaurantMenu({ id, token }));
+  }, []);
 
   const itemData = [
     {
@@ -27,8 +40,7 @@ const RestaurantDetails = () => {
       name: "Item 1",
       price: "$10",
       preparationTime: "20 mins",
-      description:
-        "This description length will be fixed.",
+      description: "This description length will be fixed.",
       image: require("../assets/images/Placeholder_Food_Item.png"),
     },
     {
@@ -86,7 +98,9 @@ const RestaurantDetails = () => {
       review: "I had a wonderful dining experience here.",
     },
   ];
-
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -97,10 +111,15 @@ const RestaurantDetails = () => {
 
       <View style={styles.restaurantCard}>
         <View style={styles.restaurantImageContainer}>
-          <Image source={restaurant.image} style={styles.restaurantImage} />
+          <Image
+            source={require("../assets/images/placeholder.png")}
+            style={styles.restaurantImage}
+          />
         </View>
         <View style={styles.restaurantDescriptionContainer}>
-          <Text style={styles.restaurantDescription}>{restaurant.description}</Text>
+          <Text style={styles.restaurantDescription}>
+            {restaurant.description}
+          </Text>
         </View>
       </View>
 
@@ -125,48 +144,65 @@ const RestaurantDetails = () => {
       </View>
 
       <View style={styles.content}>
-  {activeTab === "items" && (
-    <FlatList
-      data={itemData}
-      keyExtractor={(item) => item.id.toString()}
-      numColumns={2} // Set the number of columns to 2
-      renderItem={({ item }) => (
-        <View style={styles.itemCard}>
-          <View style={styles.itemImageConatainer}>
-            <Image style={styles.itemImage} source={restaurant.image} />
-            <View style={styles.itemTextContainer}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <View style={styles.itemRowContainer}>
-                <Text style={styles.itemPrice}>{item.price}</Text>
-                <Text style={styles.itemPreparationTime}>{item.preparationTime}</Text>
-              </View>
+        {activeTab === "items" &&
+          (restaurantMenu.length > 0 ? (
+            <FlatList
+              data={restaurantMenu}
+              keyExtractor={(item) => item.id}
+              numColumns={2} // Set the number of columns to 2
+              renderItem={({ item }) => (
+                <View style={styles.itemCard}>
+                  <View style={styles.itemImageConatainer}>
+                    <Image
+                      style={styles.itemImage}
+                      source={require("../assets/images/Placeholder_Food_Item.png")}
+                    />
+                    <View style={styles.itemTextContainer}>
+                      <Text style={styles.itemName}>{item.name}</Text>
+                      <View style={styles.itemRowContainer}>
+                        <Text style={styles.itemPrice}>{item.price}</Text>
+                        <Text style={styles.itemPreparationTime}>
+                          {item.preparationTime}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <ScrollView style={styles.itemDescriptionConatainer}>
+                    <Text style={styles.itemDescription}>
+                      {item.description}
+                    </Text>
+                  </ScrollView>
+                  <TouchableOpacity style={styles.itemButtonAddToCart}>
+                    <Text style={styles.addToCart}>Add to Cart</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+          ) : (
+            <View>
+              <Text style={tw`text-red-600 text-xl font-bold `}>
+                Ooops ! Restaurant hasn't setup its menu yet.{" "}
+              </Text>
+              <Text style={tw`text-green-500 font-bold `}>
+                Please try to order from someother restaurant
+              </Text>
             </View>
-          </View>
-          <ScrollView style={styles.itemDescriptionConatainer}>
-          <Text style={styles.itemDescription}>{item.description}</Text>
-          </ScrollView>
-          <TouchableOpacity style={styles.itemButtonAddToCart}><Text style={styles.addToCart}>Add to Cart</Text></TouchableOpacity>
-          </View>
-      )}
-    />
-  )}
-  {activeTab === "reviews" && (
-    <FlatList
-      data={reviewData}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <View style={styles.reviewCard}>
-          <Text style={styles.reviewName}>{item.name}</Text>
-          <Text style={styles.reviewDate}>{item.date}</Text>
-          <Text style={styles.reviewRating}>Rating: {item.rating}</Text>
-          <Text style={styles.reviewText}>{item.review}</Text>
-        </View>
-      )}
-    />
-  )}
-</View>
-
-
+          ))}
+        {activeTab === "reviews" && (
+          <FlatList
+            data={reviewData}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.reviewCard}>
+                <Text style={styles.reviewName}>{item.name}</Text>
+                <Text style={styles.reviewDate}>{item.date}</Text>
+                <Text style={styles.reviewRating}>Rating: {item.rating}</Text>
+                <Text style={styles.reviewText}>{item.review}</Text>
+              </View>
+            )}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -184,7 +220,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
     elevation: 5,
   },
-  extraheader:{
+  extraheader: {
     backgroundColor: "#EAB308",
     padding: 7,
     borderRadius: 10,
@@ -192,17 +228,17 @@ const styles = StyleSheet.create({
   restaurantName: {
     fontSize: 20,
     fontWeight: "bold",
-    textAlign:'center',
+    textAlign: "center",
   },
   restaurantCard: {
-    height: 'auto',
+    height: "auto",
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     elevation: 5,
     marginLeft: 10,
     marginRight: 8,
   },
-  restaurantImageContainer:{
+  restaurantImageContainer: {
     width: "100%",
     height: 150,
 
@@ -255,19 +291,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   content: {
-    flex:1,
+    flex: 1,
     padding: 5,
-    alignItems:'center',
+    alignItems: "center",
   },
   itemCard: {
     height: 250,
-    width:160,
+    width: 160,
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     elevation: 5,
     margin: 5,
     padding: 7,
-    alignSelf:'center',
+    alignSelf: "center",
   },
   itemImageConatainer: {
     height: 150,
@@ -310,9 +346,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     textAlign: "center",
   },
-  itemDescriptionConatainer: {
-    
-  },
+  itemDescriptionConatainer: {},
   itemDescription: {
     fontSize: 14,
     color: "#000",
@@ -321,9 +355,9 @@ const styles = StyleSheet.create({
   itemButtonAddToCart: {
     backgroundColor: "#EAB308",
     padding: 7,
-    width:140,
+    width: 140,
     borderRadius: 10,
-    alignSelf:'center',
+    alignSelf: "center",
   },
   addToCart: {
     color: "black",
@@ -348,7 +382,7 @@ const styles = StyleSheet.create({
   reviewDate: {
     fontSize: 14,
   },
-  reviewRating:{
+  reviewRating: {
     fontSize: 14,
   },
   reviewText: {

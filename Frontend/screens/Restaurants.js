@@ -1,126 +1,89 @@
-import React from "react";
-import { View, Text, Image, TouchableOpacity, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  FlatList,
+  ActivityIndicator,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import RestaurantCard from "../src/Components/RestaurantCard";
-import RestaurantHeader from "../src/Components/RestaurantHeader";
-
-const restaurantData = [
-  {
-    id: 1,
-    name: "Restaurant A",
-    building: "Building 1",
-    rating: 4.5,
-    bestSeller: "coffee",
-    avgpreptime: "20 mins",
-    image: require("../assets/images/placeholder.png"),
-  },
-  {
-    id: 2,
-    name: "Restaurant B",
-    building: "Building 2",
-    rating: 4.4,
-    bestSeller: "Tea",
-    avgpreptime: "25 mins",
-    image: require("../assets/images/placeholder.png"),
-  },
-  {
-    id: 3,
-    name: "Restaurant C",
-    building: "Building 3",
-    rating: 4.3,
-    bestSeller: "Sub",
-    avgpreptime: "30 mins",
-    image: require("../assets/images/placeholder.png"),
-  },
-  {
-    id: 4,
-    name: "Restaurant D",
-    building: "Building 4",
-    rating: 4.2,
-    bestSeller: "pizza",
-    avgpreptime: "35 mins",
-    image: require("../assets/images/placeholder.png"),
-  },
-  {
-    id: 5,
-    name: "Restaurant E",
-    building: "Building 5",
-    rating: 4.1,
-    bestSeller: "burger",
-    avgpreptime: "40 mins",
-    image: require("../assets/images/placeholder.png"),
-  },
-  {
-    id: 6,
-    name: "Restaurant F",
-    building: "Building 1",
-    rating: 3.9,
-    bestSeller: "Indian",
-    avgpreptime: "45 mins",
-    image: require("../assets/images/placeholder.png"),
-  },
-  {
-    id: 7,
-    name: "Restaurant G",
-    building: "Building 2",
-    rating: 4.4,
-    bestSeller: "chinese",
-    avgpreptime: "10 mins",
-    image: require("../assets/images/placeholder.png"),
-  },
-  {
-    id: 8,
-    name: "Restaurant H",
-    building: "Building 3",
-    rating: 4.5,
-    bestSeller: "Cold drinks",
-    avgpreptime: "15 mins",
-    image: require("../assets/images/placeholder.png"),
-  },
-  {
-    id: 9,
-    name: "Restaurant I",
-    building: "Building 4",
-    rating: 3.5,
-    bestSeller: "Franky",
-    avgpreptime: "50 mins",
-    image: require("../assets/images/placeholder.png"),
-  },
-  {
-    id: 10,
-    name: "Restaurant J",
-    building: "Building 5",
-    rating: 4.5,
-    bestSeller: "Pizza",
-    avgpreptime: "20 mins",
-    image: require("../assets/images/placeholder.png"),
-  },
-];
-
-// const handleCardPress = (restaurantcard) => {
-//   navigation.navigate("RestaurantDetailsScreen");
-// };
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getRestaurants,
+  setSelectedBuildingRedux,
+} from "../redux/actions/RestaurantAction";
+import tw from "twrnc";
+import IconTextBar from "../src/Layouts/IconTextBar";
+import Loading from "./Loading";
 
 const Restaurants = ({ navigation }) => {
+  const buildingIds = useSelector(
+    (store) => store.restaurant.selectedBuildings
+  );
+
+  const dispatch = useDispatch();
+  const restaurants = useSelector((store) => store.restaurant.restaurants);
+  const token = useSelector((store) => store.authentication.token);
+  const loading = useSelector((store) => store.restaurant.restaurantLoading);
+
+  useEffect(() => {
+    console.log("Executed ----> UseEffect Restaurants", buildingIds);
+    dispatch(getRestaurants({ id: buildingIds ? buildingIds : [], token }));
+  }, [buildingIds]);
+
+  if (loading) {
+    return <Loading />;
+  }
   return (
-    <>
-      <RestaurantHeader navigation={navigation} />
+    <View style={{ flex: 1 }}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={tw`mt-2 bg-yellow-500 rounded-lg py-2 px-6`}
+          onPress={() => navigation.navigate("FilterRestaurant")}
+        >
+          <IconTextBar iconType="Fai" iconName="filter" iconOnly={true} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={tw`mt-2 ml-3 rounded-lg py-2 `}
+          onPress={
+            buildingIds.length
+              ? () => dispatch(setSelectedBuildingRedux([]))
+              : () => navigation.navigate("SearchRestaurant")
+          }
+        >
+          <View style={styles.searchButtonContent}>
+            <IconTextBar
+              iconType={buildingIds.length ? "Ati" : "Fai"}
+              iconName={buildingIds.length ? "close" : "search"}
+              iconOnly={true}
+            />
+            <Text style={tw`text-black text-lg font-semibold`}>
+              {buildingIds.length ? "Search Results" : "Search here ..."}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
       <View style={{ flex: 1 }}>
         <FlatList
           style={styles.flatlistConatiner}
-          data={restaurantData}
-          renderItem={RestaurantCard}
+          data={restaurants}
+          renderItem={({ item, index }) => (
+            <RestaurantCard item={item} index={index} navigation={navigation} />
+          )}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.scrollViewContent}
         />
       </View>
-    </>
+    </View>
   );
 };
 
 const styles = {
   header: {
+    flex: 1,
+    maxHeight: 60,
     flexDirection: "row",
-    justifyContent: "space-between",
     padding: 10,
     backgroundColor: "#fff",
     elevation: 5,
@@ -129,10 +92,6 @@ const styles = {
   },
   searchButtonContent: {
     flexDirection: "row",
-    alignItems: "center",
-  },
-  searchIcon: {
-    marginRight: 10,
   },
   flatlistConatiner: {
     padding: 5,
