@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Frontend",
-    "slug": "Frontend",
+    "name": "DalBite",
+    "slug": "DalBite",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
