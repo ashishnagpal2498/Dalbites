@@ -34,31 +34,18 @@ const RestaurantHeader = ({ navigation, onSearchChange }) => {
   const icon = getIcon(route.name);
   return (
     <View style={styles.header}>
-      <TouchableOpacity
-        style={tw`basis-16 bg-yellow-500 rounded-lg justify-center items-center mr-2`}
-        onPress={() =>
-          navigation.navigate(getIconButtonNavigationScreen(route.name))
-        }
-      >
-        <IconTextBar
-          iconType={icon.type}
-          iconName={icon.name}
-          iconOnly={true}
-        />
-      </TouchableOpacity>
-
-      {route.name === "Restaurants" && (
+      {
         <TouchableOpacity
           style={tw`grow bg-yellow-500 rounded-lg  h-11 justify-center items-start pl-2`}
           onPress={handleSearchPress}
         >
           <Text style={{ opacity: 0.6 }}>Search restaurant or building</Text>
         </TouchableOpacity>
-      )}
+      }
 
       {route.name === "SearchScreen" && (
         <TextInput
-          style={tw`grow bg-yellow-500 rounded-lg p-2 h-11`}
+          style={[tw`bg-yellow-500 rounded-lg p-2 h-4`]}
           placeholder="Search restaurant or building"
           keyboardType="default"
           autoFocus

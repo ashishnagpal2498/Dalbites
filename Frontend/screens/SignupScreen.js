@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   View,
   KeyboardAvoidingView,
@@ -11,8 +11,6 @@ import {
   ScrollView,
 } from "react-native";
 import tw from "twrnc";
-import { useSelector } from "react-redux";
-
 import { emailRegex, usernameRegex, passwordRegex } from "../src/Utils/Regex";
 import { setError, signUp } from "../redux/actions/Authentication";
 

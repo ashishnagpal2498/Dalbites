@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useMemo, useState } from "react";
-import { FlatList, TouchableOpacity } from "react-native";
+import { FlatList, TouchableOpacity, TextInput } from "react-native";
 import { debounce } from "lodash";
 import RestaurantHeader from "../src/Components/RestaurantHeader";
 import RestaurantCard from "../src/Components/RestaurantCard";
 import BuildingSearchItem from "../src/Components/Search/BuildingSearchItem";
-
+import tw from "twrnc";
 const restaurants = [
   {
     id: 1,
@@ -164,10 +164,12 @@ const SearchScreen = ({ navigation }) => {
 
   return (
     <>
-      <RestaurantHeader
-        onSearchChange={debouncedSearch}
-        screen="SearchScreen"
-        navigation={navigation}
+      <TextInput
+        style={tw`grow bg-yellow-500 rounded-lg p-2 h-11`}
+        placeholder="Search restaurant or building"
+        keyboardType="default"
+        autoFocus
+        onChangeText={debouncedSearch}
       />
       <FlatList
         style={style.flatlistConatiner}
