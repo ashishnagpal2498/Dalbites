@@ -31,7 +31,6 @@ import axios from "axios";
 function* loginSaga(action) {
   try {
     yield put({ type: SET_LOADING, payload: { loading: true } });
-
     const response = yield call(
       axios.post,
       LoginAPI,

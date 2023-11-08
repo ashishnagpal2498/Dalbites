@@ -17,3 +17,11 @@ export const getAllBuildingsAPI = `${API_URL}api/get-buildings`;
 export const getRestaurantByIdAPI = `${API_URL}api/restaurants`;
 
 export const viewRestaurantMenuAPI = `${API_URL}api/restaurants`;
+
+export const getRestaurantMenuAPI = `${API_URL}api/restaurants`;
+
+export const addRestaurantMenuItemAPI = `${API_URL}api/restaurants`;
+
+export const updateRestaurantMenuItemAPI = `${API_URL}api/restaurants`;
+
+export const deleteRestaurantMenuItemAPI = `${API_URL}api/restaurants`;
