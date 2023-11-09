@@ -58,6 +58,8 @@ const MenuItem = ({cardData, onUpdateCard, onDeleteCard}) => {
           quality: 1,
           base64: true,
         });
+
+        console.log(file);
     
         if (!result.canceled) {
             console.log("========");
@@ -84,7 +86,8 @@ const MenuItem = ({cardData, onUpdateCard, onDeleteCard}) => {
         <Card style={{borderColor: 'transparent', backgroundColor: 'white', borderBottomColor: 'white', width: '98%', alignSelf: "center", paddingBottom: '10px'}}>
             <Card.Content>
             {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} style={{width: '100%', alignSelf: "center"}}/> */}
-            <Card.Cover source={file} style={{width: '100%', alignSelf: "center"}}/>
+            {isNew ? (<></>) : (<Card.Cover source={{uri: `https://firebasestorage.googleapis.com/v0/b/dalbites-4237e.appspot.com/o/${file}?alt=media&token=${file}`}} style={{width: '100%', alignSelf: "center"}}/>)}
+            {/* <Card.Cover source={file} style={{width: '100%', alignSelf: "center"}}/> */}
                 <View style={styles.container}>
                     <TouchableOpacity style={tw`bg-yellow-500 rounded-lg py-2 px-4`} onPress={handleImageChange}>
                         <Text style={tw`text-black font-semibold`}>Choose Image</Text>

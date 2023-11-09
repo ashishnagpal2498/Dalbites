@@ -11,6 +11,7 @@ import {
 import tw from "twrnc";
 import SampleMenuItemImg from '../assets/images/DalBites.png';
 import Loading from "./Loading";
+import Modal from "react-native-modal";
 
 const AddMenu = ({ route }) => {
     const { id } = route.params;
@@ -34,15 +35,17 @@ const AddMenu = ({ route }) => {
         isNew: false
     };
 
-    //const [{menuItems}, setItems] = useState({ menuItems: [<MenuItem key={0} arrayId={0} pressDelete={handleDelete}></MenuItem>] });
     const [menu, setMenu] = useState([]);
+    const [isModalVisible, setModalVisible] = useState(false);
+
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+    };
 
     useEffect(() => {
-        //fetchData().then(response => setData(response));
-        //setItems(menuItems);
         // payload - id and token
         dispatch(getRestaurantMenus({ id, token }));
-        setMenu(restaurantMenus)
+        setMenu(restaurantMenus);
     }, []);
 
     // const handleDelete = (id) => {
@@ -58,18 +61,18 @@ const AddMenu = ({ route }) => {
         } else{
             dispatch(updateRestaurantMenuItem({token, id, name, description, time: prepTime, price: cost, is_available: isAvailable, restaurant_id}));
         }
-        setMenu((prevMenu) =>
-        prevMenu.map((menuItem) =>
-            menuItem.id === id ? { id, name, description, prepTime, cost, isAvailable, isNew } : menuItem
-        )
-        );
+        setMenu(restaurantMenus);
+        // setMenu((prevMenu) =>
+        // prevMenu.map((menuItem) =>
+        //     menuItem.id === id ? { id, name, description, prepTime, cost, isAvailable, isNew } : menuItem
+        // ));
     };
 
       const deleteMenuItem = ({menuId, isNew}) => {
-        const restaurant_id = route.params.id;
+        const restaurantId = route.params.id;
         console.log(isNew);
         if(isNew == undefined){
-            dispatch(deleteRestaurantMenuItem({token, menuId, restaurant_id}));
+            dispatch(deleteRestaurantMenuItem({token, menuId, restaurantId}));
         }
         setMenu((prevMenu) => prevMenu.filter((menuItem) => menuItem.id !== menuId));
       };
@@ -105,13 +108,15 @@ const AddMenu = ({ route }) => {
 
     return(
         <View style={tw`flex-1 justify-center items-center bg-white`}>
+        {menu.length > 0 && loading == false ?
             <ScrollView>
                 {menu.length == 0 ? <Text style={tw`text-black text-lg font-semibold`}>Nothing to show. Please add using the Add Menu Item button</Text>:
-                menu.map((menuItem) => <MenuItem 
+                restaurantMenus.map((menuItem) => <MenuItem 
                 key={menuItem.id} cardData={menuItem} onUpdateCard={updateMenuItem} onDeleteCard={deleteMenuItem} 
                 ></MenuItem>)
                 }
-            </ScrollView>
+            </ScrollView> : <Text style={tw`text-black text-lg font-semibold`}>Nothing to show. Please add using the Add Menu Item button</Text>
+        }
             <View style={styles.container}>
                 <TouchableOpacity
                     style={tw`bg-yellow-500 rounded-lg py-2 px-4 mr-7`}
@@ -121,11 +126,18 @@ const AddMenu = ({ route }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={tw`bg-yellow-500 rounded-lg py-2 px-4`}
-                    onPress={printData}
+                    onPress={toggleModal}
                 >
                 <Text style={tw`text-black text-lg font-semibold`}>Save Menu</Text>
                 </TouchableOpacity>
             </View>
+            <Modal isVisible={isModalVisible}>
+                <View style={{ flex: 1 }}>
+                <Text>Hello!</Text>
+
+                <Button title="Hide modal" onPress={toggleModal} />
+                </View>
+            </Modal>
         </View>
     );
 };

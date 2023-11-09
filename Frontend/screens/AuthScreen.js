@@ -35,7 +35,9 @@ const WelcomeScreen = ({ navigation }) => {
 
       <TouchableOpacity
         style={tw`mt-4 bg-yellow-500 rounded-lg py-2 px-4`}
-        onPress={() => navigation.navigate("AddMenu", { id: "4" })}
+        onPress={() => {
+          navigation.navigate("AddMenu", { id: "4" })}
+        }
       >
         <Text style={tw`text-black text-lg font-semibold`}>Menu</Text>
       </TouchableOpacity>
