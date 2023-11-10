@@ -340,11 +340,13 @@ function* deleteRestaurantMenuItem({ payload }) {
     };
     console.log("Headers - ", headers);
 
+    console.log(payload);
+    let restaurantId = parseInt(payload.restaurantId);
+
     const response = yield call(
       axios.post, 
-      `${deleteRestaurantMenuItemAPI}/${payload.restaurantId}/delete-menu-item/${payload.menuId}`,
+      `${deleteRestaurantMenuItemAPI}/${restaurantId}/delete-menu-item/${payload.menuId}`,
       {
-        params: {menuId : payload.menuId},
         headers: { ...headers },
       }
     );

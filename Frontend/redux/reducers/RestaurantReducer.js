@@ -24,7 +24,7 @@ const initialState = {
   selectedBuildings: [],
   restaurant: {},
   restaurantMenu: [{}],
-  restaurantMenus: [{}],
+  restaurantMenus: [],
 };
 
 export default (state = initialState, action) => {

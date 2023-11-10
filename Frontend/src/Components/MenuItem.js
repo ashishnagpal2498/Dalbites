@@ -6,8 +6,6 @@ import tw from "twrnc";
 import SampleImg from '../../assets/images/DalBites.png';
 import * as ImagePicker from 'expo-image-picker';
 
-const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
-
 const MenuItem = ({cardData, onUpdateCard, onDeleteCard}) => {
 
     const [name, setName] = useState(cardData.name || '');
@@ -18,19 +16,6 @@ const MenuItem = ({cardData, onUpdateCard, onDeleteCard}) => {
     const [file, setFile] = useState(cardData.menu_image || SampleImg);
     const [fileObj, setFileObj] = useState("");
     const isNew = cardData.isNew;
-
-    // const handleImageChange = async () => {
-    //     try {
-    //         const options = {
-    //             noData: true,
-    //         };
-    //         ImagePicker.launchImageLibrary(options, async (response) => {
-    //             console.log(response);
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
 
     const createFormData = (uri) => {
         const fileName = uri.split('/').pop();
@@ -59,15 +44,9 @@ const MenuItem = ({cardData, onUpdateCard, onDeleteCard}) => {
           base64: true,
         });
 
-        console.log(file);
-    
         if (!result.canceled) {
-            console.log("========");
             const imgUri = result.assets[0].uri;
             const tmp = createFormData(imgUri);
-            console.log(tmp._parts[0][1]);
-            // console.log(Object.keys(result.assets[0]));
-            // console.log(result.assets[0].base64);
         } else {
           alert('You did not select any image.');
         }
@@ -88,15 +67,31 @@ const MenuItem = ({cardData, onUpdateCard, onDeleteCard}) => {
             {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} style={{width: '100%', alignSelf: "center"}}/> */}
             {isNew ? (<></>) : (<Card.Cover source={{uri: `https://firebasestorage.googleapis.com/v0/b/dalbites-4237e.appspot.com/o/${file}?alt=media&token=${file}`}} style={{width: '100%', alignSelf: "center"}}/>)}
             {/* <Card.Cover source={file} style={{width: '100%', alignSelf: "center"}}/> */}
-                <View style={styles.container}>
-                    <TouchableOpacity style={tw`bg-yellow-500 rounded-lg py-2 px-4`} onPress={handleImageChange}>
-                        <Text style={tw`text-black font-semibold`}>Choose Image</Text>
+                {isNew ? 
+                (
+                // <View style={styles.container}>
+                    <TouchableOpacity style={tw`bg-yellow-500 rounded-lg py-2 px-4 w-40 ml-20`} onPress={handleImageChange}>
+                        <Text style={tw`text-black font-semibold text-center justify-center content-center`}>Choose Image</Text>
                     </TouchableOpacity>
+                // </View>
+                ) : <></>
+                }
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={tw`text-base h-8`}>Name:</Text>
+                    <TextInput theme={{colors: {primary: 'black'}}} variant="titleSmall" style={tw`bg-white py-0 px-0 w-70 mb-4 h-10 mt-2`} placeholder="Name" value={name} onChangeText={setName}></TextInput>
                 </View>
-                <TextInput theme={{colors: {primary: 'black'}}} variant="titleSmall" style={tw`bg-white py-0 px-0 w-80 mb-4 h-10 mt-2`} placeholder="Name" value={name} onChangeText={setName}></TextInput>
-                <TextInput theme={{colors: {primary: 'black'}}} variant="titleSmall" style={tw`bg-white py-0 px-0 w-80 mb-4 h-10 mt-2`} placeholder="Description" value={description} onChangeText={setDescription}></TextInput>
-                <TextInput theme={{colors: {primary: 'black'}}} variant="titleSmall" style={tw`bg-white py-0 px-0 w-80 mb-4 h-10 mt-2`} placeholder="Prep Time" value={prepTime} onChangeText={setPrepTime}></TextInput>
-                <TextInput theme={{colors: {primary: 'black'}}} variant="titleSmall" style={tw`bg-white py-0 px-0 w-80 mb-4 h-10 mt-2`} placeholder="Cost" value={cost} onChangeText={setCost}></TextInput>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={tw`text-base h-8`}>Description:</Text>
+                    <TextInput theme={{colors: {primary: 'black'}}} variant="titleSmall" style={tw`bg-white py-0 px-0 w-60 mb-4 h-10 mt-2`} placeholder="Description" value={description} onChangeText={setDescription}></TextInput>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={tw`text-base h-8`}>Prep Time (mins):</Text>
+                    <TextInput theme={{colors: {primary: 'black'}}} variant="titleSmall" style={tw`bg-white py-0 px-0 w-50 mb-4 h-10 mt-2`} placeholder="Prep Time" value={prepTime} onChangeText={setPrepTime}></TextInput>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={tw`text-base h-8`}>Price (CAD):</Text>
+                    <TextInput theme={{colors: {primary: 'black'}}} variant="titleSmall" style={tw`bg-white py-0 px-0 w-60 mb-4 h-10 mt-2`} placeholder="Cost" value={cost} onChangeText={setCost}></TextInput>
+                </View>
                 <View style={styles.checkboxContainer}>
                     <Text variant="titleSmall" style={styles.label}>Available: </Text>
                     <Checkbox color='#FFEB3B' style={styles.checkbox} status={isAvailable ? 'checked' : 'unchecked'} onPress={() => {setIsAvailable(!isAvailable)}}/>
@@ -104,11 +99,13 @@ const MenuItem = ({cardData, onUpdateCard, onDeleteCard}) => {
             </Card.Content>
             <Card.Actions>
                 <TouchableOpacity style={tw`bg-yellow-500 rounded-lg py-2 px-4`} onPress={handleUpdateCard}>
-                    <Text style={tw`text-black text-lg font-semibold`}>Save</Text>
+                    {isNew == true ? (<Text style={tw`text-black text-lg font-semibold`}>Save</Text>) : <Text style={tw`text-black text-lg font-semibold`}>Update</Text>}
                 </TouchableOpacity>
+                {isNew == true ? (<></>) : 
                 <TouchableOpacity style={tw`bg-yellow-500 rounded-lg py-2 px-4`} onPress={handleDeleteCard}>
                     <Text style={tw`text-black text-lg font-semibold`}>Delete</Text>
                 </TouchableOpacity>
+                }
             </Card.Actions>
         </Card>
     </View>
@@ -147,45 +144,3 @@ const styles = StyleSheet.create({
 });
   
 export default MenuItem;
-
-
-// import React, { useState } from 'react';
-// import { Pressable, Text, TextInput, View } from 'react-native';
-// import tw from "twrnc";
-
-// const Card = ({ cardData, onUpdateCard, onDeleteCard }) => {
-//     const [name, setName] = useState(cardData.name || '');
-//     const [description, setDescription] = useState(cardData.description || '');
-
-//   const handleNameChange = (e) => {
-//     setName(e.target.value);
-//   };
-
-//   const handleDescriptionChange = (e) => {
-//     setDescription(e.target.value);
-//   };
-
-//   const handleUpdateCard = () => {
-//     console.log(name);
-//     onUpdateCard({ id: cardData.id, name, description });
-//   };
-
-//   const handleDeleteCard = () => {
-//     onDeleteCard(cardData.id);
-//   };
-
-//   return (
-//     <View className="card">
-//       <TextInput type="text" value={name} onChangeText={setName}></TextInput>
-//       <TextInput value={description} onChangeText={setDescription}></TextInput>
-//       <Pressable style={tw`bg-yellow-500 rounded-lg py-2 px-4`} onPress={handleDeleteCard}>
-//                     <Text style={tw`text-black text-lg font-semibold`}>Delete</Text>
-//                 </Pressable>
-//       <Pressable style={tw`bg-yellow-500 rounded-lg py-2 px-4`} onPress={handleUpdateCard}>
-//                     <Text style={tw`text-black text-lg font-semibold`}>Save</Text>
-//                 </Pressable>
-//     </View>
-//   );
-// };
-
-// export default Card;
