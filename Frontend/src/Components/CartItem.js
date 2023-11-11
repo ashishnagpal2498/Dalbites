@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import tw from "twrnc";
 
-const CardItem = ({cardData}) => {
+const CartItem = ({cardData}) => {
 
     const [quantity, setQuantity] = useState(1);
     
@@ -23,11 +23,10 @@ const CardItem = ({cardData}) => {
 
     return (
         <View style={styles.card}>
-            <Image source={{ uri: 'https://picsum.photos/700' }} style={styles.coverImage} />
             <Text style={styles.title}>{cardData.name}</Text>
-            <Text style={styles.description}>{cardData.description}</Text>
+            {/* <Text style={styles.description}>{cardData.description}</Text> */}
             <Text style={styles.price}>Price: ${cardData.price}</Text>
-            
+            <Text style={styles.price}>Price: ${cardData.price * cardData.quantity}</Text>
             <View style={styles.quantityContainer}>
                 <TouchableOpacity style={tw`bg-yellow-500 rounded-lg py-2 px-4`} onPress={decreaseQuantity}>
                     <Text style={tw`text-black text-lg font-semibold`}>-</Text>
@@ -92,4 +91,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default CardItem;
+export default CartItem;
