@@ -1,6 +1,8 @@
 package com.asdc.dalbites.model.DAO;
 
 import java.util.Date;
+import java.util.List;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,46 +18,46 @@ public class MenuItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     public int getTime() {
-		return time;
-	}
+        return time;
+    }
 
-	public void setTime(int time) {
-		this.time = time;
-	}
+    public void setTime(int time) {
+        this.time = time;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public int getIsDeleted() {
-		return isDeleted;
-	}
+    public int getIsDeleted() {
+        return isDeleted;
+    }
 
-	public void setIsDeleted(int isDeleted) {
-		this.isDeleted = isDeleted;
-	}
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 
-	public Date getCreated_at() {
-		return created_at;
-	}
+    public Date getCreated_at() {
+        return created_at;
+    }
 
-	public void setCreated_at(Date created_at) {
-		this.created_at = created_at;
-	}
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
+    }
 
-	public Date getUpdated_at() {
-		return updated_at;
-	}
+    public Date getUpdated_at() {
+        return updated_at;
+    }
 
-	public void setUpdated_at(Date updated_at) {
-		this.updated_at = updated_at;
-	}
+    public void setUpdated_at(Date updated_at) {
+        this.updated_at = updated_at;
+    }
 
-	private String name;
+    private String name;
     private int time;
     private double price;
     private String description;
@@ -111,4 +113,8 @@ public class MenuItem {
     @JoinColumn(name = "restaurant_id")
     @JsonIgnore
     private RestaurantDao restaurant;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<OrderItemDao> orderItems;
 }
