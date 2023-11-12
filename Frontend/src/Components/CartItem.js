@@ -4,8 +4,7 @@ import { Button, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } f
 import tw from "twrnc";
 
 const CartItem = ({cardData}) => {
-
-    const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(cardData.quantity || 1);
     
     const increaseQuantity = () => {
         setQuantity(quantity + 1);
@@ -17,16 +16,15 @@ const CartItem = ({cardData}) => {
         }
     };
     
-    const addToCart = () => {
-        console.log(`Added ${quantity} ${cardData.name}(s) to the cart.`);
+    const removeFromCart = () => {
+        //remove from cart logic here
     };
 
     return (
         <View style={styles.card}>
             <Text style={styles.title}>{cardData.name}</Text>
-            {/* <Text style={styles.description}>{cardData.description}</Text> */}
             <Text style={styles.price}>Price: ${cardData.price}</Text>
-            <Text style={styles.price}>Price: ${cardData.price * cardData.quantity}</Text>
+            <Text style={styles.price}>Total: ${cardData.price * quantity}</Text>
             <View style={styles.quantityContainer}>
                 <TouchableOpacity style={tw`bg-yellow-500 rounded-lg py-2 px-4`} onPress={decreaseQuantity}>
                     <Text style={tw`text-black text-lg font-semibold`}>-</Text>
@@ -36,8 +34,8 @@ const CartItem = ({cardData}) => {
                     <Text style={tw`text-black text-lg font-semibold`}>+</Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity style={tw`bg-yellow-500 py-2 px-4`} onPress={addToCart}>
-                <Text style={tw`text-black text-lg font-semibold text-center justify-center content-center`}>Delete</Text>
+            <TouchableOpacity style={tw`bg-yellow-500 py-2 px-4`} onPress={removeFromCart}>
+                <Text style={tw`text-black text-lg font-semibold text-center justify-center content-center`}>Remove from Cart</Text>
             </TouchableOpacity>
         </View>
     );
@@ -52,6 +50,7 @@ const styles = StyleSheet.create({
       width: screenWidth*0.95, // Make the card width 100% of the screen
       backgroundColor: '#fff',
       borderRadius: 8,
+      borderColor: 'black',
       marginBottom: 16,
       elevation: 3,
       overflow: 'hidden', // Clip child Image component to border-radius
