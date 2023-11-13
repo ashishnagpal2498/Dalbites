@@ -1,4 +1,13 @@
+package com.asdc.dalbites.Controller;
+
 import com.asdc.dalbites.controller.OrderController;
+import com.asdc.dalbites.exception.ResourceNotFoundException;
+import com.asdc.dalbites.model.DAO.LoginDao;
+import com.asdc.dalbites.model.DAO.OrderDao;
+import com.asdc.dalbites.model.DAO.RestaurantDao;
+import com.asdc.dalbites.model.DAO.RoleDao;
+import com.asdc.dalbites.model.DTO.OrderStatusDTO;
+import com.asdc.dalbites.model.ENUMS.OrderStatusEnum;
 import com.asdc.dalbites.repository.LoginRepository;
 import com.asdc.dalbites.repository.OrderRepository;
 import com.asdc.dalbites.repository.RestaurantRepository;
@@ -11,6 +20,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,21 +48,75 @@ class OrderControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // Empty test for getAllOrderOfCurrentUser
     @Test
     void getAllOrderOfCurrentUser() {
-        // TODO: Write test logic for getAllOrderOfCurrentUser method
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("restaurant");
+        LoginDao loginDao = mock(LoginDao.class);
+        when(loginRepository.findByUsername("restaurant")).thenReturn(loginDao);
+        RoleDao roleDao = mock(RoleDao.class);
+        when(loginDao.getRoleDao()).thenReturn(roleDao);
+        when(roleDao.getId()).thenReturn(2); // Assuming restaurant role is 2
+        RestaurantDao restaurantDao = mock(RestaurantDao.class);
+        when(restaurantRepository.findByLogin_Id(anyLong())).thenReturn(restaurantDao);
+        when(restaurantDao.getId()).thenReturn(1L);
+        when(orderService.getAllOrdersByRestaurantId(anyLong())).thenReturn(Arrays.asList(new OrderDao(), new OrderDao()));
+        ResponseEntity<List<OrderDao>> response = orderController.getAllOrderOfCurrentUser(principal);
+        assertNotNull(response.getBody());
+        assertEquals(2, response.getBody().size());
+        assertEquals(200, response.getStatusCodeValue());
     }
 
-    // Empty test for getOrder
+
+
     @Test
-    void getOrder() {
-        // TODO: Write test logic for getOrder method
+    void getOrder_ValidOrderId_ReturnsOrder() throws ResourceNotFoundException {
+        // Arrange
+        Long orderId = 1L;
+        when(orderService.getOrder(orderId)).thenReturn(new OrderDao());
+
+        // Act
+        ResponseEntity<OrderDao> response = orderController.getOrder(orderId);
+
+        // Assert
+        assertNotNull(response.getBody());
+        assertEquals(200, response.getStatusCodeValue());
     }
 
-    // Empty test for updateOrderStatus
     @Test
-    void updateOrderStatus() {
-        // TODO: Write test logic for updateOrderStatus method
+    void getOrder_InvalidOrderId_ReturnsNotFound() throws ResourceNotFoundException {
+        // Arrange
+        Long orderId = 1L;
+        when(orderService.getOrder(orderId)).thenThrow(new ResourceNotFoundException("Order not found on :: " + orderId));
+
+        // Act
+        ResponseEntity<OrderDao> response = orderController.getOrder(orderId);
+
+        // Assert
+        assertEquals(404, response.getStatusCodeValue());
     }
+    @Test
+    void updateOrderStatus_ValidOrderId_ReturnsUpdatedOrder() throws ResourceNotFoundException {
+        Long orderId = 1L;
+        OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
+        orderStatusDTO.setStatus(OrderStatusEnum.PREPARING);
+        OrderDao orderDao = new OrderDao();
+        when(orderService.getOrder(orderId)).thenReturn(orderDao);
+        when(orderRepository.save(orderDao)).thenReturn(orderDao);
+        ResponseEntity<OrderDao> response = orderController.updateOrderStatus(orderId, orderStatusDTO);
+        assertNotNull(response.getBody());
+        assertEquals(OrderStatusEnum.PREPARING, response.getBody().getStatus());
+        assertEquals(200, response.getStatusCodeValue());
+    }
+
+    @Test
+    void updateOrderStatus_InvalidOrderId_ReturnsNotFound() throws ResourceNotFoundException {
+        Long orderId = 1L;
+        OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
+        orderStatusDTO.setStatus(OrderStatusEnum.PREPARING);
+        when(orderService.getOrder(orderId)).thenThrow(new ResourceNotFoundException("Order not found on :: " + orderId));
+        ResponseEntity<OrderDao> response = orderController.updateOrderStatus(orderId, orderStatusDTO);
+        assertEquals(404, response.getStatusCodeValue());
+    }
+
 }
