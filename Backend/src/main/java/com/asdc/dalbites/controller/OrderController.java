@@ -70,15 +70,7 @@ public class OrderController {
 
     @PutMapping("/{orderId}")
     public ResponseEntity<OrderDao> updateOrderStatus(@PathVariable Long orderId, @RequestBody OrderStatusDTO orderStatusDTO) {
-        try {
-            OrderStatusEnum status = orderStatusDTO.getStatus();
-            OrderDao order = orderService.getOrder(orderId);
-            order.setStatus(status);
-            orderRepository.save(order);
-            return ResponseEntity.ok(order);
-        } catch (ResourceNotFoundException exception) {
-            return ResponseEntity.notFound().build();
-        }
+        return orderService.updateOrderStatus(orderId, orderStatusDTO);
     }
 
 }
