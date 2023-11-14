@@ -1,7 +1,7 @@
 stages:          # List of stages for jobs, and their order of execution
   - test
   - build
-  - push_image
+  - publish_image # Add image to DockerHub
   
 variables:
   BACKEND_IMAGE:  maven:3.8.3-openjdk-17  # Base image for the backend   
@@ -30,7 +30,7 @@ build_backend:
 
 publish-backend:
   image: docker:latest
-  stage: push_iamge
+  stage: publish_image
   tags:
     - deployment
   variables:
