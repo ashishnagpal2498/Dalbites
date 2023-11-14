@@ -33,12 +33,12 @@ publish-backend:
   stage: publish_image
   variables:
     DOCKER_TLS_CERTDIR: ''
-    DOCKER_HOST: 'tcp://docker:2375' #localhost working
+    DOCKER_HOST: 'tcp://localhost:2375' # Changed from docker to localhost as unable to login
   services:
     - docker:dind
   before_script:
     - docker --version
-    - cat /etc/hosts
+    - cat /etc/hosts # Check available hosts
     - echo "$DOCKER_LOGIN_PASSWORD" | docker login -u "$DOCKER_LOGIN_USERNAME" --password-stdin docker.io
   script:
     - cd Backend
@@ -46,10 +46,14 @@ publish-backend:
     - echo "Inside Backend directory"
     - echo $SERVER_IP
 
-    #Docker running status
-    - cat /etc/docker/daemon.json
-    - docker info
-    
+    # ------- Checking Configuration of running DockerInDocker --------
+    # - cat /etc/docker/daemon.json
+    # - docker info
+
+
+    - ls # check all available files in directory
+
+    # Build Image
     - docker build -t asdc-dalbites-backend:$CI_COMMIT_SHORT_SHA .
     - docker push asdc-dalbites-backend:$CI_COMMIT_SHORT_SHA
   only:
