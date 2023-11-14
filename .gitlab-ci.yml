@@ -29,17 +29,17 @@ variables:
 #     - staging
 
 publish-backend:
-  image: docker:latest
+  image: docker:20.10.16
   stage: publish_image
   variables:
     DOCKER_TLS_CERTDIR: ''
-    DOCKER_HOST: 'tcp://localhost:2375' # Changed host as docker login wasn't working
+    #DOCKER_HOST: 'tcp://localhost:2375' # Changed host as docker login wasn't working
   services:
-    - docker:dind
+    - docker:20.10.16-dind
   before_script:
     - docker --version
-    - echo /etc/hosts
-    - echo "$DOCKER_LOGIN_PASSWORD" | docker login -u "$DOCKER_LOGIN_USERNAME" --password-stdin docker.io
+    - cat /etc/hosts
+    - echo "$DOCKER_LOGIN_PASSWORD" | docker login -u "$DOCKER_LOGIN_USERNAME" --password-stdin #docker.io
   script:
     - cd Backend
     - pwd
