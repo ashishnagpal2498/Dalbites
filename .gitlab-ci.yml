@@ -31,8 +31,6 @@ build_backend:
 publish-backend:
   image: docker:latest
   stage: publish_image
-  tags:
-    - deployment
   variables:
     DOCKER_TLS_CERTDIR: '/certs'
   services:
