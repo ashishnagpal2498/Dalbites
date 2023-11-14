@@ -1,6 +1,7 @@
 stages:          # List of stages for jobs, and their order of execution
   - test
   - build
+  - push_image
   
 variables:
   BACKEND_IMAGE:  maven:3.8.3-openjdk-17  # Base image for the backend   
@@ -14,6 +15,7 @@ test_backend:
     - mvn test
   only:
     - develop
+    - staging
 
 # build_backend
 build_backend:
@@ -24,3 +26,27 @@ build_backend:
     - mvn clean install
   only:
     - develop
+    - staging
+
+publish-backend:
+  image: docker:latest
+  stage: push_iamge
+  tags:
+    - deployment
+  variables:
+    DOCKER_TLS_CERTDIR: '/certs'
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD
+  script:
+    - cd Backend
+    - pwd
+    - echo "Inside Backend directory"
+    - echo $SERVER_IP
+    - docker --version
+    - docker build -t asdc-dalbites-backend:$CI_COMMIT_SHORT_SHA .
+    - docker push asdc-dalbites-backend:$CI_COMMIT_SHORT_SHA
+  only:
+    - develop
+    - staging
