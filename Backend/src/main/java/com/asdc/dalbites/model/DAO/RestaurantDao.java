@@ -128,7 +128,7 @@ public class RestaurantDao {
     
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<MenuItem> menuItems = new ArrayList<>();
+    private List<MenuItemDao> menuItems = new ArrayList<>();
 
     public RestaurantDao() {
     }
