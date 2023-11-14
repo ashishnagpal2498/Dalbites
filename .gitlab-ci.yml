@@ -33,10 +33,11 @@ publish-backend:
   stage: publish_image
   variables:
     DOCKER_TLS_CERTDIR: '/certs'
+    DOCKER_HOST: 'tcp://docker:2375'
   services:
     - docker:dind
   before_script:
-    - docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD
+    - echo "$DOCKER_LOGIN_PASSWORD" | docker login -u "$DOCKER_LOGIN_USERNAME" --password-stdin
   script:
     - cd Backend
     - pwd
