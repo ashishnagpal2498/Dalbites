@@ -31,11 +31,13 @@ variables:
 publish-backend:
   image: docker:latest
   stage: publish_image
-  variables:
-    DOCKER_TLS_CERTDIR: ''
-    DOCKER_HOST: 'tcp://localhost:2375' # Changed from docker to localhost as unable to login
   services:
     - docker:dind
+    
+  variables:
+    DOCKER_TLS_CERTDIR: ''
+    DOCKER_HOST: 'tcp://docker:2375' # Changed from docker to localhost as unable to login
+
   before_script:
     - docker --version
     - cat /etc/hosts # Check available hosts
