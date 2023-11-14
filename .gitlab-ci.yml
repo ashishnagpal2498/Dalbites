@@ -32,12 +32,10 @@ publish-backend:
   image: docker:latest
   stage: publish_image
   services:
-    - name: docker:dind
-      alias: thedockerhost
-
+    - docker:dind
   variables:
     DOCKER_TLS_CERTDIR: ''
-    DOCKER_HOST: 'tcp://thedockerhost:2375' # Changed from docker to localhost as unable to login
+    DOCKER_HOST: 'tcp://localhost:2375' # Changed from docker to localhost as unable to login
 
   before_script:
     - docker --version
