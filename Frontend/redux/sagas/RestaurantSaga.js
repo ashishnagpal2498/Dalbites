@@ -201,7 +201,7 @@ function* getRestaurantMenu({ payload }) {
     console.log("Headers - ", headers);
     const response = yield call(
       axios.get,
-      `${getRestaurantMenuAPI}/${payload.id}/get-menu`,
+      `${getRestaurantMenuAPI}/${payload.id}/menu`,
       {
         headers: { ...headers },
       }
@@ -247,7 +247,7 @@ function* addRestaurantMenuItem({ payload }) {
     formData.append("is_available", payload.is_available);
     formData.append("restaurant_id", payload.restaurant_id);
     formData.append("file", payload.fileObj);
-    console.log(formData);
+
     const response = yield call(
       axios.post,
       `${addRestaurantMenuItemAPI}/${payload.restaurant_id}/add-menu-item`,
@@ -260,7 +260,7 @@ function* addRestaurantMenuItem({ payload }) {
     if (response.status >= 200 && response.status <= 300) {
       yield put({
         type: GET_RESTAURANT_MENUS_SUCCESS,
-        payload: { restaurantMenus: response.data.data, restaurantLoading: false },
+        payload: { restaurantMenus: response.data, restaurantLoading: false },
       });
     }
   } catch (error) {
@@ -293,10 +293,9 @@ function* updateRestaurantMenuItem({ payload }) {
       ...API_HEADERS,
     };
     console.log("Headers - ", headers);
-    console.log(`${updateRestaurantMenuItemAPI}/${payload.restaurant_id}/update-menu-item`);
 
     const response = yield call(
-      axios.post,
+      axios.put,
       `${updateRestaurantMenuItemAPI}/${payload.restaurant_id}/update-menu-item`,
       {id: payload.id, name: payload.name, description: payload.description, price: payload.price, time: payload.time, is_available: payload.is_available}, 
       {
@@ -307,7 +306,7 @@ function* updateRestaurantMenuItem({ payload }) {
     if (response.status >= 200 && response.status <= 300) {
       yield put({
         type: GET_RESTAURANT_MENUS_SUCCESS,
-        payload: { restaurantMenus: response.data.data, restaurantLoading: false },
+        payload: { restaurantMenus: response.data, restaurantLoading: false },
       });
     }
   } catch (error) {
@@ -342,12 +341,10 @@ function* deleteRestaurantMenuItem({ payload }) {
     console.log("Headers - ", headers);
     
     let restaurantId = parseInt(payload.restaurantId);
-    console.log(`${deleteRestaurantMenuItemAPI}/${restaurantId}/delete-menu-item/${payload.menuId}`);
 
     const response = yield call(
-      axios.post, 
-      `${deleteRestaurantMenuItemAPI}/${restaurantId}/delete-menu-item/${payload.menuId}`,
-      {menuId: payload.menuId, restaurantId: payload.restaurantId}, 
+      axios.delete, 
+      `${deleteRestaurantMenuItemAPI}/${restaurantId}/delete-menu-item/${payload.menuId}`, 
       {
         headers: { ...headers },
       }
@@ -356,11 +353,10 @@ function* deleteRestaurantMenuItem({ payload }) {
     if (response.status >= 200 && response.status <= 300) {
       yield put({
         type: GET_RESTAURANT_MENUS_SUCCESS,
-        payload: { restaurantMenus: response.data.data, restaurantLoading: false },
+        payload: { restaurantMenus: response.data, restaurantLoading: false },
       });
     }
   } catch (error) {
-    console.log(error);
     return ({
       type: SET_RESTAURANT_MENUITEM,
       payload: { restaurantError: error.message },

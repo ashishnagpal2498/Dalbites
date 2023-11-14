@@ -32,7 +32,7 @@ const MenuItem = ({cardData, onUpdateCard, onDeleteCard}) => {
             uri,
             type: `image/${fileType}`,
         });
-        console.log(fileObj);
+        // console.log(fileObj);
         return formData;
     }
 
