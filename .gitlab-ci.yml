@@ -6,27 +6,27 @@ stages:          # List of stages for jobs, and their order of execution
 variables:
   BACKEND_IMAGE:  maven:3.8.3-openjdk-17  # Base image for the backend   
 
-# test_backend
-test_backend:
-  stage: test
-  image: $BACKEND_IMAGE
-  script:
-    - cd Backend
-    - mvn test
-  only:
-    - develop
-    - staging
+# # test_backend
+# test_backend:
+#   stage: test
+#   image: $BACKEND_IMAGE
+#   script:
+#     - cd Backend
+#     - mvn test
+#   only:
+#     - develop
+#     - staging
 
-# build_backend
-build_backend:
-  stage: build
-  image: $BACKEND_IMAGE
-  script:
-    - cd Backend
-    - mvn clean install
-  only:
-    - develop
-    - staging
+# # build_backend
+# build_backend:
+#   stage: build
+#   image: $BACKEND_IMAGE
+#   script:
+#     - cd Backend
+#     - mvn clean install
+#   only:
+#     - develop
+#     - staging
 
 publish-backend:
   image: docker:latest
