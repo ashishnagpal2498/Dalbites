@@ -25,4 +25,7 @@ public interface RestaurantRepository extends JpaRepository<RestaurantDao, Long>
 
     @Query(value = "select * from restaurant_owner where building_id in (:ids)", nativeQuery = true)
     public List<RestaurantDao> getAll(List<Long> ids);
+
+    @Query(value = "select * from restaurant_owner where restaurant_id = ?1", nativeQuery = true)
+    public RestaurantDao getRestaurant(Long id);
 }
