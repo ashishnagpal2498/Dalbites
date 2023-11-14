@@ -44,9 +44,13 @@ publish-backend:
     - cd Backend
     - pwd
     - echo "Inside Backend directory"
-    - echo $SERVER_IP
-    - docker info
+
+    # Checking Configuration of running DockerInDocker
+    - sudo systemctl status docker
     - cat /etc/docker/daemon.json
+    - sudo journalctl -u docker.service
+    - docker info
+
     - docker build -t asdc-dalbites-backend:$CI_COMMIT_SHORT_SHA .
     - docker push asdc-dalbites-backend:$CI_COMMIT_SHORT_SHA
   only:
