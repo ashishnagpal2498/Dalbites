@@ -33,7 +33,7 @@ publish-backend:
   stage: publish_image
   variables:
     DOCKER_TLS_CERTDIR: ''
-    DOCKER_HOST: 'tcp://localhost:2375'
+    DOCKER_HOST: 'tcp://localhost:2375' # Changed host as docker login wasn't working
   services:
     - docker:dind
   before_script:
@@ -43,12 +43,10 @@ publish-backend:
   script:
     - cd Backend
     - pwd
-    - echo "Inside Backend directory"
 
     # Checking Configuration of running DockerInDocker
-    - sudo systemctl status docker
+    - systemctl status docker
     - cat /etc/docker/daemon.json
-    - sudo journalctl -u docker.service
     - docker info
 
     - docker build -t asdc-dalbites-backend:$CI_COMMIT_SHORT_SHA .
