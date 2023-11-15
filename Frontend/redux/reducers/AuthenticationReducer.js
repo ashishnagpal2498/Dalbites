@@ -26,6 +26,7 @@ const initialState = {
   user: {},
   successMessage: "",
   redirect: "",
+  token: "",
 };
 
 export default (state = initialState, action) => {
@@ -41,6 +42,7 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         isAuth: true,
+        ...payload,
       };
     case SET_ERROR:
       return {

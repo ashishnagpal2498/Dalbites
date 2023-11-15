@@ -18,9 +18,10 @@ export const setLoading = (payload) => {
   };
 };
 
-export const setToken = () => {
+export const setToken = (token) => {
   return {
     type: SET_TOKEN,
+    payload: { token },
   };
 };
 

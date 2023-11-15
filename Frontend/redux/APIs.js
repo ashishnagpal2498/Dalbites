@@ -13,3 +13,11 @@ export const forgetPasswordVerification = `${API_URL}api/forget-password-verific
 export const SetupRestaurantAccountAPI = `${API_URL}api/restaurant/setup`;
 
 export const BuildingListAPI = `${API_URL}api/get-buildings`;
+
+export const viewAllRestaurantAPI = `${API_URL}api/restaurants`;
+
+export const getAllBuildingsAPI = `${API_URL}api/get-buildings`;
+
+export const getRestaurantByIdAPI = `${API_URL}api/restaurants`;
+
+export const viewRestaurantMenuAPI = `${API_URL}api/restaurants`;

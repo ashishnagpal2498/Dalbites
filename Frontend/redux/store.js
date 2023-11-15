@@ -4,13 +4,14 @@ import { all } from "redux-saga/effects";
 
 import rootReducer from "./rootReducer"; // Import your root reducer here
 import { authSaga } from "./sagas/AuthenticationSaga"; // Import your sagas
+import { restaurantSaga } from "./sagas/RestaurantSaga";
 
 const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
 
 function* rootSaga() {
-  yield all([authSaga()]);
+  yield all([authSaga(), restaurantSaga()]);
 }
 
 sagaMiddleware.run(rootSaga);

@@ -20,7 +20,6 @@ import {
   SETUP_RESTAURANT_ACCOUNT_SUCCESS,
   SETUP_RESTAURANT_ACCOUNT_FAILURE,
 } from "../Types/AuthenticationTypes";
-import { setLoading } from "../actions/Authentication";
 import {
   LoginAPI,
   SetupRestaurantAccountAPI,
@@ -59,7 +58,7 @@ function* loginSaga(action) {
       payload: { error: error.message, redirect: "Login" },
     });
   } finally {
-    yield put(setLoading(false));
+    yield put({ type: SET_LOADING, payload: { loading: false } });
   }
 }
 
