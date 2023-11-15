@@ -1,7 +1,8 @@
 package com.asdc.dalbites.service.impl;
 
+import com.asdc.dalbites.service.FirebaseFileService;
+import com.asdc.dalbites.util.UtilityFunctions;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
@@ -25,11 +26,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class FirebaseFileService {
+public class FirebaseFileServiceImpl implements FirebaseFileService {
     private Storage storage;
 
     @Autowired
     ResourceLoader resourceLoader;
+    
+    @Autowired
+    UtilityFunctions utilityFunctions;
 
     @EventListener
     public void init(ApplicationReadyEvent event) {
@@ -44,6 +48,7 @@ public class FirebaseFileService {
         }
     }
 
+    @Override
     public String uploadFile(MultipartFile file) throws IOException{
         String imageName = generateFileName(file.getOriginalFilename());
         Map<String, String> map = new HashMap<>();
@@ -54,7 +59,7 @@ public class FirebaseFileService {
                 .setContentType(file.getContentType())
                 .build();
         storage.create(blobInfo, file.getBytes());
-        return imageName;
+        return utilityFunctions.getFirebaseStorageURL(imageName);
     }
     
     private String generateFileName(String originalFileName) {
@@ -63,12 +68,5 @@ public class FirebaseFileService {
 
     private String getExtension(String originalFileName) {
         return StringUtils.getFilenameExtension(originalFileName);
-    }
-
-    public Object download(String fileName) {
-        BlobId blobId = BlobId.of("dalbites-4237e.appspot.com", "6efbd4f7-fa21-4f48-98b6-afa591a42619.png");
-        Blob blob = storage.get(blobId);
-        String fileContent = new String(blob.getContent());
-        return fileContent;
     }
 }

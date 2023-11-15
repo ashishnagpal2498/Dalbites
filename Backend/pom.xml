@@ -101,6 +101,11 @@
             <artifactId>google-api-client</artifactId>
             <version>1.30.4</version>
         </dependency>
+        <dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-core</artifactId>
+		    <scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
