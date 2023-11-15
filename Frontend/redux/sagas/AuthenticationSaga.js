@@ -16,10 +16,14 @@ import {
   FORGET_PASSWORD,
   FORGET_PASSWORD_SUCCESS,
   FORGET_PASSWORD_FAILURE,
+  SETUP_RESTAURANT_ACCOUNT,
+  SETUP_RESTAURANT_ACCOUNT_SUCCESS,
+  SETUP_RESTAURANT_ACCOUNT_FAILURE,
 } from "../Types/AuthenticationTypes";
 import { setLoading } from "../actions/Authentication";
 import {
   LoginAPI,
+  SetupRestaurantAccountAPI,
   SignUpAPI,
   forgetPasswordRequestAPI,
   forgetPasswordVerification,
@@ -41,7 +45,8 @@ function* loginSaga(action) {
     );
     if (response.status >= 200 && response.status <= 300) {
       yield call(SecureStore.setItemAsync, "token", response.data.token);
-      yield put({ type: LOGIN_SUCCESS });
+      const isRestaurant = response.data.role.toLowerCase() == "restaurant"
+      yield put({ type: LOGIN_SUCCESS, payload: { isRestaurant, redirect: isRestaurant ? "AddMenu" : "" } });
     } else {
       yield put({
         type: LOGIN_FAILURE,
@@ -89,6 +94,7 @@ function* signUpSaga(action) {
           tempToken: response.data.token,
           tempUser: {
             email: response.data.email,
+            role: response.data.role
           },
           redirect: "VerifyAccount",
         },
@@ -148,6 +154,7 @@ function* validateOTP(action) {
         payload: {
           successMessage: response.data.message,
           redirect: "VerifyAccount",
+          ...payload
         },
       });
     } else {
@@ -221,10 +228,54 @@ function* forgetPassword(action) {
   }
 }
 
+function* setupRestaurantAccountSaga(action) {
+  try {
+    yield put({ type: SET_LOADING, payload: { loading: true } });
+
+    let formdata = new FormData();
+
+    formdata.append("name", action.payload.restaurantName)
+    formdata.append("description", action.payload.restaurantDescription)
+    formdata.append("building", action.payload.buildingId)
+    formdata.append("delivery_time", action.payload.estimatedDeliveryTime)
+    formdata.append("file", { uri: action.payload.restaurantImage.uri, name: 'image.jpg', type: 'image/jpg'})
+
+    const response = yield call(axios.post, SetupRestaurantAccountAPI, formdata, {
+      headers: {
+        ...API_HEADERS,
+        Authorization: `Bearer ${action.payload.authToken}`,
+        "Content-Type": "multipart/form-data"
+      },
+    });
+    if (response.status >= 200 && response.status <= 300) {
+      yield put({ type: SETUP_RESTAURANT_ACCOUNT_SUCCESS, payload: { redirect: "AddMenu" } });
+    } else {
+      yield put({
+        type: SETUP_RESTAURANT_ACCOUNT_FAILURE,
+        payload: { error: error.message, redirect: "SetupRestaurantScreen" },
+      });
+    }
+  } catch (error) {
+    if (error.response.status == 409) {
+      yield put({
+        type: SETUP_RESTAURANT_ACCOUNT_FAILURE,
+        payload: { error: "Some error occured, try login", redirect: "SetupRestaurantScreen" },
+      });
+    } else
+      yield put({
+        type: SETUP_RESTAURANT_ACCOUNT_FAILURE,
+        payload: { error: error.message, redirect: "SetupRestaurantScreen" },
+      });
+  } finally {
+    yield put({ type: SET_LOADING, payload: { loading: false } });
+  }
+}
+
 export function* authSaga() {
   yield takeEvery(LOGIN, loginSaga);
   yield takeEvery(SIGNUP, signUpSaga);
   yield takeEvery(LOGOUT, logout);
   yield takeEvery(VALIDATE_OTP, validateOTP);
   yield takeEvery(FORGET_PASSWORD, forgetPassword);
+  yield takeEvery(SETUP_RESTAURANT_ACCOUNT, setupRestaurantAccountSaga);
 }

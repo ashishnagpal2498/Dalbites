@@ -8,6 +8,7 @@ import {
   VALIDATE_OTP,
   SET_SUCCESS_MESSAGE,
   FORGET_PASSWORD,
+  SETUP_RESTAURANT_ACCOUNT
 } from "../Types/AuthenticationTypes";
 
 export const setLoading = (payload) => {
@@ -56,5 +57,10 @@ export const setSuccessMessage = (payload) => ({
 
 export const forgetPassword = (payload) => ({
   type: FORGET_PASSWORD,
+  payload,
+});
+
+export const setupRestaurantAccount = (payload) => ({
+  type: SETUP_RESTAURANT_ACCOUNT,
   payload,
 });

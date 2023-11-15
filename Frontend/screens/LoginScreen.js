@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { login, setError } from "../redux/actions/Authentication";
-import { usernameRegex } from "../src/Utils/Regex";
+import { emailRegex, usernameRegex } from "../src/Utils/Regex";
 import tw from "twrnc";
 
 const LoginScreen = ({ navigation }) => {
@@ -15,13 +15,13 @@ const LoginScreen = ({ navigation }) => {
   const [userIdError, setUserIdError] = useState("");
 
   const validateCredentials = () => {
-    const invalidUserId = !usernameRegex.test(userId);
-    invalidUserId && setUserIdError("Invalid B00 Id");
-    return invalidUserId;
+    const validUserId = usernameRegex.test(userId) || emailRegex.test(userId);
+    !validUserId && setUserIdError("Invalid BannerId/Username");
+    return validUserId;
   };
 
   const handleLogin = async () => {
-    if (validateCredentials()) {
+    if (!validateCredentials()) {
       setTimeout(() => setUserIdError(""), 4000);
       return;
     }
@@ -40,7 +40,7 @@ const LoginScreen = ({ navigation }) => {
       <Text style={tw`text-red-600 mb-1`}> {userIdError}</Text>
       <TextInput
         style={tw`bg-gray-200 rounded-lg py-2 px-4 w-80 mb-4`}
-        placeholder="Banner Id"
+        placeholder="Banner Id / Username"
         value={userId}
         onChangeText={setUserId}
       />

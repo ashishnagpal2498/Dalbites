@@ -9,3 +9,7 @@ export const validateOTPAPI = `${API_URL}api/verify-account`;
 export const forgetPasswordRequestAPI = `${API_URL}api/forget-password-request`;
 
 export const forgetPasswordVerification = `${API_URL}api/forget-password-verification`;
+
+export const SetupRestaurantAccountAPI = `${API_URL}api/restaurant/setup`;
+
+export const BuildingListAPI = `${API_URL}api/get-buildings`;
