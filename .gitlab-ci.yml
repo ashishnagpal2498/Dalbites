@@ -36,7 +36,7 @@ publish-backend:
   variables:
     DOCKER_TLS_CERTDIR: '/certs' #certs
     DOCKER_HOST: 'tcp://docker:2375' # Changed from docker to localhost as unable to login
-    # DOCKER_DRIVER: overlay2
+    DOCKER_DRIVER: overlay2
   # before_script:
   #   - docker --version
   #   - cat /etc/hosts # Check available hosts
@@ -46,9 +46,9 @@ publish-backend:
     - pwd
     - echo $SERVER_IP
     - docker --version
-    - docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD docker.io
-    - docker build -t docker.io/$DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA .
-    - docker push docker.io/$DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA
+    - docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD
+    - docker build -t $DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA .
+    - docker push $DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA
   # script:
   #   - cd Backend
   #   - pwd
