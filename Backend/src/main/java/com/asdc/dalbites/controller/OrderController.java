@@ -11,6 +11,7 @@ import com.asdc.dalbites.repository.LoginRepository;
 import com.asdc.dalbites.repository.OrderRepository;
 import com.asdc.dalbites.repository.RestaurantRepository;
 import com.asdc.dalbites.repository.RestaurantsRepository;
+import com.asdc.dalbites.service.OrderService;
 import com.asdc.dalbites.service.impl.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,37 +24,19 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/order")
 public class OrderController {
-    @Autowired
-    private OrderServiceImpl orderService;
-    @Autowired
-    public OrderRepository orderRepository;
 
     @Autowired
-    public LoginRepository loginRepository;
+    private OrderService orderService;
 
-    @Autowired
-    public RestaurantRepository restaurantRepository;
-
-    @Value("${role.user}")
-    private int userRole;
-
-    @Value("${role.restaurant}")
-    private int restaurantRole;
-
-    @GetMapping()
-    public ResponseEntity<List<OrderDao>> getAllOrderOfCurrentUser(Principal principal){
-        String username = principal.getName();
-        LoginDao loginDao = loginRepository.findByUsername(username);
-        if (loginDao.getRoleDao().getId() == userRole) {
-            List<OrderDao> userOrders = orderService.getAllOrdersByUserId(loginDao.getId());
-            return ResponseEntity.ok(userOrders);
-        }
-        else {
-            RestaurantDao restaurantDao = restaurantRepository.findByLogin_Id(loginDao.getId());  ;
-            List<OrderDao> restaurantOrders = orderService.getAllOrdersByRestaurantId(restaurantDao.getId());
-            return ResponseEntity.ok(restaurantOrders);
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderDao>> getAllOrderOfCurrentUser(Principal principal) {
+        try {
+            List<OrderDao> orders = orderService.getAllOrders(principal);
+            return ResponseEntity.ok(orders);
+        } catch (ResourceNotFoundException exception) {
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -62,15 +45,18 @@ public class OrderController {
         try {
             OrderDao order = orderService.getOrder(orderId);
             return ResponseEntity.ok(order);
-        }catch (ResourceNotFoundException exception){
+        } catch (ResourceNotFoundException exception) {
             return ResponseEntity.notFound().build();
         }
     }
 
-
     @PutMapping("/{orderId}")
     public ResponseEntity<OrderDao> updateOrderStatus(@PathVariable Long orderId, @RequestBody OrderStatusDTO orderStatusDTO) {
-        return orderService.updateOrderStatus(orderId, orderStatusDTO);
+        try {
+            OrderDao updatedOrder = orderService.updateOrderStatus(orderId, orderStatusDTO);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (ResourceNotFoundException exception) {
+            return ResponseEntity.notFound().build();
+        }
     }
-
 }

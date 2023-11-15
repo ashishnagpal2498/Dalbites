@@ -20,7 +20,7 @@ public class OrderDao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
-    private Long id;
+    private Long orderId;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemDao> orderItems;
@@ -33,10 +33,7 @@ public class OrderDao {
     private OrderStatusEnum status;
 
     @Column(name = "special_instruction")
-    private String specialIntstruction;
-
-//    @Column(name = "status")
-//    private String status;
+    private String specialInstruction;
 
     @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

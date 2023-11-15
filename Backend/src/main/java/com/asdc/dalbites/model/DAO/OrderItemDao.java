@@ -13,18 +13,15 @@ import java.util.Date;
 @Getter
 @Setter
 @Data
-@Table(name = "orders_items")
+@Table(name = "order_item")
 public class OrderItemDao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_item_id")
-    private Long id;
+    private Long orderItemId;
 
     @Column(name = "quantity")
     private int quantity;
-
-//    @Column(name = "special_instruction")
-//    private String specialIntstruction;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
