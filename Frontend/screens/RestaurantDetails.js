@@ -103,11 +103,11 @@ const RestaurantDetails = ({ route }) => {
   }
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <View style={styles.extraheader}>
           <Text style={styles.restaurantName}>{restaurant.name}</Text>
         </View>
-      </View>
+      </View> */}
 
       <View style={styles.restaurantCard}>
         <View style={styles.restaurantImageContainer}>
@@ -235,13 +235,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     elevation: 5,
-    marginLeft: 10,
-    marginRight: 8,
+    marginLeft: 5,
+    marginRight: 5,
   },
   restaurantImageContainer: {
     width: "100%",
     height: 150,
-
+    marginTop: 5,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },

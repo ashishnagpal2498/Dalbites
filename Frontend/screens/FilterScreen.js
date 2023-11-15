@@ -27,7 +27,7 @@ const Filter = ({ navigation }) => {
   const handleFilter = () => {
     console.log("SelectedBuilding --- > ", selectedBuildings);
     dispatch(setSelectedBuildingRedux(selectedBuildings));
-    navigation.navigate("ViewRestaurants");
+    navigation.navigate("Restaurants");
   };
 
   useEffect(() => {

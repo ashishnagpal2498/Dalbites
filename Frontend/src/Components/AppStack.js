@@ -33,7 +33,7 @@ const AppStack = () => {
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [loading]);
   const screenOptions = {
     headerTitle: "",
   };
