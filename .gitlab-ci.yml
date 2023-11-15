@@ -35,7 +35,7 @@ publish-backend:
     - docker:dind
   variables:
     DOCKER_TLS_CERTDIR: '/certs' #certs
-    DOCKER_HOST: 'tcp://docker:2375' # Changed from docker to localhost as unable to login
+    DOCKER_HOST: 'tcp://localhost:2375' # Changed from docker to localhost as unable to login
     DOCKER_DRIVER: overlay2
   # before_script:
   #   - docker --version
