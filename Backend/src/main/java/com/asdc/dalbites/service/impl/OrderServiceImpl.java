@@ -1,10 +1,12 @@
 package com.asdc.dalbites.service.impl;
 
 import com.asdc.dalbites.exception.ResourceNotFoundException;
+import com.asdc.dalbites.mappers.OrderMapper;
+import com.asdc.dalbites.mappers.OrderItemMapper;
 import com.asdc.dalbites.model.DAO.LoginDao;
 import com.asdc.dalbites.model.DAO.OrderDao;
 import com.asdc.dalbites.model.DAO.RestaurantDao;
-import com.asdc.dalbites.model.DAO.UserDao;
+import com.asdc.dalbites.model.DTO.OrderDTO;
 import com.asdc.dalbites.model.DTO.OrderStatusDTO;
 import com.asdc.dalbites.model.ENUMS.OrderStatusEnum;
 import com.asdc.dalbites.repository.LoginRepository;
@@ -14,12 +16,11 @@ import com.asdc.dalbites.service.EmailService;
 import com.asdc.dalbites.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -36,13 +37,17 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private RestaurantRepository restaurantRepository;
 
+    @Autowired
+    private OrderMapper orderMapper;
+
     @Value("${role.user}")
     private int userRole;
 
     @Value("${role.restaurant}")
     private int restaurantRole;
 
-    public List<OrderDao> getAllOrders(Principal principal) throws ResourceNotFoundException {
+    @Override
+    public List<OrderDTO> getAllOrders(Principal principal) throws ResourceNotFoundException {
         String username = principal.getName();
         LoginDao loginDao = loginRepository.findByUsername(username);
 
@@ -54,28 +59,40 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    public List<OrderDao> getAllOrdersByUserId(Long userId) {
-        return orderRepository.findAllByUser_UserId(userId);
+    @Override
+    public List<OrderDTO> getAllOrdersByUserId(Long userId) {
+        return orderRepository.findAllByUser_UserId(userId)
+                .stream()
+                .map(OrderMapper::toOrderDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<OrderDao> getAllOrdersByRestaurantId(Long restaurantId) {
-        return orderRepository.findAllByRestaurant_Id(restaurantId);
+    @Override
+    public List<OrderDTO> getAllOrdersByRestaurantId(Long restaurantId) {
+        return orderRepository.findAllByRestaurant_Id(restaurantId)
+                .stream()
+                .map(OrderMapper::toOrderDTO)
+                .collect(Collectors.toList());
     }
 
-    public OrderDao getOrder(Long orderId) throws ResourceNotFoundException {
-        return orderRepository.findById(orderId)
+    @Override
+    public OrderDTO getOrder(Long orderId) throws ResourceNotFoundException {
+        OrderDao order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found on :: " + orderId));
+        return OrderMapper.toOrderDTO(order);
     }
 
-    public OrderDao updateOrderStatus(Long orderId, OrderStatusDTO orderStatusDTO) throws ResourceNotFoundException {
-        OrderDao order = getOrder(orderId);
+    @Override
+    public OrderDTO updateOrderStatus(Long orderId, OrderStatusDTO orderStatusDTO) throws ResourceNotFoundException {
+        OrderDTO order = getOrder(orderId);
         OrderStatusEnum status = orderStatusDTO.getStatus();
         OrderStatusEnum oldStatus = order.getStatus();
         order.setStatus(status);
-        orderRepository.save(order);
+
+        orderRepository.save(orderMapper.toOrderDao(order));
 
         if (status == OrderStatusEnum.READY_TO_PICKUP && oldStatus != OrderStatusEnum.READY_TO_PICKUP) {
-            sendReadyToPickupEmail(order.getUser().getEmail());
+            sendReadyToPickupEmail(orderMapper.toOrderDao(order).getUser().getEmail());
         }
         return order;
     }
