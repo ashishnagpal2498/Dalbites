@@ -36,5 +36,5 @@ public class OrderItemDao {
     @ManyToOne
     @JoinColumn(name = "id")
     @JsonIgnore
-    private  MenuItem item;
+    private  MenuItemDao item;
 }

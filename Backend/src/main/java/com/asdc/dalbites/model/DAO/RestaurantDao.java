@@ -123,12 +123,12 @@ public class RestaurantDao {
 	@JoinColumn(name = "building_id", referencedColumnName = "id")
 	private BuildingDao buildingDao;
 
-	@Column(name="restaurant_image", nullable = true)
-	private String restaurantImage;
-
-	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore
-	private List<MenuItem> menuItems = new ArrayList<>();
+    @Column(name="restaurant_image", nullable = true)
+    private String restaurantImage;
+    
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<MenuItemDao> menuItems = new ArrayList<>();
 
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore

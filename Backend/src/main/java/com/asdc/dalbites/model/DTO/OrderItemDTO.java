@@ -1,6 +1,6 @@
 package com.asdc.dalbites.model.DTO;
 
-import com.asdc.dalbites.model.DAO.MenuItem;
+import com.asdc.dalbites.model.DAO.MenuItemDao;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,5 +11,5 @@ public class OrderItemDTO {
     private int quantity;
     private Date createdAt;
     private Long orderId;
-    private MenuItem item;
+    private MenuItemDao item;
 }
