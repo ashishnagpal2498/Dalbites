@@ -28,7 +28,7 @@ const AppStack = () => {
     const isRestaurant = await SecureStore.getItemAsync("isRestaurant");
 
     if (userToken) {
-      dispatch(setToken({ userToken, isRestaurant }));
+      dispatch(setToken({ token: userToken, isRestaurant }));
     } else {
       console.log(" AppStack Component -->Token Not Found");
       dispatch(setLoading({ loading: false }));
