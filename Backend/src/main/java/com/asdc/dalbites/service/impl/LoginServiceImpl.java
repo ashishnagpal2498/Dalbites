@@ -140,11 +140,13 @@ public class LoginServiceImpl implements LoginService {
                 UserDao userDetails = (UserDao) getUserByUsername(userLoginDTO.getUsername());
                 claims.put("name", userDetails.getName());
                 claims.put("email", userDetails.getEmail());
+                claims.put("user_id", userDetails.getUser_id());
             }
             else if (loginDao.getRoleDao().getId() == restaurantRole) {
                 RestaurantDao restaurantDao = (RestaurantDao) getUserByUsername(userLoginDTO.getUsername());
                 claims.put("name", restaurantDao.getName());
                 claims.put("address", restaurantDao.getAddress());
+                claims.put("restaurant_id", restaurantDao.getId());
             }
             String jwtToken = jwtUtil.generateToken(claims);
             claims.put("token", jwtToken);
