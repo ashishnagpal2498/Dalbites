@@ -3,79 +3,93 @@ import { View, Text,TouchableOpacity, StyleSheet,TextInput } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import moment from 'moment';
 
+
 const Review = ({ route }) => {
     const { orderId } = route.params;
-  
 
-    const handleSaveDescriptionButton = ()=>{
-
-    };
-    const handleChangeReviewState = ()=>{
-
-    };
 
     var date = moment()
       .utcOffset('-04:00')
       .format('DD-MM-YYYY hh:mm a');
 
 
-    // const orderHistory =
-    //     {
-    //       orderId: '00001',
-    //       name: '09-11-2023',
-    //     };
+    const starRatings=[1, 2, 3, 4, 5]
 
-    // const [ratings, setRatings] = useState(Array(orderHistory.length).fill(0));
 
-    // const rateOrder = (orderIndex, rating) => {
-    //   const newRatings = [...ratings];
-    //   newRatings[orderIndex] = rating;
-    //   setRatings(newRatings);
-    // };
+    const [rating, setRating] = useState(null)
+
+
+    const handleStarPress = (index) =>{
+        setRating(index)
+        console.log(index)
+    }
+
+
+    const [textDescription, setTextDescription] = useState("")
+
+
+    const handleReviewChange = (text) =>{
+        setTextDescription(text)
+        console.log(text)
+    }
+
+
+    const handleSaveDescriptionButton = (rating, textDescription) =>{
+        console.log(rating)
+        console.log(textDescription)
+    }
+
 
     return(
         <ScrollView style={styles.reviewScreenContainer}>
+
 
             <View style={styles.reviewInfoContainer}>
                 <Text style={styles.infoText}>{orderId}</Text>
                 <Text style={styles.infoText}>{date}</Text>
             </View>
 
+
             <View style={styles.reviewContainer}>
+
 
                 <View style={styles.ratingBox}>
 
-                    {[1, 2, 3, 4, 5].map((star, i) => (
-                        <TouchableOpacity key={i} onPress={() => rateOrder(index, star)}>
-                            <Text style={[styles.stars
-                            // { color: ratings[index] >= star ? '#EAB308' : 'gray' }
-                            ]}> ★ </Text>
+
+                    {starRatings.map((index)=>(
+                        <TouchableOpacity onPress={() => handleStarPress(index)}>
+                            <Text style={[styles.stars, {color : rating+1<= index  ? 'grey':'#EAB308'} ]}> ★ </Text>
                         </TouchableOpacity>
                     ))}
 
+
                 </View>
+
 
                 <View style={styles.descriptionBox}>
                     <TextInput
-                        style={styles.descriptiontext}
+                        style={styles.descriptionText}
                         multiline={true}
                         numberOfLines={4}
-                        placeholder="Add a Review"
-                        onChangeText={(text) => handleChangeReviewState("Add a Review", text)}
+                        placeholder="Add a review"
+                        onChangeText={(text) => handleReviewChange(text)}
                     />
                 </View>
-
+               
                 <View style={styles.saveButtonContainer}>
-                    <TouchableOpacity style={styles.saveButton} onPress={handleSaveDescriptionButton}>
+                    <TouchableOpacity style={rating == null? styles.disabledButton : styles.saveButton} onPress={() => handleSaveDescriptionButton(rating, textDescription)} disabled={rating===null}>
                         <Text style={styles.buttonText}>Save Review</Text>
-                    </TouchableOpacity>                
+                    </TouchableOpacity>              
                 </View>
 
+
             </View>
+
 
         </ScrollView>
     );
 };
+
 
 const styles = StyleSheet.create({
     reviewScreenContainer:{
@@ -110,6 +124,7 @@ const styles = StyleSheet.create({
     },
     stars:{
         fontSize:25,
+        paddingBottom:6,
     },
     saveButtonContainer:{
         marginTop:7,
@@ -123,6 +138,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         borderRadius: 10,
     },
+    disabledButton:{
+        backgroundColor: "grey",
+        paddingVertical: 7,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+    },
     buttonText:{
         fontSize: 20,
         fontWeight: "bold",
@@ -132,14 +153,17 @@ const styles = StyleSheet.create({
         width:"100%",
         borderWidth:1,
         alignSelf:"center",
-        flexDirection:"column",       
+        flexDirection:"column",      
     },
-    descriptiontext:{
+    descriptionText:{
         padding:3,
         fontSize: 14,
         textAlignVertical:"top",
     },
 
+
 });
 
+
 export default Review;
+
