@@ -13,6 +13,8 @@ import {
   SET_SUCCESS_MESSAGE,
   FORGET_PASSWORD_SUCCESS,
   FORGET_PASSWORD_FAILURE,
+  SETUP_RESTAURANT_ACCOUNT_SUCCESS,
+  SETUP_RESTAURANT_ACCOUNT_FAILURE
 } from "../Types/AuthenticationTypes";
 
 const initialState = {
@@ -25,6 +27,7 @@ const initialState = {
   successMessage: "",
   redirect: "",
   token: "",
+  restaurantId: ""
 };
 
 export default (state = initialState, action) => {
@@ -65,6 +68,7 @@ export default (state = initialState, action) => {
         isAuth: true,
         error: null,
         redirect: "",
+        ...payload
       };
     case LOGIN_FAILURE:
       return {
@@ -77,6 +81,9 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         isAuth: false,
+        isRestaurant: false,
+        restaurantId: "",
+        redirect: ""
       };
     case LOGOUT_FAILURE:
       return {
@@ -113,6 +120,22 @@ export default (state = initialState, action) => {
         ...payload,
       };
     case FORGET_PASSWORD_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        isAuth: false,
+        ...payload,
+      };
+    case SETUP_RESTAURANT_ACCOUNT_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        isAuth: true,
+        isRestaurant: true,
+        loading: false,
+        ...payload,
+      };
+    case SETUP_RESTAURANT_ACCOUNT_FAILURE:
       return {
         ...state,
         loading: false,

@@ -14,9 +14,9 @@ import Loading from "./Loading";
 import Modal from "react-native-modal";
 
 const AddMenu = ({ route }) => {
-    const { id } = route.params;
+    // const { id } = route.params;
     let token = useSelector((store) => store.authentication.token);
-    token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiVXNlciIsInJvbGVfaWQiOjEsIm5hbWUiOiJSdXNoaSIsImV4cCI6MTcwMTkyMTYwMCwiaWF0IjoxNjk5MzkxMTAyLCJlbWFpbCI6InJ1c2hpcm9ubWVzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiQjAwMDA3MDA3In0.vzmKvIwrIapAMt5nIJdwh9hUQfFsr3kuNq1MKJqkH9c";
+    const id = useSelector((store) => store.authentication.restaurantId);
     const restaurant = useSelector((store) => store.restaurant.restaurant);
     const restaurantMenus = useSelector(
         (store) => store.restaurant.restaurantMenus
@@ -49,7 +49,7 @@ const AddMenu = ({ route }) => {
     }, []);
 
     const updateMenuItem = ({ id, name, description, prepTime, cost, isAvailable, isNew, fileObj }) => {
-        const restaurant_id = route.params.id;
+        const restaurant_id = id;
         if(isNew == true){
             dispatch(addRestaurantMenuItem({ token, name, description, time: prepTime, price: cost, is_available: isAvailable, restaurant_id, fileObj}));
             toggleModal();
@@ -64,7 +64,7 @@ const AddMenu = ({ route }) => {
     };
 
     const deleteMenuItem = ({menuId, isNew}) => {
-        const restaurantId = route.params.id;
+        const restaurantId = id;
         console.log(isNew);
         if(isNew == undefined){
             dispatch(deleteRestaurantMenuItem({token, menuId, restaurantId}));
