@@ -23,7 +23,8 @@ export const setToken = (payload) => {
     type: SET_TOKEN,
     payload: { 
       token: payload.token,
-      isRestaurant: payload?.isRestaurant || false
+      isRestaurant: payload?.isRestaurant || false,
+      restaurantId: payload.restaurantId
     },
   };
 };
