@@ -24,7 +24,7 @@ const UserMenuItem = ({cardData}) => {
     return(
         <View style={styles.itemCard}>
             <View style={styles.itemImageConatainer}>
-                <Image style={styles.itemImage} source={require("../../assets/images/Placeholder_Food_Item.png")}/>
+                {cardData.menu_image ? <Image style={styles.itemImage} source={{uri: cardData.menu_image}}/> : <Image style={styles.itemImage} source={require("../../assets/images/Placeholder_Food_Item.png")}/>}
                 <View style={styles.itemTextContainer}>
                     <Text style={styles.itemName}>{cardData.name}</Text>
                     <View style={styles.itemRowContainer}>
