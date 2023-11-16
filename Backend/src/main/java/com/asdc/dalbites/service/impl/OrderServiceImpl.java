@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDTO> getAllOrdersByUserId(Long userId) {
         return orderRepository.findAllByUser_UserId(userId)
                 .stream()
-                .map(OrderMapper::toOrderDTO)
+                .map(orderMapper::toOrderDTO)
                 .collect(Collectors.toList());
     }
 
@@ -71,7 +71,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDTO> getAllOrdersByRestaurantId(Long restaurantId) {
         return orderRepository.findAllByRestaurant_Id(restaurantId)
                 .stream()
-                .map(OrderMapper::toOrderDTO)
+                .map(orderMapper::toOrderDTO)
                 .collect(Collectors.toList());
     }
 
@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO getOrder(Long orderId) throws ResourceNotFoundException {
         OrderDao order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found on :: " + orderId));
-        return OrderMapper.toOrderDTO(order);
+        return orderMapper.toOrderDTO(order);
     }
 
     @Override

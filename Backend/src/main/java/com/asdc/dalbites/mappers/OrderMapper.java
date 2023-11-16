@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Component
 public class OrderMapper {
 
-    public static OrderDTO toOrderDTO(OrderDao orderDao) {
+    public OrderDTO toOrderDTO(OrderDao orderDao) {
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setOrderId(orderDao.getOrderId());
         orderDTO.setOrderItems(orderDao.getOrderItems().stream()
@@ -26,7 +26,7 @@ public class OrderMapper {
         return orderDTO;
     }
 
-    public static OrderDao toOrderDao(OrderDTO orderDTO){
+    public OrderDao toOrderDao(OrderDTO orderDTO){
         OrderDao orderDao = new OrderDao();
         orderDao.setOrderId(orderDTO.getOrderId());
         orderDao.setOrderItems(orderDTO.getOrderItems().stream()

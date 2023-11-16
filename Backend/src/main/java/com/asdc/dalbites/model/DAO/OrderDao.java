@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,4 +50,8 @@ public class OrderDao {
     @JoinColumn(name = "restaurant_id")
     @JsonIgnore
     private RestaurantDao restaurant;
+    public OrderDao() {
+        this.orderItems = new ArrayList<>();
+    }
+
 }
