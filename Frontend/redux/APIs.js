@@ -17,3 +17,5 @@ export const getAllBuildingsAPI = `${API_URL}api/get-buildings`;
 export const getRestaurantByIdAPI = `${API_URL}api/restaurants`;
 
 export const viewRestaurantMenuAPI = `${API_URL}api/restaurants`;
+
+export const postReviewAPI = `${API_URL}api/review`;
