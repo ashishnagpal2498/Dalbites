@@ -54,15 +54,26 @@ const VerifyAccount = () => {
     console.log("TempUser after SuccessMessage   -> ", tempUser);
     successMessage &&
       setTimeout(() => {
-        dispatch(
-          setSuccessMessage({
-            successMessage: null,
-            ...(tempUser.forgetPassword
-              ? { redirect: "Login", loading: true }
-              : { isAuth: true, redirect: "" }),
-          })
-        );
-        dispatch(setLoading({ loading: false }));
+        if (tempUser.role == "user") {
+          dispatch(
+            setSuccessMessage({
+              successMessage: null,
+              ...(tempUser.forgetPassword
+                ? { redirect: "Login", loading: true }
+                : { isAuth: true, redirect: "" }),
+            })
+          );
+          dispatch(setLoading({ loading: false }));
+        }
+        else {
+          dispatch(
+            setSuccessMessage({
+              successMessage: null,
+              ...{ redirect: "SetupRestaurantScreen", loading: true },
+            })
+          );
+          dispatch(setLoading({ loading: false }));
+        }
       }, 3000);
   }, [successMessage]);
 
@@ -95,8 +106,6 @@ const VerifyAccount = () => {
       return;
     }
     const enteredOTP = otp.join("");
-    console.log("entered OTP", enteredOTP);
-    console.log("TempUser", tempUser);
     const payload = {
       otp: enteredOTP,
       tempToken,

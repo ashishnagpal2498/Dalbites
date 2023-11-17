@@ -10,6 +10,10 @@ export const forgetPasswordRequestAPI = `${API_URL}api/forget-password-request`;
 
 export const forgetPasswordVerification = `${API_URL}api/forget-password-verification`;
 
+export const SetupRestaurantAccountAPI = `${API_URL}api/restaurant/setup`;
+
+export const BuildingListAPI = `${API_URL}api/get-buildings`;
+
 export const viewAllRestaurantAPI = `${API_URL}api/restaurants`;
 
 export const getAllBuildingsAPI = `${API_URL}api/get-buildings`;
@@ -27,3 +31,11 @@ export const getUserOrderAPI = `${API_URL}api/order/all`;
 export const getReviewAPI = `${API_URL}api/review`;
 
 export const updateReviewAPI = `${API_URL}api/review`;
+
+export const getRestaurantMenuAPI = `${API_URL}api/restaurants`;
+
+export const addRestaurantMenuItemAPI = `${API_URL}api/restaurants`;
+
+export const updateRestaurantMenuItemAPI = `${API_URL}api/restaurants`;
+
+export const deleteRestaurantMenuItemAPI = `${API_URL}api/restaurants`;

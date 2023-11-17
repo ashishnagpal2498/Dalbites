@@ -8,6 +8,7 @@ import {
   VALIDATE_OTP,
   SET_SUCCESS_MESSAGE,
   FORGET_PASSWORD,
+  SETUP_RESTAURANT_ACCOUNT
 } from "../Types/AuthenticationTypes";
 
 export const setLoading = (payload) => {
@@ -17,10 +18,14 @@ export const setLoading = (payload) => {
   };
 };
 
-export const setToken = (token) => {
+export const setToken = (payload) => {
   return {
     type: SET_TOKEN,
-    payload: { token },
+    payload: { 
+      token: payload.token,
+      isRestaurant: payload?.isRestaurant || false,
+      restaurantId: payload.restaurantId
+    },
   };
 };
 
@@ -57,5 +62,10 @@ export const setSuccessMessage = (payload) => ({
 
 export const forgetPassword = (payload) => ({
   type: FORGET_PASSWORD,
+  payload,
+});
+
+export const setupRestaurantAccount = (payload) => ({
+  type: SETUP_RESTAURANT_ACCOUNT,
   payload,
 });
