@@ -5,6 +5,7 @@ import {
   GET_RESTAURANT_MENU,
   SET_RESTAURANT_LOADING,
   SET_SELECTED_BUILDINGS,
+  GET_RESTAURANT_REVIEW,
   GET_RESTAURANT_MENUS,
   SET_RESTAURANT_MENUITEM,
   UPDATE_RESTAURANT_MENUITEM,
@@ -41,10 +42,14 @@ export const getRestaurantMenu = (payload) => ({
   payload,
 });
 
+export const getAllRestaurantReviews = (payload) => ({
+  type: GET_RESTAURANT_REVIEW,
+  payload,
+});
 export const getRestaurantMenus = (payload) => ({
   type: GET_RESTAURANT_MENUS,
   payload,
-})
+});
 
 export const addRestaurantMenuItem = (payload) => ({
   type: SET_RESTAURANT_MENUITEM,
@@ -59,4 +64,4 @@ export const updateRestaurantMenuItem = (payload) => ({
 export const deleteRestaurantMenuItem = (payload) => ({
   type: DELETE_RESTAURANT_MENUITEM,
   payload,
-})
+});

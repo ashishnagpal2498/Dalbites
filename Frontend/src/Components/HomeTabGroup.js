@@ -21,7 +21,7 @@ const HomeTabGroup = () => (
         } else if (route.name === "Food") {
           iconType = "Mci";
           iconName = "food";
-        } else if (route.name === "Restaurants") {
+        } else if (route.name === "RestaurantsStack") {
           iconType = "Ini";
           iconName = "restaurant";
         } else if (route.name === "Notifications") {
@@ -46,7 +46,11 @@ const HomeTabGroup = () => (
   >
     <Tab.Screen name="Home" component={Home} />
     <Tab.Screen name="Food" component={Food} />
-    <Tab.Screen name="Restaurants" component={RestaurantStack} />
+    <Tab.Screen
+      name="RestaurantsStack"
+      options={{ title: "Restaurants" }}
+      component={RestaurantStack}
+    />
     <Tab.Screen name="Notifications" component={Notifications} />
   </Tab.Navigator>
 );

@@ -22,6 +22,16 @@ export const getRestaurantByIdAPI = `${API_URL}api/restaurants`;
 
 export const viewRestaurantMenuAPI = `${API_URL}api/restaurants`;
 
+export const postReviewAPI = `${API_URL}api/review`;
+
+export const getRestaurantReviewAPI = `${API_URL}api/review`;
+
+export const getUserOrderAPI = `${API_URL}api/order/all`;
+
+export const getReviewAPI = `${API_URL}api/review`;
+
+export const updateReviewAPI = `${API_URL}api/review`;
+
 export const getRestaurantMenuAPI = `${API_URL}api/restaurants`;
 
 export const addRestaurantMenuItemAPI = `${API_URL}api/restaurants`;
