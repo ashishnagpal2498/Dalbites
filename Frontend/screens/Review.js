@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,15 +9,40 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { postReview } from "../redux/actions/UserAction";
+import {
+  getReview,
+  postReview,
+  setSuccessMessage,
+} from "../redux/actions/UserAction";
+import Loading from "./Loading";
+import { getRestaurantById } from "../redux/actions/RestaurantAction";
+import tw from "twrnc";
 
-const Review = ({ route }) => {
-  const { orderId } = route.params;
+const Review = ({ route, navigation }) => {
+  const { restaurantId } = route.params;
   const dispatch = useDispatch();
   const review = useSelector((store) => store.user.review);
   const token = useSelector((store) => store.authentication.token);
-  const loading = useSelector((store) => store.user.profileLoading);
+  const profileLoading = useSelector((store) => store.user.profileLoading);
+  const restaurant = useSelector((store) => store.restaurant.restaurant);
+  const restaurantLoading = useSelector(
+    (store) => store.restaurant.restaurantLoading
+  );
+  const [reviewComment, setReviewComment] = useState("");
+  const successMessage = useSelector((store) => store.user.successMessage);
+  const handleReviewChange = (text) => {
+    setReviewComment(text);
+  };
 
+  const handleSaveReview = (rating, reviewComment) => {
+    dispatch(
+      postReview({ token, restaurantId, rating, reviewComment, review })
+    );
+    setTimeout(
+      () => dispatch(setSuccessMessage({ successMessage: null })),
+      4000
+    );
+  };
   var date = moment().utcOffset("-04:00").format("DD-MM-YYYY hh:mm a");
 
   const starRatings = [1, 2, 3, 4, 5];
@@ -28,20 +53,29 @@ const Review = ({ route }) => {
     setRating(index);
   };
 
-  const [textDescription, setTextDescription] = useState("");
+  useEffect(() => {
+    dispatch(getRestaurantById({ id: restaurantId, token }));
+    dispatch(getReview({ id: restaurantId, token }));
+  }, []);
 
-  const handleReviewChange = (text) => {
-    setTextDescription(text);
-  };
+  useEffect(() => {
+    if (review) {
+      setReviewComment(review.reviewComment);
+      setRating(review.rating);
+    }
+  }, [review]);
 
-  const handleSaveReview = (rating, reviewComment) => {
-    dispatch(postReview({ token, rating, reviewComment }));
-  };
+  if (restaurantLoading || profileLoading) {
+    return <Loading />;
+  }
 
+  // if (review) {
+  //   setTimeout(() => navigation.navigate("Profile"), 3000);
+  // }
   return (
     <ScrollView style={styles.reviewScreenContainer}>
       <View style={styles.reviewInfoContainer}>
-        <Text style={styles.infoText}>{orderId}</Text>
+        <Text style={styles.infoText}>{restaurant.name}</Text>
         <Text style={styles.infoText}>{date}</Text>
       </View>
 
@@ -71,6 +105,7 @@ const Review = ({ route }) => {
             multiline={true}
             numberOfLines={4}
             placeholder="Add a review"
+            value={reviewComment}
             onChangeText={(text) => handleReviewChange(text)}
           />
         </View>
@@ -78,12 +113,15 @@ const Review = ({ route }) => {
         <View style={styles.saveButtonContainer}>
           <TouchableOpacity
             style={rating == null ? styles.disabledButton : styles.saveButton}
-            onPress={() => handleSaveReview(rating, textDescription)}
+            onPress={() => handleSaveReview(rating, reviewComment)}
             disabled={rating === null}
           >
             <Text style={styles.buttonText}>Save Review</Text>
           </TouchableOpacity>
         </View>
+        <Text style={tw`text-green-600`}>
+          {successMessage && successMessage}
+        </Text>
       </View>
     </ScrollView>
   );

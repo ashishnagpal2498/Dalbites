@@ -6,13 +6,14 @@ import rootReducer from "./rootReducer"; // Import your root reducer here
 import { authSaga } from "./sagas/AuthenticationSaga"; // Import your sagas
 import { restaurantSaga } from "./sagas/RestaurantSaga";
 import { userSaga } from "./sagas/UserSaga";
+import { orderSaga } from "./sagas/OrderSaga";
 
 const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
 
 function* rootSaga() {
-  yield all([authSaga(), restaurantSaga(), userSaga()]);
+  yield all([authSaga(), restaurantSaga(), userSaga(), orderSaga()]);
 }
 
 sagaMiddleware.run(rootSaga);
