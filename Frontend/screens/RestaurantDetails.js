@@ -179,19 +179,26 @@ const RestaurantDetails = ({ route }) => {
               </Text>
             </View>
           ))}
-        {activeTab === "reviews" && (
-          <FlatList
-            data={reviewData}
-            keyExtractor={(item) => item.reviewId.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.reviewCard}>
-                <Text style={styles.reviewName}>{item.name}</Text>
-                <Text style={styles.reviewRating}>Rating: {item.rating}</Text>
-                <Text style={styles.reviewText}>{item.reviewComment}</Text>
-              </View>
-            )}
-          />
-        )}
+        {activeTab === "reviews" &&
+          (restaurantReviews.length > 0 ? (
+            <FlatList
+              data={restaurantReviews}
+              keyExtractor={(item) => item.reviewId.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.reviewCard}>
+                  <Text style={styles.reviewName}>{item.name}</Text>
+                  <Text style={styles.reviewRating}>Rating: {item.rating}</Text>
+                  <Text style={styles.reviewText}>{item.reviewComment}</Text>
+                </View>
+              )}
+            />
+          ) : (
+            <View>
+              <Text style={tw`text-green-500 font-bold `}>
+                No restaurant reviews
+              </Text>
+            </View>
+          ))}
       </View>
     </View>
   );
@@ -358,7 +365,8 @@ const styles = StyleSheet.create({
   },
 
   reviewCard: {
-    height: "auto",
+    height: 100,
+    width: 150,
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     elevation: 5,
