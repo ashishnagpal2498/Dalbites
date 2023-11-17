@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.asdc.dalbites.exception.ResourceNotFoundException;
 import com.asdc.dalbites.model.DAO.RestaurantDao;
-import com.asdc.dalbites.model.DTO.SetupRestaurantAccountDTO;
+import com.asdc.dalbites.model.DTO.RestaurantDTO;
 import com.asdc.dalbites.repository.RestaurantRepository;
 import com.asdc.dalbites.service.RestaurantService;
 
@@ -20,7 +20,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private RestaurantRepository restaurantRepository;
 
     @Autowired
-    private FirebaseFileService firebaseFileService;
+    private FirebaseFileServiceImpl firebaseFileService;
 
     @Override
     public List<RestaurantDao> getAllRestaurants(List<Long> buildings) {
@@ -30,7 +30,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public RestaurantDao setupRestaurantAccount(MultipartFile file, SetupRestaurantAccountDTO setupRestaurantAccountDTO) throws Exception {
+    public RestaurantDao setupRestaurantAccount(MultipartFile file, RestaurantDTO setupRestaurantAccountDTO) throws Exception {
         try {
             String fileName = firebaseFileService.uploadFile(file);
             setupRestaurantAccountDTO.setFileName(fileName);
@@ -41,9 +41,6 @@ public class RestaurantServiceImpl implements RestaurantService {
             } else {
                 throw new ResourceNotFoundException("Restaurant Not Found");
             }
-        } catch(IllegalArgumentException exception) {
-            exception.printStackTrace();
-            throw exception;
         } catch(Exception exception) {
             exception.printStackTrace();
             throw exception;

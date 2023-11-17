@@ -89,16 +89,19 @@ public class LoginServiceImpl implements LoginService {
                 userDao.setLoginDao(loginDao);
                 userRepository.save(userDao);
                 claims.put("email", userDao.getEmail());
+                claims.put("user_id", userDao.getUser_id());
             }
             else if (userSignUpDTO.getRoleId() == restaurantRole) {
                 RestaurantDao restaurantDao = new RestaurantDao(userSignUpDTO.getName(), userSignUpDTO.getAddress());
                 restaurantDao.setLoginDao(loginDao);
                 restaurantRepository.save(restaurantDao);
+                claims.put("restaurant_id", restaurantDao.getId());
                 claims.put("email", loginDao.getUsername());
             }
             else {
                 throw new Exception("Role not found in the system");
             }
+            claims.put("login_id", loginDao.getId());
             claims.put("name", userSignUpDTO.getName());
             claims.put("role", userSignUpDTO.getRole());
             int otp = (int) Math.floor(100000 + Math.random() * 900000);
@@ -137,11 +140,13 @@ public class LoginServiceImpl implements LoginService {
                 UserDao userDetails = (UserDao) getUserByUsername(userLoginDTO.getUsername());
                 claims.put("name", userDetails.getName());
                 claims.put("email", userDetails.getEmail());
+                claims.put("user_id", userDetails.getUser_id());
             }
             else if (loginDao.getRoleDao().getId() == restaurantRole) {
                 RestaurantDao restaurantDao = (RestaurantDao) getUserByUsername(userLoginDTO.getUsername());
                 claims.put("name", restaurantDao.getName());
                 claims.put("address", restaurantDao.getAddress());
+                claims.put("restaurant_id", restaurantDao.getId());
             }
             String jwtToken = jwtUtil.generateToken(claims);
             claims.put("token", jwtToken);
