@@ -39,56 +39,6 @@ const RestaurantDetails = ({ route }) => {
     dispatch(getAllRestaurantReviews({ id, token }));
   }, []);
 
-  const itemData = [
-    {
-      id: 1,
-      name: "Item 1",
-      price: "$10",
-      preparationTime: "20 mins",
-      description: "This description length will be fixed.",
-      image: require("../assets/images/Placeholder_Food_Item.png"),
-    },
-    {
-      id: 2,
-      name: "Item 2",
-      price: "$15",
-      preparationTime: "25 mins",
-      description: "A delicious item from our menu.",
-      image: require("../assets/images/Placeholder_Food_Item.png"),
-    },
-    {
-      id: 3,
-      name: "Item 3",
-      price: "$15",
-      preparationTime: "25 mins",
-      description: "A delicious item from our menu.",
-      image: require("../assets/images/Placeholder_Food_Item.png"),
-    },
-  ];
-
-  const reviewData = [
-    {
-      reviewId: 1,
-      name: "John Doe",
-      date: "October 10, 2023",
-      rating: "4.5",
-      reviewComment: "If Required The Review UI ",
-    },
-    {
-      reviewId: 2,
-      name: "Jane Smith",
-      date: "October 12, 2023",
-      rating: "4.5",
-      reviewComment: "wonderful dining experience.",
-    },
-    {
-      reviewId: 3,
-      name: "Ashish",
-      date: "November 16, 2023",
-      rating: "4",
-      reviewComment: "Good restaurant",
-    },
-  ];
   if (loading) {
     return <Loading />;
   }

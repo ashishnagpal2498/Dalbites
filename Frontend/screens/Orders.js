@@ -1,63 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "./Loading";
+import { getUserOrders } from "../redux/actions/OrderAction";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { logout } from "../redux/actions/Authentication";
-import Reviews from "./Reviews";
-const userData = {
-  id: 1,
-  name: "Adam Bills ",
-  banner: "B00123456",
-  email: "abcd@dal.ca",
-};
 
-const Profile = ({ navigation }) => {
-  // const handleEditPhoto = () => {
-  //   console.log('edit photo button pressed');
-  // };
-
+const Orders = ({ navigation }) => {
   const dispatch = useDispatch();
+  const orders = useSelector((store) => store.order.orders);
   const token = useSelector((store) => store.authentication.token);
-  const loading = useSelector((store) => store.user.profileLoading);
+  const loading = useSelector((store) => store.order.orderLoading);
 
-  // const handleChangePassword = () => {
-  //   console.log("change password button pressed");
-  // };
-
-  const handleLogout = () => dispatch(logout());
-
-  const [userPhoto, setUserPhoto] = useState(
-    require("../assets/images/Dummy_profile_photo.png")
-  );
+  const handlereview = (restaurantId) => {
+    navigation.navigate("AddReview", { restaurantId });
+  };
 
   useEffect(() => {
-    // Request permission to access the user's media library
-    (async () => {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
-        alert("Sorry, we need camera roll permissions to make this work!");
-      }
-    })();
+    dispatch(getUserOrders(token));
   }, []);
-
-  const handleEditPhoto = async () => {
-    // Launch the image picker
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      // Update the user's photo with the selected image
-      setUserPhoto({ uri: result.uri });
-    }
-  };
 
   if (loading) {
     return <Loading />;
@@ -65,51 +26,42 @@ const Profile = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView>
-        <View style={styles.profilebody}>
-          <View style={styles.profileinfocontainer}>
-            <View style={styles.profilephotoContainer}>
-              {/* <View style={styles.photoContainer}>
-              <Image
-                style={styles.photo}
-                source={require("../assets/images/Dummy_profile_photo.png")}
-              />
-            </View> */}
-
-              <View style={styles.photoContainer}>
-                <Image style={styles.photo} source={userPhoto} />
+        <View style={styles.ordercontainer}>
+          {orders.map((order, index) => (
+            <View style={styles.ordercard} key={index}>
+              <View style={styles.row1}>
+                <Text style={styles.row1text}>Order ID: {order.orderId}</Text>
+                <Text style={styles.row1text}>Date: {order.createdAt}</Text>
               </View>
 
-              <TouchableOpacity
-                style={styles.photobutton}
-                onPress={handleEditPhoto}
-              >
-                <Text style={styles.phototext}>Edit Photo</Text>
-              </TouchableOpacity>
+              <View style={styles.row2}>
+                <Text style={styles.row2text}>{order.restaurantName}</Text>
+                <Text style={styles.row2text}>Cost: ${order.totalAmount}</Text>
+              </View>
+
+              <View style={styles.row3}>
+                <Text style={styles.row3text}>Order: </Text>
+                <Text style={styles.row3text}>
+                  {order.orderItems.map(
+                    (menuItem, i) =>
+                      `${menuItem.item.name}(${menuItem.quantity})${
+                        i === order.orderItems.length - 1 ? "" : ", "
+                      }`
+                  )}
+                </Text>
+              </View>
+
+              <View style={styles.addreviewbuttoncontainer}>
+                <TouchableOpacity
+                  style={styles.reviewButton}
+                  onPress={() => handlereview(order.restaurantId)}
+                >
+                  <Text style={styles.reviewtext}>Add a Review</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-
-            <View style={styles.profileinfo}>
-              <Text style={styles.nametext}>Name : {userData.name}</Text>
-              <Text style={styles.emailtext}>Email : {userData.email}</Text>
-              <Text style={styles.bannertext}>
-                Banner Id : {userData.banner}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.profilebuttonscontainer}>
-            {/* <TouchableOpacity
-              style={styles.button}
-              onPress={handleChangePassword}
-            >
-              <Text style={styles.buttonText}>Change Password</Text>
-            </TouchableOpacity> */}
-
-            <TouchableOpacity style={styles.button} onPress={handleLogout}>
-              <Text style={styles.buttonText}>Logout</Text>
-            </TouchableOpacity>
-          </View>
+          ))}
         </View>
-        <Reviews />
       </SafeAreaView>
     </ScrollView>
   );
@@ -265,4 +217,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+export default Orders;

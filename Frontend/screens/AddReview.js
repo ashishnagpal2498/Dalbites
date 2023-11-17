@@ -18,7 +18,7 @@ import Loading from "./Loading";
 import { getRestaurantById } from "../redux/actions/RestaurantAction";
 import tw from "twrnc";
 
-const Review = ({ route, navigation }) => {
+const AddReview = ({ route, navigation }) => {
   const { restaurantId } = route.params;
   const dispatch = useDispatch();
   const review = useSelector((store) => store.user.review);
@@ -38,10 +38,10 @@ const Review = ({ route, navigation }) => {
     dispatch(
       postReview({ token, restaurantId, rating, reviewComment, review })
     );
-    setTimeout(
-      () => dispatch(setSuccessMessage({ successMessage: null })),
-      4000
-    );
+    setTimeout(() => {
+      dispatch(setSuccessMessage({ successMessage: null }));
+      navigation.navigate("OrderHistory");
+    }, 4000);
   };
   var date = moment().utcOffset("-04:00").format("DD-MM-YYYY hh:mm a");
 
@@ -198,4 +198,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Review;
+export default AddReview;
