@@ -5,6 +5,7 @@ import {
   GET_RESTAURANT_MENU,
   SET_RESTAURANT_LOADING,
   SET_SELECTED_BUILDINGS,
+  GET_RESTAURANT_REVIEW,
 } from "../Types/RestaurantTypes";
 
 export const getRestaurants = (payload) => ({
@@ -34,5 +35,10 @@ export const getRestaurantById = (payload) => ({
 
 export const getRestaurantMenu = (payload) => ({
   type: GET_RESTAURANT_MENU,
+  payload,
+});
+
+export const getAllRestaurantReviews = (payload) => ({
+  type: GET_RESTAURANT_REVIEW,
   payload,
 });

@@ -9,6 +9,8 @@ import {
   GET_RESTAURANT_SUCCESS,
   SET_RESTAURANT_LOADING,
   SET_SELECTED_BUILDINGS,
+  GET_RESTAURANT_REVIEW_SUCCESS,
+  GET_RESTAURANT_REVIEW_FAILURE,
 } from "../Types/RestaurantTypes";
 
 const initialState = {
@@ -19,6 +21,7 @@ const initialState = {
   selectedBuildings: [],
   restaurant: {},
   restaurantMenu: [{}],
+  restaurantReviews: [{}],
 };
 
 export default (state = initialState, action) => {
@@ -75,6 +78,17 @@ export default (state = initialState, action) => {
         restaurantError: null,
       };
     case GET_RESTAURANT_MENU_FAILURE:
+      return {
+        ...state,
+        ...payload,
+      };
+    case GET_RESTAURANT_REVIEW_SUCCESS:
+      return {
+        ...state,
+        ...payload,
+        restaurantError: null,
+      };
+    case GET_RESTAURANT_REVIEW_FAILURE:
       return {
         ...state,
         ...payload,

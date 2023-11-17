@@ -2,6 +2,7 @@ import { put, call, takeEvery } from "redux-saga/effects";
 import {
   getAllBuildingsAPI,
   getRestaurantByIdAPI,
+  getRestaurantReviewAPI,
   viewAllRestaurantAPI,
   viewRestaurantMenuAPI,
 } from "../APIs";
@@ -19,6 +20,9 @@ import {
   GET_RESTAURANT_MENU,
   GET_RESTAURANT_MENU_FAILURE,
   GET_RESTAURANT_MENU_SUCCESS,
+  GET_RESTAURANT_REVIEW,
+  GET_RESTAURANT_REVIEW_FAILURE,
+  GET_RESTAURANT_REVIEW_SUCCESS,
   GET_RESTAURANT_SUCCESS,
   SET_RESTAURANT_LOADING,
 } from "../Types/RestaurantTypes";
@@ -50,6 +54,7 @@ function* getRestaurantByIdSaga(action) {
         payload: { restaurant: response.data },
       });
     }
+    console.log("Restaurant --> ", response.data);
   } catch (error) {
     yield put({
       type: GET_RESTAURANT_BY_ID_FAILURE,
@@ -176,9 +181,49 @@ function* getRestaurantMenuSaga({ payload }) {
   }
 }
 
+function* getRestaurantReviewSaga({ payload }) {
+  console.log("Get restaurant review Saga");
+  try {
+    yield put({
+      type: SET_RESTAURANT_LOADING,
+      payload: { restaurantLoading: true },
+    });
+
+    const headers = {
+      Authorization: `Bearer ${payload.token}`,
+      ...API_HEADERS,
+    };
+    const response = yield call(
+      axios.get,
+      `${getRestaurantReviewAPI}/${payload.id}`,
+      {
+        headers: { ...headers },
+      }
+    );
+    console.log("Reviews --> ", response.data);
+    if (response.status >= 200 && response.status <= 300) {
+      yield put({
+        type: GET_RESTAURANT_REVIEW_SUCCESS,
+        payload: { restaurantReviews: response.data },
+      });
+    }
+  } catch (error) {
+    yield put({
+      type: GET_RESTAURANT_REVIEW_FAILURE,
+      payload: { restaurantError: error.message },
+    });
+  } finally {
+    yield put({
+      type: SET_RESTAURANT_LOADING,
+      payload: { restaurantLoading: false },
+    });
+  }
+}
+
 export function* restaurantSaga() {
   yield takeEvery(GET_RESTAURANT, getRestaurantsSaga);
   yield takeEvery(GET_BUILDING, getBuildingSaga);
   yield takeEvery(GET_RESTAURANT_BY_ID, getRestaurantByIdSaga);
   yield takeEvery(GET_RESTAURANT_MENU, getRestaurantMenuSaga);
+  yield takeEvery(GET_RESTAURANT_REVIEW, getRestaurantReviewSaga);
 }

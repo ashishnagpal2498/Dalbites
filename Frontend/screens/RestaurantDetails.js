@@ -12,6 +12,7 @@ import {
 import tw from "twrnc";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getAllRestaurantReviews,
   getRestaurantById,
   getRestaurantMenu,
 } from "../redux/actions/RestaurantAction";
@@ -25,6 +26,9 @@ const RestaurantDetails = ({ route }) => {
   const restaurantMenu = useSelector(
     (store) => store.restaurant.restaurantMenu
   );
+  const restaurantReviews = useSelector(
+    (store) => store.restaurant.restaurantReviews
+  );
   const loading = useSelector((store) => store.restaurant.restaurantLoading);
   const dispatch = useDispatch();
 
@@ -32,6 +36,7 @@ const RestaurantDetails = ({ route }) => {
     // payload - id and token
     dispatch(getRestaurantById({ id, token }));
     dispatch(getRestaurantMenu({ id, token }));
+    dispatch(getAllRestaurantReviews({ id, token }));
   }, []);
 
   const itemData = [
@@ -63,39 +68,25 @@ const RestaurantDetails = ({ route }) => {
 
   const reviewData = [
     {
-      id: 1,
+      reviewId: 1,
       name: "John Doe",
       date: "October 10, 2023",
       rating: "4.5",
-      review: "If Required The Review UI will be improved in later stages ",
+      reviewComment: "If Required The Review UI ",
     },
     {
-      id: 2,
+      reviewId: 2,
       name: "Jane Smith",
       date: "October 12, 2023",
       rating: "4.5",
-      review: "I had a wonderful dining experience here.",
+      reviewComment: "wonderful dining experience.",
     },
     {
-      id: 3,
-      name: "wdcwcwcw",
-      date: "October 12, 2023",
-      rating: "4.5",
-      review: "I had a wonderful dining experience here.",
-    },
-    {
-      id: 4,
-      name: "wcvwv",
-      date: "October 12, 2023",
-      rating: "4.5",
-      review: "I had a wonderful dining experience here.",
-    },
-    {
-      id: 5,
-      name: "nk kr lvle",
-      date: "October 12, 2023",
-      rating: "4.5",
-      review: "I had a wonderful dining experience here.",
+      reviewId: 3,
+      name: "Ashish",
+      date: "November 16, 2023",
+      rating: "4",
+      reviewComment: "Good restaurant",
     },
   ];
   if (loading) {
@@ -191,13 +182,12 @@ const RestaurantDetails = ({ route }) => {
         {activeTab === "reviews" && (
           <FlatList
             data={reviewData}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.reviewId.toString()}
             renderItem={({ item }) => (
               <View style={styles.reviewCard}>
                 <Text style={styles.reviewName}>{item.name}</Text>
-                <Text style={styles.reviewDate}>{item.date}</Text>
                 <Text style={styles.reviewRating}>Rating: {item.rating}</Text>
-                <Text style={styles.reviewText}>{item.review}</Text>
+                <Text style={styles.reviewText}>{item.reviewComment}</Text>
               </View>
             )}
           />
