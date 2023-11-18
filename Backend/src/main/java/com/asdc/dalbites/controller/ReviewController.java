@@ -18,6 +18,7 @@ public class ReviewController {
 
     @GetMapping
     public ResponseEntity<List<ReviewDTO>> getUserReviews(@RequestHeader("Authorization") String bearerToken) {
-        return null;
+        List<ReviewDTO> reviews = reviewService.getAllUserReviews(bearerToken);
+        return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
 }
