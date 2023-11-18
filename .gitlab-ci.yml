@@ -32,7 +32,7 @@ test_eas_login:
     #   "
     - >
       expect -c "
-        spawn eas login --non-interactive
+        spawn eas login
         expect \"Email or username\"
         send \"$EAS_LOGIN_USERNAME\r\"
         expect \"Password\"
