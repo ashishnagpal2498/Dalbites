@@ -28,6 +28,10 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<?> getUserById(@RequestHeader("Authorization") String bearerToken){
-       return null;
+        UserDao user = userService.getUserById(bearerToken);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }

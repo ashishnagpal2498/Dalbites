@@ -59,4 +59,16 @@ public class UserControllerTest {
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(userDao, result.getBody());
     }
+    @Test
+    void testGetUserByIdWhenUserNotFound() {
+        String bearerToken = "userTokenValue";
+
+        when(userService.getUserById(bearerToken)).thenReturn(null);
+
+        ResponseEntity<?> result = userController.getUserById(bearerToken);
+
+        assertNotNull(result);
+        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+        assertEquals("User not found", result.getBody());
+    }
 }
