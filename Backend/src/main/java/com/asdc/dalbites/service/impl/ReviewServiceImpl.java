@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -50,11 +51,19 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewDTO> getAllRestaurantReviews(Long restuarantId){
-        return null;
+        List<ReviewDao> reviewDaos = reviewRepository.findByRestaurantId(restuarantId);
+        return reviewDaos.stream()
+                .map(reviewMapper::toReviewDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<ReviewDTO> getAllUserReviews(String token){
-        return null;
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        Long userId = Long.parseLong(tokenClaims.get("user_id").toString());
+        List<ReviewDao> reviewDaos = reviewRepository.findByUser_UserId(userId);
+        return reviewDaos.stream()
+                .map(reviewMapper::toReviewDTO)
+                .collect(Collectors.toList());
     }
 }
