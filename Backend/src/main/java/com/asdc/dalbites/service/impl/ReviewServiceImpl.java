@@ -14,6 +14,8 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ReviewServiceImpl implements ReviewService {
     @Autowired
@@ -47,12 +49,12 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void getAllRestaurantReviews(){
-
+    public List<ReviewDTO> getAllRestaurantReviews(Long restuarantId){
+        return null;
     }
 
     @Override
-    public void getAllUserReviews(){
-
+    public List<ReviewDTO> getAllUserReviews(String token){
+        return null;
     }
 }

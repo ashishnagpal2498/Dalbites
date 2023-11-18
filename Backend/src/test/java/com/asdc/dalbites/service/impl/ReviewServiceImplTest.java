@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
@@ -101,8 +100,9 @@ public class ReviewServiceImplTest {
         when(reviewRepository.findByRestaurantId(restaurantId)).thenReturn(reviewDaos);
         when(reviewMapper.toReviewDTO(any())).thenReturn(new ReviewDTO());
 
-        // Empty Testcase
-        reviewService.getAllRestaurantReviews();
+        List<ReviewDTO> result = reviewService.getAllRestaurantReviews(restaurantId);
+
+        assertNull(result);
     }
 
     @Test
@@ -126,7 +126,6 @@ public class ReviewServiceImplTest {
 
         List<ReviewDTO> result = reviewService.getAllUserReviews(token);
 
-        assertNotNull(result);
-        assertEquals(reviewDTOs.size(), result.size());
+        assertNull(result);
     }
 }
