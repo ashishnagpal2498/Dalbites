@@ -50,6 +50,16 @@ public class UserServiceImplTest {
     }
     @Test
     void testGetUserById() {
+        String token = "userToken";
+        Claims claims = new DefaultClaims();
+        claims.put("user_id", "46");
+        Optional<UserDao> userDaoOptional = Optional.of(new UserDao());
 
+        when(jwtTokenUtil.getAllClaimsFromToken(anyString())).thenReturn(claims);
+        when(userRepository.findById(anyString())).thenReturn(userDaoOptional);
+
+        UserDao result = userService.getUserById(token);
+
+        assertNotNull(result);
     }
 }
