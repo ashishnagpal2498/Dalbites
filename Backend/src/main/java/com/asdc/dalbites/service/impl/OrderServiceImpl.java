@@ -6,12 +6,14 @@ import com.asdc.dalbites.mappers.OrderItemMapper;
 import com.asdc.dalbites.model.DAO.LoginDao;
 import com.asdc.dalbites.model.DAO.OrderDao;
 import com.asdc.dalbites.model.DAO.RestaurantDao;
+import com.asdc.dalbites.model.DAO.UserDao;
 import com.asdc.dalbites.model.DTO.OrderDTO;
 import com.asdc.dalbites.model.DTO.OrderStatusDTO;
 import com.asdc.dalbites.model.ENUMS.OrderStatusEnum;
 import com.asdc.dalbites.repository.LoginRepository;
 import com.asdc.dalbites.repository.OrderRepository;
 import com.asdc.dalbites.repository.RestaurantRepository;
+import com.asdc.dalbites.repository.UserRepository;
 import com.asdc.dalbites.service.EmailService;
 import com.asdc.dalbites.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class OrderServiceImpl implements OrderService {
     private LoginRepository loginRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private RestaurantRepository restaurantRepository;
 
     @Autowired
@@ -52,7 +57,9 @@ public class OrderServiceImpl implements OrderService {
         LoginDao loginDao = loginRepository.findByUsername(username);
 
         if (loginDao.getRoleDao().getId() == userRole) {
-            return getAllOrdersByUserId(loginDao.getId());
+            UserDao user = userRepository.findByLogin_Id(loginDao.getId());
+            return getAllOrdersByUserId(user.getUserId());
+
         } else {
             RestaurantDao restaurantDao = restaurantRepository.findByLogin_Id(loginDao.getId());
             return getAllOrdersByRestaurantId(restaurantDao.getId());

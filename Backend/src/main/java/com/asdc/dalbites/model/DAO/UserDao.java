@@ -97,10 +97,11 @@ public class UserDao {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "login_id")
+	@JsonIgnore
 	private LoginDao loginDao;
 
 	@OneToMany(mappedBy = "user")
-	@JsonIgnore // Add @JsonIgnore here
+	@JsonIgnore
 	private List<OrderDao> orders;
 
 	public UserDao() {

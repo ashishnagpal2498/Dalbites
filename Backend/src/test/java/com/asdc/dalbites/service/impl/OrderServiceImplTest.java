@@ -1,4 +1,4 @@
-package com.asdc.dalbites.ServiceImpl;
+package com.asdc.dalbites.service.impl;
 
 import com.asdc.dalbites.exception.ResourceNotFoundException;
 import com.asdc.dalbites.mappers.OrderMapper;
