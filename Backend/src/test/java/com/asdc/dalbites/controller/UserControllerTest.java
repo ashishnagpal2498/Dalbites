@@ -16,6 +16,9 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 public class UserControllerTest {
 
     @Mock
@@ -42,5 +45,18 @@ public class UserControllerTest {
 
         assertNotNull(result);
         assertEquals(userDaos.size(), result.size());
+    }
+    @Test
+    void testGetUserById() {
+        String bearerToken = "userToken";
+        UserDao userDao = new UserDao();
+
+        when(userService.getUserById(bearerToken)).thenReturn(userDao);
+
+        ResponseEntity<?> result = userController.getUserById(bearerToken);
+
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(userDao, result.getBody());
     }
 }
