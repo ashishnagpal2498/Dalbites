@@ -7,6 +7,7 @@ import Loading from "./Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { logout } from "../redux/actions/Authentication";
 import Reviews from "./Reviews";
+import { getAllUserReviews, getUserDetails } from "../redux/actions/UserAction";
 const userData = {
   id: 1,
   name: "Adam Bills ",
@@ -22,7 +23,8 @@ const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
   const token = useSelector((store) => store.authentication.token);
   const loading = useSelector((store) => store.user.profileLoading);
-
+  const userReviews = useSelector((store) => store.user.userReviews);
+  const user = useSelector((store) => store.user.user);
   // const handleChangePassword = () => {
   //   console.log("change password button pressed");
   // };
@@ -42,6 +44,9 @@ const Profile = ({ navigation }) => {
         alert("Sorry, we need camera roll permissions to make this work!");
       }
     })();
+
+    dispatch(getAllUserReviews({ token }));
+    dispatch(getUserDetails({ token }));
   }, []);
 
   const handleEditPhoto = async () => {
@@ -88,11 +93,11 @@ const Profile = ({ navigation }) => {
             </View>
 
             <View style={styles.profileinfo}>
-              <Text style={styles.nametext}>Name : {userData.name}</Text>
-              <Text style={styles.emailtext}>Email : {userData.email}</Text>
-              <Text style={styles.bannertext}>
+              <Text style={styles.nametext}>Name : {user.name}</Text>
+              <Text style={styles.emailtext}>Email : {user.email}</Text>
+              {/* <Text style={styles.bannertext}>
                 Banner Id : {userData.banner}
-              </Text>
+              </Text> */}
             </View>
           </View>
 
@@ -109,7 +114,7 @@ const Profile = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-        <Reviews />
+        <Reviews userReviews={userReviews} />
       </SafeAreaView>
     </ScrollView>
   );

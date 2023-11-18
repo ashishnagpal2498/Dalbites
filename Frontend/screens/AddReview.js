@@ -104,7 +104,7 @@ const AddReview = ({ route, navigation }) => {
             style={styles.descriptionText}
             multiline={true}
             numberOfLines={4}
-            placeholder="Add a review"
+            placeholder="Add review comment . . ."
             value={reviewComment}
             onChangeText={(text) => handleReviewChange(text)}
           />
@@ -116,7 +116,9 @@ const AddReview = ({ route, navigation }) => {
             onPress={() => handleSaveReview(rating, reviewComment)}
             disabled={rating === null}
           >
-            <Text style={styles.buttonText}>Save Review</Text>
+            <Text style={styles.buttonText}>
+              {review ? "Update" : "Save"} Review
+            </Text>
           </TouchableOpacity>
         </View>
         <Text style={tw`text-green-600`}>
@@ -181,8 +183,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   buttonText: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 18,
     textAlign: "center",
   },
   descriptionBox: {
