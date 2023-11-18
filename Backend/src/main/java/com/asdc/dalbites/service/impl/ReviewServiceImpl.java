@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,5 +66,15 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewDaos.stream()
                 .map(reviewMapper::toReviewDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ReviewDTO getRestaurantReviewByUser(String token, Long restaurantId){
+       return null;
+    }
+
+    @Override
+    public ReviewDTO updateRestaurantReviewByUser(ReviewDTO updatedReviewDTO) {
+        return null;
     }
 }

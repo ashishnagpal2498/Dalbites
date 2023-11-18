@@ -95,14 +95,15 @@ public class ReviewServiceImplTest {
         );
         List<ReviewDTO> reviewDTOs = reviewDaos.stream()
                 .map(reviewMapper::toReviewDTO)
-                .collect(Collectors.toList());
+                .toList();
 
         when(reviewRepository.findByRestaurantId(restaurantId)).thenReturn(reviewDaos);
         when(reviewMapper.toReviewDTO(any())).thenReturn(new ReviewDTO());
 
         List<ReviewDTO> result = reviewService.getAllRestaurantReviews(restaurantId);
 
-        assertNull(result);
+        assertNotNull(result);
+        assertEquals(reviewDTOs.size(), result.size());
     }
 
     @Test
@@ -118,7 +119,7 @@ public class ReviewServiceImplTest {
         );
         List<ReviewDTO> reviewDTOs = reviewDaos.stream()
                 .map(reviewMapper::toReviewDTO)
-                .collect(Collectors.toList());
+                .toList();
 
         when(jwtUtil.getAllClaimsFromToken(anyString())).thenReturn(claims);
         when(reviewRepository.findByUser_UserId(userId)).thenReturn(reviewDaos);
@@ -126,6 +127,43 @@ public class ReviewServiceImplTest {
 
         List<ReviewDTO> result = reviewService.getAllUserReviews(token);
 
-        assertNull(result);
+        assertNotNull(result);
+        assertEquals(reviewDTOs.size(), result.size());
+    }
+
+    @Test
+    void testGetRestaurantReviewByUser(){
+        String token = "dummyTokenValue";
+        Claims claims = new DefaultClaims();
+        claims.put("user_id", 1L);
+        Long userId = 1L;
+        Long restaurantId = 4L;
+        Optional<ReviewDao> reviewDaoOptional = Optional.of(new ReviewDao());
+        ReviewDTO reviewDTO = new ReviewDTO();
+
+        when(jwtUtil.getAllClaimsFromToken(anyString())).thenReturn(claims);
+        when(reviewRepository.findByUser_UserIdAndRestaurant_Id(userId, restaurantId)).thenReturn(reviewDaoOptional);
+        when(reviewMapper.toReviewDTO(any())).thenReturn(reviewDTO);
+
+        ReviewDTO result = reviewService.getRestaurantReviewByUser(token, restaurantId);
+
+        assertNotNull(result);
+        assertEquals(reviewDTO, result);
+    }
+
+    @Test
+    void testUpdateRestaurantReviewByUser() {
+        ReviewDTO updatedReviewDTO = new ReviewDTO(1L, 1L, 5, "Updated review", 46L);
+        Optional<ReviewDao> existingReviewOptional = Optional.of(new ReviewDao());
+        ReviewDao updatedReviewDao = new ReviewDao();
+
+        when(reviewRepository.findById(updatedReviewDTO.getReviewId())).thenReturn(existingReviewOptional);
+        when(reviewRepository.save(any())).thenReturn(updatedReviewDao);
+        when(reviewMapper.toReviewDTO(any())).thenReturn(updatedReviewDTO);
+
+        ReviewDTO result = reviewService.updateRestaurantReviewByUser(updatedReviewDTO);
+
+        assertNotNull(result);
+        assertEquals(updatedReviewDTO, result);
     }
 }
