@@ -136,6 +136,7 @@ public class LoginServiceImpl implements LoginService {
             claims.put("username", loginDao.getUsername());
             claims.put("role_id", loginDao.getRoleDao().getId());
             claims.put("role", loginDao.getRoleDao().getName());
+            claims.put("login_id",loginDao.getId());
             if (loginDao.getRoleDao().getId() == userRole) {
                 UserDao userDetails = (UserDao) getUserByUsername(userLoginDTO.getUsername());
                 claims.put("name", userDetails.getName());
