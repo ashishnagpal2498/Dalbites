@@ -21,4 +21,24 @@ public class ReviewController {
         List<ReviewDTO> reviews = reviewService.getAllUserReviews(bearerToken);
         return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
+    @PostMapping
+    public ResponseEntity<ReviewDTO> createReview(@RequestHeader("Authorization") String bearerToken, @RequestBody ReviewDTO reviewDTO) {
+
+        return null;
+    }
+
+    @GetMapping("/{restaurantId}")
+    public List<ReviewDTO> getRestaurantReviews(@PathVariable Long restaurantId){
+        return null;
+    }
+
+    @GetMapping("/{restaurantId}/user")
+    public ResponseEntity<ReviewDTO> getRestaurantReviewByUser(@RequestHeader("Authorization") String bearerToken, @PathVariable Long restaurantId) {
+        return null;
+    }
+
+    @PutMapping
+    public ResponseEntity<ReviewDTO> updateRestaurantReviewByUser(@RequestBody ReviewDTO updatedReviewDTO) {
+        return null;
+    }
 }

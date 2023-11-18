@@ -48,4 +48,64 @@ public class ReviewControllerTest {
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(reviewDTOs, result.getBody());
     }
+
+    @Test
+    void testCreateReview() {
+        String bearerToken = "JWTUserToken";
+        ReviewDTO reviewDTO = new ReviewDTO();
+        ReviewDTO createdReviewDTO = new ReviewDTO();
+
+        when(reviewService.createReview(bearerToken, reviewDTO)).thenReturn(createdReviewDTO);
+
+        ResponseEntity<ReviewDTO> result = reviewController.createReview(bearerToken, reviewDTO);
+
+        assertNotNull(result);
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
+        assertEquals(createdReviewDTO, result.getBody());
+    }
+
+    @Test
+    void testGetRestaurantReviews() {
+        Long restaurantId = 1L;
+        List<ReviewDTO> reviewDTOs = Arrays.asList(
+                new ReviewDTO(),
+                new ReviewDTO()
+        );
+
+        when(reviewService.getAllRestaurantReviews(restaurantId)).thenReturn(reviewDTOs);
+
+        List<ReviewDTO> result = reviewController.getRestaurantReviews(restaurantId);
+
+        assertNotNull(result);
+        assertEquals(reviewDTOs, result);
+    }
+
+    @Test
+    void testGetRestaurantReviewByUser() {
+        String bearerToken = "Token";
+        Long restaurantId = 1L;
+        ReviewDTO reviewDTO = new ReviewDTO();
+
+        when(reviewService.getRestaurantReviewByUser(bearerToken, restaurantId)).thenReturn(reviewDTO);
+
+        ResponseEntity<ReviewDTO> result = reviewController.getRestaurantReviewByUser(bearerToken, restaurantId);
+
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(reviewDTO, result.getBody());
+    }
+
+    @Test
+    void testUpdateRestaurantReviewByUser() {
+        ReviewDTO updatedReviewDTO = new ReviewDTO();
+        ReviewDTO updatedReviewResultDTO = new ReviewDTO();
+
+        when(reviewService.updateRestaurantReviewByUser(updatedReviewDTO)).thenReturn(updatedReviewResultDTO);
+
+        ResponseEntity<ReviewDTO> result = reviewController.updateRestaurantReviewByUser(updatedReviewDTO);
+
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(updatedReviewResultDTO, result.getBody());
+    }
 }
