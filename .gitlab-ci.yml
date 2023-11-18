@@ -1,70 +1,23 @@
 stages:          # List of stages for jobs, and their order of execution
-  - test
-  - build
-  - publish_image # Add image to DockerHub
+  - test_login
   
 variables:
   BACKEND_IMAGE:  maven:3.8.3-openjdk-17  # Base image for the backend   
+  FRONTEND_IMAGE: node:18-alpine3.17
 
 # # test_backend
-# test_backend:
-#   stage: test
-#   image: $BACKEND_IMAGE
-#   script:
-#     - cd Backend
-#     - mvn test
-#   only:
-#     - develop
-#     - staging
-
-# # build_backend
-# build_backend:
-#   stage: build
-#   image: $BACKEND_IMAGE
-#   script:
-#     - cd Backend
-#     - mvn clean install
-#   only:
-#     - develop
-#     - staging
-
-publish-backend:
-  image: docker:latest
-  stage: publish_image
-  services:
-    - docker:dind
-  variables:
-    DOCKER_TLS_CERTDIR: '' #certs
-    DOCKER_HOST: 'tcp://docker:2375' # Changed from docker to localhost as unable to login
-    # DOCKER_DRIVER: overlay2
-  # before_script:
-  #   - docker --version
-  #   - cat /etc/hosts # Check available hosts
-  #   - echo "$DOCKER_LOGIN_PASSWORD" | docker login -u "$DOCKER_LOGIN_USERNAME" --password-stdin docker.io
+test_eas_login:
+  stage: test_login
+  image: $FRONTEND_IMAGE
+  before_script:
+    - node --version
+    - cd Frontend
+    - npm install
+    - npm install -g expo-cli
+    - echo "Expo CLI installed"
+    - npm install -g eas-cli 
+    - echo "EAS Cli installed"
   script:
-    - cd Backend
-    - pwd
-    - echo $SERVER_IP
-    - docker --version
-    - docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD
-    - docker build -t $DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA .
-    - docker push $DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA
-  # script:
-  #   - cd Backend
-  #   - pwd
-  #   - echo "Inside Backend directory"
-  #   - echo $SERVER_IP
-
-  #   # ------- Checking Configuration of running DockerInDocker --------
-  #   # - cat /etc/docker/daemon.json
-  #   # - docker info
-
-
-  #   - ls # check all available files in directory
-
-  #   # Build Image
-  #   - docker build -t asdc-dalbites-backend:$CI_COMMIT_SHORT_SHA .
-  #   - docker push asdc-dalbites-backend:$CI_COMMIT_SHORT_SHA
+    - eas login -u $EAS_LOGIN_USERNAME  -p $EAS_LOGIN_PASSWORD --non-interactive
   only:
-    - develop
-    - staging
+    - frontend
