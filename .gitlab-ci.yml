@@ -19,7 +19,8 @@ test_eas_login:
   script:
     - echo "Username-$EAS_LOGIN_USERNAME"
     - echo "Password-$EAS_LOGIN_PASSWORD"
-    - apk add --no-cache expect
+    - apk add --no-cache expect # Adding expect 
+    - apk add --no-cache git #Adding git
     - >
       expect -c "
         spawn eas login
@@ -31,6 +32,7 @@ test_eas_login:
         expect eof
       "
     - eas whoami
+    - git --version
     - eas build --platform android --profile preview --non-interactive
 
   only:
