@@ -9,6 +9,7 @@ import com.asdc.dalbites.repository.RestaurantRepository;
 import com.asdc.dalbites.repository.ReviewRepository;
 import com.asdc.dalbites.repository.UserRepository;
 import com.asdc.dalbites.service.ReviewService;
+import com.asdc.dalbites.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,15 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtTokenUtil jwtUtil;
+
     @Override
-    public ReviewDTO createReview(ReviewDTO reviewDTO){
-        RestaurantDao restaurant = restaurantRepository.findByLogin_Id(reviewDTO.getRestaurantId());
-        UserDao user = userRepository.findByLogin_Id(reviewDTO.getUserId());
+    public ReviewDTO createReview(String token, ReviewDTO reviewDTO){
+        RestaurantDao restaurant = restaurantRepository.findById(reviewDTO.getRestaurantId()).orElse(null);
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        Long userId = Long.parseLong(tokenClaims.get("user_id").toString());
+        UserDao user = userRepository.findByUserId(userId);
 
         ReviewDao reviewDao = reviewMapper.toReviewEntity(reviewDTO);
 

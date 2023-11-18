@@ -10,6 +10,7 @@ import com.asdc.dalbites.repository.ReviewRepository;
 import com.asdc.dalbites.repository.UserRepository;
 import com.asdc.dalbites.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,7 +18,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Date;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
 public class ReviewServiceImplTest {
     @Mock
@@ -28,6 +35,9 @@ public class ReviewServiceImplTest {
 
     @Mock
     private RestaurantRepository restaurantRepository;
+
+    @Mock
+    private JwtTokenUtil jwtUtil;
 
     @Mock
     private UserRepository userRepository;
@@ -43,37 +53,35 @@ public class ReviewServiceImplTest {
     @Test
     public void testCreateReview(){
         // Submit a review
+        String token = "yourToken";
+        ReviewDTO reviewDTO = new ReviewDTO(1L, 1L, 5, "Great!", 123L);
+        Claims claims = new DefaultClaims();
+        claims.put("user_id", 123L);
 
-        ReviewDTO reviewDTO = new ReviewDTO();
-        reviewDTO.setRating(4);
-        reviewDTO.setReviewComment("Great experience");
-        reviewDTO.setRestaurantId(1L);
-        reviewDTO.setUserId(2L);
+        // Mocking repository calls
+        when(jwtUtil.getAllClaimsFromToken(anyString())).thenReturn(claims);
+        when(userRepository.findByUserId(anyLong())).thenReturn(new UserDao());
+        when(restaurantRepository.findById(anyLong())).thenReturn(Optional.of(new RestaurantDao()));
 
-        RestaurantDao mockedRestaurant = new RestaurantDao();
-        mockedRestaurant.setId(1L);
+        ReviewDao reviewDao = new ReviewDao();
+        reviewDao.setRating(reviewDTO.getRating());
+        reviewDao.setReviewComment(reviewDTO.getReviewComment());
+        reviewDao.setUser(new UserDao());
+        reviewDao.setRestaurant(new RestaurantDao());
+        reviewDao.setCreatedAt(new Date());
 
-        UserDao mockedUser = new UserDao();
-        mockedUser.setUserId(2L);
+        when(reviewMapper.toReviewEntity(any())).thenReturn(reviewDao);
+        when(reviewRepository.save(any())).thenReturn(reviewDao);
+        when(reviewMapper.toReviewDTO(any())).thenReturn(reviewDTO);
 
-        ReviewDao mockedReviewDao = new ReviewDao();
-        mockedReviewDao.setRating(reviewDTO.getRating());
-        mockedReviewDao.setReviewComment(reviewDTO.getReviewComment());
-        mockedReviewDao.setRestaurant(mockedRestaurant);
-        mockedReviewDao.setUser(mockedUser);
+        ReviewDTO result = reviewService.createReview(token, reviewDTO);
 
-        // Mocking repository methods
-        Mockito.when(restaurantRepository.findByLogin_Id(reviewDTO.getRestaurantId())).thenReturn(mockedRestaurant);
-        Mockito.when(userRepository.findByLogin_Id(reviewDTO.getUserId())).thenReturn(mockedUser);
-        Mockito.when(reviewMapper.toReviewEntity(reviewDTO)).thenReturn(mockedReviewDao);
-        Mockito.when(reviewRepository.save(Mockito.any(ReviewDao.class))).thenReturn(mockedReviewDao);
-        Mockito.when(reviewMapper.toReviewDTO(mockedReviewDao)).thenReturn(reviewDTO);
-
-        // Act
-        ReviewDTO createdReview = reviewService.createReview(reviewDTO);
-
-        // Assert
-        assertEquals(reviewDTO, createdReview);
+        // Assert the result
+        assertNotNull(result);
+        assertEquals(reviewDTO.getRating(), result.getRating());
+        assertEquals(reviewDTO.getReviewComment(), result.getReviewComment());
+        assertEquals(reviewDTO.getUserId(), result.getUserId());
+        assertEquals(reviewDTO.getRestaurantId(), result.getRestaurantId());
     }
 
     @Test
