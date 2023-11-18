@@ -1,7 +1,9 @@
 package com.asdc.dalbites.service;
 
+import com.asdc.dalbites.model.DTO.ReviewDTO;
+
 public interface ReviewService {
-    void createReview();
+    ReviewDTO createReview(ReviewDTO reviewDTO);
     void getAllRestaurantReviews();
     void getAllUserReviews();
 }
