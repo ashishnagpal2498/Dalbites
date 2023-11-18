@@ -12,20 +12,21 @@ test_eas_login:
   before_script:
     - node --version
     - cd Frontend
-    - npm install
     - npm install -g expo-cli
     - echo "Expo CLI installed"
     - npm install -g eas-cli 
     - echo "EAS Cli installed"
   script:
-  - |
-    expect << EOF
-      spawn eas login --non-interactive
-      expect "Username:"
-      send "$EAS_LOGIN_USERNAME\r"
-      expect "Password:"
-      send "$EAS_LOGIN_PASSWORD\r"
-      expect eof
-    EOF
+    - apk add --no-cache expect
+    - |
+      expect << 'EOF'
+        spawn eas login --non-interactive
+        expect "Email or username"
+        send "$EAS_LOGIN_USERNAME\r"
+        expect "Password"
+        send "$EAS_LOGIN_PASSWORD\r"
+        expect "Logged in"
+        expect eof
+      EOF
   only:
     - frontend
