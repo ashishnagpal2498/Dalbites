@@ -38,13 +38,6 @@ const Restaurants = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
         <TouchableOpacity
-          style={tw`mt-2 bg-yellow-500 rounded-lg py-2 px-6`}
-          onPress={() => navigation.navigate("FilterRestaurant")}
-        >
-          <IconTextBar iconType="Fai" iconName="filter" iconOnly={true} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
           style={tw`mt-2 ml-3 rounded-lg py-2 `}
           onPress={
             buildingIds.length

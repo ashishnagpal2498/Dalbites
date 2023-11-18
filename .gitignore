@@ -9,4 +9,6 @@ Backend/.mvn/wrapper/maven-wrapper.jar
 **/src/test/**/target/
 
 Frontend/node_modules/
+node_modules
 .vscode
+

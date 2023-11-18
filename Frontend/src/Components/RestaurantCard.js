@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 const RestaurantCard = ({ navigation, item }) => {
   const handleCardPress = (id) => {
     console.log("Restaurant Details --> ", id);
-    navigation.navigate("RestaurantDetail", { id });
+    navigation.navigate("RestaurantDetail", { id, title: item.name });
   };
   return (
     <TouchableOpacity onPress={() => handleCardPress(item.id)}>
