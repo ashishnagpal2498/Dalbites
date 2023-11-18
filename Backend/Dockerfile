@@ -5,6 +5,6 @@ RUN mvn -f /home/app/pom.xml clean install
 
 FROM openjdk:17
 LABEL authors="Ashish"
+COPY --from = springboot_build /home/app/target/asdc-dalbites-backend.jar /app/asdc-dalbites-backend.jar
 EXPOSE 8080
-ADD target/asdc-dalbites-backend.jar asdc-dalbites-backend.jar
-ENTRYPOINT ["java","-jar","/asdc-dalbites-backend.jar"]
+ENTRYPOINT ["java","-jar","/app/asdc-dalbites-backend.jar"]
