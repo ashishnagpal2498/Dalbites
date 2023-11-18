@@ -18,8 +18,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -53,12 +56,11 @@ public class ReviewServiceImplTest {
     @Test
     public void testCreateReview(){
         // Submit a review
-        String token = "yourToken";
+        String token = "dummyTokenValue";
         ReviewDTO reviewDTO = new ReviewDTO(1L, 1L, 5, "Great!", 123L);
         Claims claims = new DefaultClaims();
         claims.put("user_id", 123L);
 
-        // Mocking repository calls
         when(jwtUtil.getAllClaimsFromToken(anyString())).thenReturn(claims);
         when(userRepository.findByUserId(anyLong())).thenReturn(new UserDao());
         when(restaurantRepository.findById(anyLong())).thenReturn(Optional.of(new RestaurantDao()));
@@ -76,7 +78,7 @@ public class ReviewServiceImplTest {
 
         ReviewDTO result = reviewService.createReview(token, reviewDTO);
 
-        // Assert the result
+        // Assert
         assertNotNull(result);
         assertEquals(reviewDTO.getRating(), result.getRating());
         assertEquals(reviewDTO.getReviewComment(), result.getReviewComment());
@@ -87,10 +89,44 @@ public class ReviewServiceImplTest {
     @Test
     public void testGetAllRestaurantReviews(){
         // Get all reviews of a restaurant
+        Long restaurantId = 1L;
+        List<ReviewDao> reviewDaos = Arrays.asList(
+                new ReviewDao(),
+                new ReviewDao()
+        );
+        List<ReviewDTO> reviewDTOs = reviewDaos.stream()
+                .map(reviewMapper::toReviewDTO)
+                .collect(Collectors.toList());
+
+        when(reviewRepository.findByRestaurantId(restaurantId)).thenReturn(reviewDaos);
+        when(reviewMapper.toReviewDTO(any())).thenReturn(new ReviewDTO());
+
+        // Empty Testcase
+        reviewService.getAllRestaurantReviews();
     }
 
     @Test
     public void testGetAllUserReviews(){
         // Get all reviews of a user
+        String token = "dummyToken";
+        Claims claims = new DefaultClaims();
+        claims.put("user_id", 123L);
+        Long userId = 123L;
+        List<ReviewDao> reviewDaos = Arrays.asList(
+                new ReviewDao(),
+                new ReviewDao()
+        );
+        List<ReviewDTO> reviewDTOs = reviewDaos.stream()
+                .map(reviewMapper::toReviewDTO)
+                .collect(Collectors.toList());
+
+        when(jwtUtil.getAllClaimsFromToken(anyString())).thenReturn(claims);
+        when(reviewRepository.findByUser_UserId(userId)).thenReturn(reviewDaos);
+        when(reviewMapper.toReviewDTO(any())).thenReturn(new ReviewDTO());
+
+        List<ReviewDTO> result = reviewService.getAllUserReviews(token);
+
+        assertNotNull(result);
+        assertEquals(reviewDTOs.size(), result.size());
     }
 }
