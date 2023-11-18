@@ -61,5 +61,6 @@ public class UserServiceImplTest {
         UserDao result = userService.getUserById(token);
 
         assertNotNull(result);
+        assertEquals(userDaoOptional.get(),result);
     }
 }

@@ -19,6 +19,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    private JwtTokenUtil jwtUtil;
+
     @Override
     public List<UserDao> getAllUsers() {
         return (List<UserDao>)userRepository.findAll();
@@ -26,6 +29,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDao getUserById(String token){
-        return null;
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        String userId = tokenClaims.get("user_id").toString();
+        Optional<UserDao> user = userRepository.findById(userId);
+        return user.orElse(null);
     }
 }
