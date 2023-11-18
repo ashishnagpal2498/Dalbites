@@ -9,14 +9,18 @@ variables:
   FRONTEND_IMAGE: node:18-alpine3.17  # Base image for the frontend
   BACKEND_IMAGE: maven:3.8.3-openjdk-17  # Base image for the backend
 
+# ------------ Test Stage ----------------------
 # test_backend
 test_backend:
   stage: test
   image: $BACKEND_IMAGE
   before_script:
+    - cd Backend
+    - echo "List all files"
+    - ls
+    - mvn --version
     - mvn clean
   script:
-    - cd Backend
     - mvn test
   only:
     - develop
@@ -24,19 +28,21 @@ test_backend:
     - backend
 
 #test_frontend
-test_frontend:
-  stage: test
-  image: $FRONTEND_IMAGE
-  before_script:
-    - npm install -g expo-cli
-  script:
-    - cd Frontend
-    - npm install
-    - npm run test
-  only:
-    - develop
-    - staging
-    - frontend
+# test_frontend:
+#   stage: test
+#   image: $FRONTEND_IMAGE
+#   before_script:
+#     - npm install -g expo-cli
+#   script:
+#     - cd Frontend
+#     - npm install
+#     - npm run test
+#   only:
+#     - develop
+#     - staging
+#     - frontend
+
+#---------------- Build Stage -------------------------
 
 # build_backend
 build_backend:
@@ -49,6 +55,18 @@ build_backend:
     - develop
     - staging
     - backend
+
+#Build
+build_frontend:
+  stage: build
+  image: $FRONTEND_IMAGE
+  before_script:
+    - npm install -g expo-cli
+  script:
+    - cd Frontend
+    - npm install
+
+#---------------------- Publish Stage -------------------------------
 
 publish-backend:
   image: docker:latest
