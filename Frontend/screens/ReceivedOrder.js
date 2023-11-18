@@ -9,16 +9,23 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "./Loading";
 import { Picker } from "@react-native-picker/picker";
-import { getOrder, updateOrderStatus } from "../redux/actions/RestaurantOrderAction";
+import {
+  getOrder,
+  updateOrderStatus,
+} from "../redux/actions/RestaurantOrderAction";
 import moment from "moment";
 import { Alert } from "react-native";
 
 const ReceivedOrder = () => {
   const dispatch = useDispatch();
 
-  const loading = useSelector((store) => store.restaurantOrder.restaurantOrderLoading);
+  const loading = useSelector(
+    (store) => store.restaurantOrder.restaurantOrderLoading
+  );
   const orders = useSelector((store) => store.restaurantOrder.restaurantOrder);
-  const orderError = useSelector((store) => store.restaurantOrder.restaurantOrderError);
+  const orderError = useSelector(
+    (store) => store.restaurantOrder.restaurantOrderError
+  );
 
   useEffect(() => {
     dispatch(getOrder("all"));
@@ -83,34 +90,33 @@ const ReceivedOrder = () => {
     );
   };
 
-  const renderFooter = (item,index) =>{
+  const renderFooter = (item, index) => {
     return (
       <View style={localStyles.footerContaier}>
-        <View style={{flexDirection:'row',gap:5}}>
-            <Text>Payment Status :</Text>
-            <Text
-              style={{
-                textAlign: "center",
-                fontWeight: "bold",
-              }}
-            >
-            {index % 2 == 0 ?  "Paid" : "UnPaid"}
-            </Text>
-            </View>
-            <View style={{alignSelf:'center',flexDirection: "row",}}>
-              <Text style={localStyles.idText}> Total : </Text>
-              <Text style={localStyles.dataText}>
-                {item.orderItems.reduce(
-                  (accumulator, currentValue) =>
-                    accumulator +
-                    currentValue.item.price * currentValue.quantity,
-                  0
-                )}
-              </Text>
-            </View>
-          </View>
-    )
-  }
+        <View style={{ flexDirection: "row", gap: 5 }}>
+          <Text>Payment Status :</Text>
+          <Text
+            style={{
+              textAlign: "center",
+              fontWeight: "bold",
+            }}
+          >
+            {index % 2 == 0 ? "Paid" : "UnPaid"}
+          </Text>
+        </View>
+        <View style={{ alignSelf: "center", flexDirection: "row" }}>
+          <Text style={localStyles.idText}> Total : </Text>
+          <Text style={localStyles.dataText}>
+            {item.orderItems.reduce(
+              (accumulator, currentValue) =>
+                accumulator + currentValue.item.price * currentValue.quantity,
+              0
+            )}
+          </Text>
+        </View>
+      </View>
+    );
+  };
 
   const renderOrder = ({ item, index, navigation }) => {
     return (
@@ -118,24 +124,30 @@ const ReceivedOrder = () => {
         <View style={localStyles.header}>
           <View style={localStyles.headerContainer}>
             <View style={localStyles.userNameCircle}>
-              <Text style={localStyles.userTitleText}>{item?.name[0].toUpperCase()}</Text>
+              <Text style={localStyles.userTitleText}>
+                {item?.name[0].toUpperCase()}
+              </Text>
             </View>
             <View>
               <Text style={localStyles.userNameText}>{item?.name}</Text>
               <Text style={localStyles.orderTimeText}>
-                {moment(item.createdAt).add(1, "days").calendar()}
+                {moment(item?.createdAt).format("LL")}
+              </Text>
+              <Text style={localStyles.orderTimeText}>
+                {moment(item?.createdAt).format("LT")}
+                {/* {moment(item.createdAt).add(1, "days").calendar()} */}
               </Text>
             </View>
           </View>
-            <View style={localStyles.detailContainer}>
-              <Text style={localStyles.idText}>Order ID : </Text>
-              <Text style={localStyles.dataText}> {item.orderId}</Text>
-            </View>
-                </View>
+          <View style={localStyles.detailContainer}>
+            <Text style={localStyles.idText}>Order ID : </Text>
+            <Text style={localStyles.dataText}> {item.orderId}</Text>
+          </View>
+        </View>
         <FlatList
           data={item.orderItems}
           renderItem={renderItem}
-          ListFooterComponent={()=>renderFooter(item,index)}
+          ListFooterComponent={() => renderFooter(item, index)}
           keyExtractor={(item) => item.item.id.toString()}
         />
         {item?.status == "DECLINED" || item?.status == "PICKED_UP" ? (
@@ -246,7 +258,7 @@ const localStyles = StyleSheet.create({
     fontWeight: "600",
     color: "#000000",
   },
-  orderStatusText:{
+  orderStatusText: {
     fontSize: 14,
     fontWeight: "500",
     color: "#000000",
@@ -267,36 +279,40 @@ const localStyles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
+    flex: 1,
   },
   headerContainer: {
     flexDirection: "row",
     gap: 10,
+    // flex: 1,
   },
   userNameCircle: {
-    width:40,
-    height:40,
+    width: 40,
+    height: 40,
     borderRadius: 25,
     backgroundColor: "white",
     padding: 10,
-    alignItems:'center',
-    justifyContent:'center',
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
   },
-  userTitleText:{
+  userTitleText: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#000000",
   },
   detailContainer: {
     flexDirection: "row",
+    alignItems: "flex-end",
+    // flex: 1,
   },
-  footerContaier:{
-    justifyContent:'space-between',
-    alignItems:'center',
-    flexDirection:'row',
+  footerContaier: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
     padding: 10,
     // backgroundColor: "#f1d981",
-    backgroundColor:"#f5e4a5"
-
+    backgroundColor: "#f5e4a5",
   },
   idText: {
     fontSize: 14,
@@ -362,7 +378,6 @@ const localStyles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderRadius: 10,
-    // backgroundColor: "#ecc94b",
   },
   dropDownStyle: {
     width: "100%",
@@ -375,8 +390,7 @@ const localStyles = StyleSheet.create({
     gap: 10,
     paddingBottom: 10,
     paddingHorizontal: 10,
-    // backgroundColor: "#f1d981",
-    backgroundColor:"#f5e4a5",
+    backgroundColor: "#f5e4a5",
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
   },
