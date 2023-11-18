@@ -39,3 +39,7 @@ export const addRestaurantMenuItemAPI = `${API_URL}api/restaurants`;
 export const updateRestaurantMenuItemAPI = `${API_URL}api/restaurants`;
 
 export const deleteRestaurantMenuItemAPI = `${API_URL}api/restaurants`;
+
+export const getAllOrdersForRestaurantAPI = `${API_URL}api/order/`;
+
+export const updateOrderStatusForRestaurantAPI = `${API_URL}api/order/`;
