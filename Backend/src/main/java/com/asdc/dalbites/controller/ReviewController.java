@@ -23,22 +23,24 @@ public class ReviewController {
     }
     @PostMapping
     public ResponseEntity<ReviewDTO> createReview(@RequestHeader("Authorization") String bearerToken, @RequestBody ReviewDTO reviewDTO) {
-
-        return null;
+        ReviewDTO createdReview = reviewService.createReview(bearerToken,reviewDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
     }
 
     @GetMapping("/{restaurantId}")
     public List<ReviewDTO> getRestaurantReviews(@PathVariable Long restaurantId){
-        return null;
+        return reviewService.getAllRestaurantReviews(restaurantId);
     }
 
     @GetMapping("/{restaurantId}/user")
     public ResponseEntity<ReviewDTO> getRestaurantReviewByUser(@RequestHeader("Authorization") String bearerToken, @PathVariable Long restaurantId) {
-        return null;
+        ReviewDTO createdReview = reviewService.getRestaurantReviewByUser(bearerToken,restaurantId);
+        return ResponseEntity.status(HttpStatus.OK).body(createdReview);
     }
 
     @PutMapping
     public ResponseEntity<ReviewDTO> updateRestaurantReviewByUser(@RequestBody ReviewDTO updatedReviewDTO) {
-        return null;
+        ReviewDTO createdReview = reviewService.updateRestaurantReviewByUser(updatedReviewDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(createdReview);
     }
 }
