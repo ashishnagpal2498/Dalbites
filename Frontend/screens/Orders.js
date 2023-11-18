@@ -31,7 +31,9 @@ const Orders = ({ navigation }) => {
             <View style={styles.ordercard} key={index}>
               <View style={styles.row1}>
                 <Text style={styles.row1text}>Order ID: {order.orderId}</Text>
-                <Text style={styles.row1text}>Date: {order.createdAt}</Text>
+                <Text style={styles.row1text}>
+                  Date: {new Date(order.createdAt).toLocaleString("en-US")}
+                </Text>
               </View>
 
               <View style={styles.row2}>
@@ -56,7 +58,7 @@ const Orders = ({ navigation }) => {
                   style={styles.reviewButton}
                   onPress={() => handlereview(order.restaurantId)}
                 >
-                  <Text style={styles.reviewtext}>Add a Review</Text>
+                  <Text style={styles.reviewtext}>Review restaurant</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -72,62 +74,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     backgroundColor: "lightgrey",
-  },
-  header: {
-    backgroundColor: "black",
-    elevation: 5,
-    width: "100%",
-    alignItems: "center",
-  },
-  headertext: {
-    color: "white",
-    fontSize: 25,
-    fontWeight: "bold",
-    textAlign: "center",
-    margin: 5,
-  },
-  profilebody: {
-    width: "100%",
-    alignSelf: "center",
-    backgroundColor: "white",
-    padding: 10,
-  },
-  profileinfocontainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    borderWidth: 1,
-  },
-  profilephotoContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRightWidth: 1,
-  },
-  photoContainer: {
-    width: "100%",
-    aspectRatio: 1,
-    overflow: "hidden",
-  },
-  photo: {
-    width: "100%",
-    height: "100%",
-  },
-  photobutton: {
-    backgroundColor: "#EAB308",
-    paddingVertical: 2,
-    paddingHorizontal: 5,
-    borderRadius: 5,
-    margin: 5,
-  },
-  phototext: {
-    fontSize: 10,
-    alignSelf: "center",
-  },
-  profileinfo: {
-    flex: 3,
-    paddingHorizontal: 7,
-    paddingBottom: 7,
-    justifyContent: "space-evenly",
   },
   nametext: {
     fontSize: 20,
@@ -202,17 +148,16 @@ const styles = StyleSheet.create({
   },
   addreviewbuttoncontainer: {
     marginTop: 10,
-    alignSelf: "center",
+    alignSelf: "flex-end",
   },
   reviewButton: {
-    backgroundColor: "#EAB308",
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 7,
   },
   reviewtext: {
-    fontSize: 15,
-    fontWeight: "bold",
+    fontSize: 12,
+    color: "blue",
     textAlign: "center",
   },
 });
