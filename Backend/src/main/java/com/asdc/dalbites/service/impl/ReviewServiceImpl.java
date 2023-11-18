@@ -70,11 +70,24 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewDTO getRestaurantReviewByUser(String token, Long restaurantId){
-       return null;
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        Long userId = Long.parseLong(tokenClaims.get("user_id").toString());
+        Optional<ReviewDao> reviewDao = reviewRepository.findByUser_UserIdAndRestaurant_Id(userId,restaurantId);
+        return reviewDao.map(dao -> reviewMapper.toReviewDTO(dao)).orElse(null);
     }
 
     @Override
     public ReviewDTO updateRestaurantReviewByUser(ReviewDTO updatedReviewDTO) {
-        return null;
+        Optional<ReviewDao> existingReviewOptional = reviewRepository.findById(updatedReviewDTO.getReviewId());
+
+        if (existingReviewOptional.isPresent()) {
+            ReviewDao existingReview = existingReviewOptional.get();
+            existingReview.setRating(updatedReviewDTO.getRating());
+            existingReview.setReviewComment(updatedReviewDTO.getReviewComment());
+
+            ReviewDao updatedReview = reviewRepository.save(existingReview);
+
+            return reviewMapper.toReviewDTO(updatedReview);
+        } else return null;
     }
 }
