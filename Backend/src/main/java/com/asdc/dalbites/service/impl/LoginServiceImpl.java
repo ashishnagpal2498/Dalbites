@@ -89,7 +89,7 @@ public class LoginServiceImpl implements LoginService {
                 userDao.setLoginDao(loginDao);
                 userRepository.save(userDao);
                 claims.put("email", userDao.getEmail());
-                claims.put("user_id", userDao.getUser_id());
+                claims.put("user_id", userDao.getUserId());
             }
             else if (userSignUpDTO.getRoleId() == restaurantRole) {
                 RestaurantDao restaurantDao = new RestaurantDao(userSignUpDTO.getName(), userSignUpDTO.getAddress());
@@ -140,7 +140,7 @@ public class LoginServiceImpl implements LoginService {
                 UserDao userDetails = (UserDao) getUserByUsername(userLoginDTO.getUsername());
                 claims.put("name", userDetails.getName());
                 claims.put("email", userDetails.getEmail());
-                claims.put("user_id", userDetails.getUser_id());
+                claims.put("user_id", userDetails.getUserId());
             }
             else if (loginDao.getRoleDao().getId() == restaurantRole) {
                 RestaurantDao restaurantDao = (RestaurantDao) getUserByUsername(userLoginDTO.getUsername());

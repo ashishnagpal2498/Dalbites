@@ -18,7 +18,7 @@ import com.asdc.dalbites.model.DAO.RestaurantDao;
 import com.asdc.dalbites.model.DTO.MenuItemDTO;
 import com.asdc.dalbites.repository.MenuItemRepository;
 import com.asdc.dalbites.repository.RestaurantRepository;
-import com.asdc.dalbites.service.impl.FirebaseFileService;
+import com.asdc.dalbites.service.FirebaseFileService;
 import com.asdc.dalbites.service.impl.MenuServiceImpl;
 
 public class MenuServiceImplTest {
