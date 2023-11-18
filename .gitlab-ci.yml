@@ -7,7 +7,7 @@ stages:          # List of stages for jobs, and their order of execution
 variables:
   # Define your environment-specific variables here
   FRONTEND_IMAGE: node:18-alpine3.17  # Base image for the frontend
-  BACKEND_IMAGE: maven:3-jdk-8  # Base image for the backend
+  BACKEND_IMAGE: maven:3.8.3-openjdk-17  # Base image for the backend
 
 # test_backend
 test_backend:
