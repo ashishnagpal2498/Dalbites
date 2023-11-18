@@ -13,9 +13,11 @@ variables:
 test_backend:
   stage: test
   image: $BACKEND_IMAGE
+  before_script:
+    - mvn clean
   script:
     - cd Backend
-    - mvn clean test
+    - mvn test
   only:
     - develop
     - staging
