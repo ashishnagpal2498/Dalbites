@@ -20,16 +20,6 @@ test_eas_login:
     - echo "Username-$EAS_LOGIN_USERNAME"
     - echo "Password-$EAS_LOGIN_PASSWORD"
     - apk add --no-cache expect
-    # - >
-    #   expect - "
-    #     spawn eas login
-    #     expect "Email or username"
-    #     send "$EAS_LOGIN_USERNAME\r"
-    #     expect "Password"
-    #     send "$EAS_LOGIN_PASSWORD\r"
-    #     expect "Logged in"
-    #     expect eof
-    #   "
     - >
       expect -c "
         spawn eas login
@@ -40,5 +30,8 @@ test_eas_login:
         expect \"Logged in\"
         expect eof
       "
+    - eas whoami
+    - eas build --platform android --profile preview --non-interactive
+
   only:
     - frontend
