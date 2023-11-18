@@ -18,6 +18,14 @@ test_eas_login:
     - npm install -g eas-cli 
     - echo "EAS Cli installed"
   script:
-    - eas login -u $EAS_LOGIN_USERNAME  -p $EAS_LOGIN_PASSWORD --non-interactive
+  - |
+    expect << EOF
+      spawn eas login --non-interactive
+      expect "Username:"
+      send "$EAS_LOGIN_USERNAME\r"
+      expect "Password:"
+      send "$EAS_LOGIN_PASSWORD\r"
+      expect eof
+    EOF
   only:
     - frontend
