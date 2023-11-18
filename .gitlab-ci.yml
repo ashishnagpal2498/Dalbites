@@ -17,10 +17,12 @@ test_eas_login:
     - npm install -g eas-cli 
     - echo "EAS Cli installed"
   script:
+    - echo "Username-$EAS_LOGIN_USERNAME"
+    - echo "Password-$EAS_LOGIN_PASSWORD"
     - apk add --no-cache expect
     - |
       expect << 'EOF'
-        spawn eas login --non-interactive
+        spawn eas login
         expect "Email or username"
         send "$EAS_LOGIN_USERNAME\r"
         expect "Password"
