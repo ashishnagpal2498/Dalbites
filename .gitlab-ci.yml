@@ -21,25 +21,16 @@ test_backend:
     - mvn clean
   script:
     - mvn test
-  only:
-    - develop
-    - staging
-    - backend
 
-#test_frontend
-# test_frontend:
-#   stage: test
-#   image: $FRONTEND_IMAGE
-#   before_script:
-#     - npm install -g expo-cli
-#   script:
-#     - cd Frontend
-#     - npm install
-#     - npm run test
-#   only:
-#     - develop
-#     - staging
-#     - frontend
+# test_frontend
+test_frontend:
+  stage: test
+  image: $FRONTEND_IMAGE
+  before_script:
+    - npm install -g expo-cli
+  script:
+    - cd Frontend
+    - npm install
 
 #---------------- Build Stage -------------------------
 
@@ -88,6 +79,7 @@ build_frontend:
   only:
     - frontend
     - develop
+    - staging
 
 #---------------------- Publish Stage -------------------------------
 
@@ -123,10 +115,10 @@ deploy_backend:
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SERVER_USER@$SERVER_IP "
         docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD docker.io &&
-        docker pull docker.io/$DOCKER_LOGIN_USERNAME/dalbites:04ba1020 &&
+        docker pull docker.io/$DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA &&
         docker images &&
         docker container rm -f dalbites-app || true &&
-        docker run -d -p 8080:8080 --name dalbites-app docker.io/$DOCKER_LOGIN_USERNAME/dalbites:04ba1020 &&
+        docker run -d -p 8080:8080 --name dalbites-app docker.io/$DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA &&
         docker ps"
   only:
     - develop
