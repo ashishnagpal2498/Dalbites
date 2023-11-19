@@ -48,7 +48,7 @@ function* loginSaga(action) {
         yield call(SecureStore.setItemAsync, "restaurantId", response.data.restaurant_id.toString());
         yield call(SecureStore.setItemAsync, "isRestaurant", "true");
       }
-      yield put({ type: LOGIN_SUCCESS, payload: { isRestaurant, redirect: isRestaurant ? "AddMenu" : "", restaurantId: response.data?.restaurant_id || "" } });
+      yield put({ type: LOGIN_SUCCESS, payload: { isRestaurant, redirect: isRestaurant ? "AddMenu" : "", restaurantId: response.data?.restaurant_id || "", token: response.data.token } });
     } else {
       yield put({
         type: LOGIN_FAILURE,

@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "DalBite",
-    "slug": "DalBite",
+    "name": "DalBites",
+    "slug": "dalbite",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/DalBites.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/DalBites.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -15,16 +15,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ashish.nagpal.dalbite"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/DalBites.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ashish.nagpal.dalbite"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/images/DalBites.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c89bfb5e-6c5a-43e3-b3ba-8b8c8186e209"
+      }
+    },
+    "owner": "ashish.nagpal"
   }
 }
