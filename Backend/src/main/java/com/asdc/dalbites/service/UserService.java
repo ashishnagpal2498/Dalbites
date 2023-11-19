@@ -9,4 +9,5 @@ import com.asdc.dalbites.model.DAO.UserDao;
 public interface UserService {
 
     public List<UserDao> getAllUsers();
+    public UserDao getUserById(String token);
 }
