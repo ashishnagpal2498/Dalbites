@@ -18,7 +18,7 @@ import com.asdc.dalbites.model.DAO.RestaurantDao;
 import com.asdc.dalbites.model.DTO.MenuItemDTO;
 import com.asdc.dalbites.repository.MenuItemRepository;
 import com.asdc.dalbites.repository.RestaurantRepository;
-import com.asdc.dalbites.service.FirebaseFileService;
+import com.asdc.dalbites.service.impl.FirebaseFileServiceImpl;
 import com.asdc.dalbites.service.impl.MenuServiceImpl;
 
 public class MenuServiceImplTest {
@@ -29,7 +29,7 @@ public class MenuServiceImplTest {
     private RestaurantRepository restaurantRepository;
 
     @Mock
-    private FirebaseFileService firebaseFileService;
+    private FirebaseFileServiceImpl firebaseFileServiceImpl;
 
     @InjectMocks
     private MenuServiceImpl menuService;
@@ -58,7 +58,7 @@ public class MenuServiceImplTest {
 
         //RestaurantDao restaurant = restaurantRepository.getRestaurant(restaurantId);
 
-        when(firebaseFileService.uploadFile(file)).thenReturn("testFile.txt");
+        when(firebaseFileServiceImpl.uploadFile(file)).thenReturn("testFile.txt");
         //when(restaurantRepository.getRestaurant(restaurantId)).thenReturn(new RestaurantDao("name", "address"));
 
         List<MenuItemDao> actualMenu = menuService.getMenu(restaurantId);
