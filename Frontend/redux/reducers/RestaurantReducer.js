@@ -16,6 +16,12 @@ import {
   GET_RESTAURANT_REVIEW_SUCCESS,
   GET_RESTAURANT_REVIEW_FAILURE,
   UPDATE_RESTAURANT_MENUITEM,
+  ADD_CART_ITEM,
+  GET_CART_ITEM,
+  DELETE_CART_ITEM,
+  DELETE_CART_ITEMS,
+  UPDATE_CART_ITEM,
+  SELECT_RESTAURANT_FOR_CART
 } from "../Types/RestaurantTypes";
 
 const initialState = {
@@ -28,6 +34,8 @@ const initialState = {
   restaurantMenu: [{}],
   restaurantReviews: [{}],
   restaurantMenus: [],
+  cartItems: [],
+  selectedRestaurantForCart: {}
 };
 
 export default (state = initialState, action) => {
@@ -116,6 +124,36 @@ export default (state = initialState, action) => {
         ...state,
         ...payload,
       };
+    case GET_CART_ITEM:
+      return {
+        ...state,
+        ...payload
+      };
+    case ADD_CART_ITEM:
+      return {
+        ...state,
+        ...payload
+      };
+    case DELETE_CART_ITEM:
+      return {
+        ...state,
+        ...payload
+      };
+    case UPDATE_CART_ITEM:
+      return {
+        ...state,
+        ...payload
+      };
+    case DELETE_CART_ITEMS:
+      return {
+        ...state,
+        cartItems: []
+      };
+    case SELECT_RESTAURANT_FOR_CART:
+      return {
+        ...state,
+        ...payload
+      }
     default:
       return state;
   }

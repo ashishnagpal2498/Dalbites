@@ -11,4 +11,5 @@ Backend/.mvn/wrapper/maven-wrapper.jar
 Frontend/node_modules/
 node_modules
 .vscode
+logs/
 

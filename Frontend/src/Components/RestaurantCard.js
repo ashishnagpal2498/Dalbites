@@ -1,18 +1,22 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { selectedRestaurantForCart } from "../../redux/actions/RestaurantAction";
 
 const RestaurantCard = ({ navigation, item }) => {
-  const handleCardPress = (id) => {
-    console.log("Restaurant Details --> ", id);
-    navigation.navigate("RestaurantDetail", { id, title: item.name });
+  const dispatch = useDispatch();
+
+  const handleCardPress = (item) => {
+    dispatch(selectedRestaurantForCart(item))
+    navigation.navigate("RestaurantDetail", { id: item.id, title: item.name });
   };
   return (
-    <TouchableOpacity onPress={() => handleCardPress(item.id)}>
+    <TouchableOpacity onPress={() => handleCardPress({ name: item.name, id: item.id })}>
       <View style={styles.card}>
         <View style={styles.imageConatainer}>
           <Image
             style={styles.image}
-            source={require("../../assets/images/placeholder.png")}
+            src={item.restaurantImage}
           />
           <View style={styles.textContainer}>
             <Text style={styles.restaurantName}>{item.name}</Text>
@@ -26,7 +30,7 @@ const RestaurantCard = ({ navigation, item }) => {
           <Text style={styles.bestSellerText}>
             Best Seller: {item.bestSeller}
           </Text>
-          <Text style={styles.timeText}>Avg Prep Time: {item.avgpreptime}</Text>
+          <Text style={styles.timeText}>Avg Prep Time: {item.estimatedDeliveryTime}</Text>
         </View>
       </View>
     </TouchableOpacity>
