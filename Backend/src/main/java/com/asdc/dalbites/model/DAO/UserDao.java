@@ -1,7 +1,9 @@
 package com.asdc.dalbites.model.DAO;
 
 import java.util.Date;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.*;
@@ -13,17 +15,17 @@ import lombok.Setter;
 @Setter
 @Table(name = "student")
 public class UserDao {
-    @Id
-    @Column(name="user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_id;
+	@Id
+	@Column(name="user_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long userId;
 
-    public Long getUser_id() {
-		return user_id;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getName() {
@@ -75,33 +77,38 @@ public class UserDao {
 	}
 
 	@Column(name="name")
-    private String name;
-    
-    @Column(name="email")
-    private String email;
+	private String name;
 
-    @Column(name="is_deleted")
-    private int is_deleted = 0;
+	@Column(name="email")
+	private String email;
 
-    @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    private Date created_at;
+	@Column(name="is_deleted")
+	private int is_deleted = 0;
 
-    @Column(name = "updated_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    private Date updated_at;
+	@Column(name = "created_at")
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreationTimestamp
+	private Date created_at;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "login_id")
-    private LoginDao loginDao;
+	@Column(name = "updated_at")
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreationTimestamp
+	private Date updated_at;
 
-    public UserDao() {
-    }
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "login_id")
+	@JsonIgnore
+	private LoginDao loginDao;
 
-    public UserDao(String name, String email) {
-        this.name = name;
-        this.email = email;
-    }
+	@OneToMany(mappedBy = "user")
+	@JsonIgnore
+	private List<OrderDao> orders;
+
+	public UserDao() {
+	}
+
+	public UserDao(String name, String email) {
+		this.name = name;
+		this.email = email;
+	}
 }

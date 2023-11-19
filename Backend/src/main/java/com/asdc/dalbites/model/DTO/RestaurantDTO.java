@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SetupRestaurantAccountDTO {
+public class RestaurantDTO {
     private Long building_id;
     public Long getBuilding_id() {
 		return building_id;
@@ -51,19 +51,30 @@ public class SetupRestaurantAccountDTO {
     private String name;
     private String description;
     private String fileName;
+    private String deliveryTime;
 
-    public SetupRestaurantAccountDTO(String name, Long buildingId, String description, String fileName) {
+    public RestaurantDTO(String name, Long buildingId, String description, String fileName, String deliveryTime) {
         this.building_id = buildingId;
         this.name = name;
         this.description = description;
         this.fileName = fileName;
+        this.deliveryTime = deliveryTime;
     }
 
-    public SetupRestaurantAccountDTO(Long id, String name, Long buildingId, String description, String fileName) {
+    public RestaurantDTO(Long id, String name, Long buildingId, String description, String fileName, String deliveryTime) {
         this.id = id;
         this.building_id = buildingId;
         this.name = name;
         this.description = description;
         this.fileName = fileName;
+        this.deliveryTime = deliveryTime;
     }
+
+	public String getDeliveryTime() {
+		return deliveryTime;
+	}
+
+	public void setDeliveryTime(String deliveryTime) {
+		this.deliveryTime = deliveryTime;
+	}
 }

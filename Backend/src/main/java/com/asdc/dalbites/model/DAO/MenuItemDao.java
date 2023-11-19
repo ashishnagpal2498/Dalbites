@@ -1,20 +1,13 @@
 package com.asdc.dalbites.model.DAO;
 
 import java.util.Date;
+import java.util.List;
+
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -145,6 +138,10 @@ public class MenuItemDao {
     @JoinColumn(name = "restaurant_id", referencedColumnName = "restaurant_id")
     @JsonIgnore
     private RestaurantDao restaurant;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<OrderItemDao> orderItems;
 
     public MenuItemDao() {
     }

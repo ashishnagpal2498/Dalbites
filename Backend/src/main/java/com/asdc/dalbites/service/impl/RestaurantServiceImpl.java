@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.asdc.dalbites.exception.ResourceNotFoundException;
 import com.asdc.dalbites.model.DAO.RestaurantDao;
-import com.asdc.dalbites.model.DTO.SetupRestaurantAccountDTO;
+import com.asdc.dalbites.model.DTO.RestaurantDTO;
 import com.asdc.dalbites.repository.RestaurantRepository;
 import com.asdc.dalbites.service.RestaurantService;
 
@@ -20,30 +20,27 @@ public class RestaurantServiceImpl implements RestaurantService {
     private RestaurantRepository restaurantRepository;
 
     @Autowired
-    private FirebaseFileService firebaseFileService;
+    private FirebaseFileServiceImpl firebaseFileService;
 
     @Override
     public List<RestaurantDao> getAllRestaurants(List<Long> buildings) {
-        if(buildings.size() == 0) return  (List<RestaurantDao>)restaurantRepository.findAll();
+    	if(buildings.size() == 0) return  (List<RestaurantDao>)restaurantRepository.findAll();
         else return (List<RestaurantDao>)restaurantRepository.getAll(buildings);
         //throw new UnsupportedOperationException("Unimplemented method 'getAllRestaurants'");
     }
 
     @Override
-    public RestaurantDao setupRestaurantAccount(MultipartFile file, SetupRestaurantAccountDTO setupRestaurantAccountDTO) throws Exception {
+    public RestaurantDao setupRestaurantAccount(MultipartFile file, RestaurantDTO setupRestaurantAccountDTO) throws Exception {
         try {
             String fileName = firebaseFileService.uploadFile(file);
             setupRestaurantAccountDTO.setFileName(fileName);
-            restaurantRepository.setupRestaurant(setupRestaurantAccountDTO.getName(), setupRestaurantAccountDTO.getDescription(), setupRestaurantAccountDTO.getBuilding_id(), setupRestaurantAccountDTO.getFileName(), setupRestaurantAccountDTO.getId());
+            restaurantRepository.setupRestaurant(setupRestaurantAccountDTO.getName(), setupRestaurantAccountDTO.getDescription(), setupRestaurantAccountDTO.getBuilding_id(), setupRestaurantAccountDTO.getFileName(), setupRestaurantAccountDTO.getId(), setupRestaurantAccountDTO.getDeliveryTime());
             Optional<RestaurantDao> restaurantDao = restaurantRepository.findById(setupRestaurantAccountDTO.getId());
             if (restaurantDao.isPresent()) {
                 return restaurantDao.get();
             } else {
                 throw new ResourceNotFoundException("Restaurant Not Found");
             }
-        } catch(IllegalArgumentException exception) {
-            exception.printStackTrace();
-            throw exception;
         } catch(Exception exception) {
             exception.printStackTrace();
             throw exception;

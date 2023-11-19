@@ -22,8 +22,8 @@ import com.asdc.dalbites.model.DTO.ForgetPasswordDTO;
 import com.asdc.dalbites.model.DTO.UserLoginDTO;
 import com.asdc.dalbites.model.DTO.UserSignUpDTO;
 import com.asdc.dalbites.model.DTO.VerifyAccountDTO;
-import com.asdc.dalbites.service.EmailService;
 import com.asdc.dalbites.service.LoginService;
+import com.asdc.dalbites.service.impl.EmailServiceImpl;
 
 @RestController
 @RequestMapping("/api")
@@ -36,7 +36,7 @@ public class AuthenticationController {
 	private LoginService loginService;
 
 	@Autowired
-	private EmailService emailService;
+	private EmailServiceImpl emailService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> doSignup(@RequestBody UserSignUpDTO userSignUpDTO) throws Exception {
