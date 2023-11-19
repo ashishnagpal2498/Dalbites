@@ -31,7 +31,7 @@ const Filter = ({ navigation }) => {
   };
 
   useEffect(() => {
-    console.log("Filter screen --> fetch buildings");
+    console.log("Filter screen --> fetch buildings", token);
     dispatch(getBuildings({ token }));
   }, []);
   if (loading) {

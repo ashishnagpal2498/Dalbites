@@ -9,10 +9,12 @@ import {
   Pressable,
   TouchableWithoutFeedback,
   ScrollView,
+  Switch
 } from "react-native";
 import tw from "twrnc";
 import { emailRegex, usernameRegex, passwordRegex } from "../src/Utils/Regex";
 import { setError, signUp } from "../redux/actions/Authentication";
+import Colors from '../src/Utils/Colors';
 
 const SignupScreen = () => {
   const dispatch = useDispatch();
@@ -43,12 +45,16 @@ const SignupScreen = () => {
   };
 
   const validateCredentials = () => {
-    const { username, name, email, password, confirmPassword } = signUpFormData;
+    const { username, name, email, password, confirmPassword, role } = signUpFormData;
     const isError = { ...errors };
 
-    if (!usernameRegex.test(username)) isError.username = "Invalid B00 Id";
+    if (role == "user" && !usernameRegex.test(username)) {
+      isError.username = "Invalid B00 Id";
+    } else if (role == "restaurant" && !emailRegex.test(username)) {
+      isError.username = "Please enter a valid email";
+    }
 
-    if (!emailRegex.test(email)) isError.email = "Please enter a valid email";
+    if (role == "user" && !emailRegex.test(email)) isError.email = "Please enter a valid email";
 
     if (name.trim() === "") isError.name = "Please enter a valid name";
 
@@ -92,6 +98,14 @@ const SignupScreen = () => {
         5000
       );
   }, [error]);
+
+  const handleRoleSwitchValueChange = (value) => {
+    setSignUpFormData({
+      ...signUpFormData,
+      role: value === true ? "restaurant" : "user",
+    });
+  }
+
   return (
     <KeyboardAvoidingView
       behavior="height"
@@ -106,10 +120,23 @@ const SignupScreen = () => {
         >
           <Text style={tw`text-black text-4xl font-bold mb-8`}>Sign Up</Text>
           <Text style={tw`text-red-600 mb-1`}> {error}</Text>
+          
+          <View style={{ flexDirection: 'row' }} >
+            <Text style={tw`text-black text-sm my-3 mr-1`}>User</Text>
+            <Switch
+              trackColor={{ false: Colors.primaryButton, true: Colors.secondaryButton }}
+              thumbColor={signUpFormData.role == "user" ? Colors.primaryButton : Colors.secondaryButton}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={handleRoleSwitchValueChange}
+              value={signUpFormData.role == "restaurant"}
+            />
+            <Text style={tw`text-black text-sm my-3`}>Restaurant</Text>
+          </View>
+          
           <Text style={tw`text-red-600 mb-1`}> {errors.name}</Text>
           <TextInput
             style={tw`bg-gray-200 rounded-lg py-2 px-4 w-80 mb-2`}
-            placeholder="Name"
+            placeholder={ signUpFormData.role == "user" ? "Name" : "Restaurant Owner Name"}
             value={signUpFormData.name}
             onChangeText={(text) => handleSignUpState("name", text)}
           />
@@ -117,18 +144,22 @@ const SignupScreen = () => {
           <Text style={tw`text-red-600 mb-1`}>{errors.username}</Text>
           <TextInput
             style={tw`bg-gray-200 rounded-lg py-2 px-4 w-80 mb-2`}
-            placeholder="Banner Id"
+            placeholder={ signUpFormData.role == "user" ? "Banner Id" : "Email"}
             value={signUpFormData.username}
             onChangeText={(text) => handleSignUpState("username", text)}
           />
 
-          <Text style={tw`text-red-600 mb-1`}>{errors.email}</Text>
-          <TextInput
-            style={tw`bg-gray-200 rounded-lg py-2 px-4 w-80 mb-2`}
-            placeholder="Email"
-            value={signUpFormData.email}
-            onChangeText={(text) => handleSignUpState("email", text)}
-          />
+          {signUpFormData.role == "user" && (
+            <>
+              <Text style={tw`text-red-600 mb-1`}>{errors.email}</Text>
+              <TextInput
+                style={tw`bg-gray-200 rounded-lg py-2 px-4 w-80 mb-2`}
+                placeholder="Email"
+                value={signUpFormData.email}
+                onChangeText={(text) => handleSignUpState("email", text)}
+              />
+            </>)
+          }
 
           <Text style={tw`text-red-600 mb-1`}>{errors.password}</Text>
           <TextInput
@@ -138,6 +169,7 @@ const SignupScreen = () => {
             value={signUpFormData.password}
             onChangeText={(text) => handleSignUpState("password", text)}
           />
+          
           <Text style={tw`text-red-600 mb-1`}>{errors.confirmPassword}</Text>
           <TextInput
             style={tw`bg-gray-200 rounded-lg py-2 px-4 w-80 mb-2`}

@@ -1,30 +1,28 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import IconTextBar from "../Layouts/IconTextBar";
+import Home from "../../screens/Home";
+import Food from "../../screens/Food";
+import Restaurants from "../../screens/Restaurants";
+import Notifications from "../../screens/Notifications";
 import RestaurantStack from "./RestaurantStack";
-import Cart from "../../screens/Cart";
-import Profile from "../../screens/Profile"
+import AddMenu from "../../screens/AddMenu";
 
 const Tab = createBottomTabNavigator();
 
-const HomeTabGroup = () => (
+const RestaurantHomeTabGroup = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       headerShown: false,
       tabBarIcon: ({ focused, color }) => {
         let iconName;
-        if (route.name === "Profile") {
+        if (route.name === "Menu") {
+          iconType = "Ini";
+          iconName = focused ? "home" : "home-outline";
+        } else if (route.name === "Order") {
           iconType = "Mci";
-          iconName = "account";
-        } else if (route.name === "Restaurants") {
-          iconType = "Ini";
-          iconName = "restaurant";
-        } else if (route.name === "Cart") {
-          iconType = "Ini";
-          iconName = focused
-            ? "cart"
-            : "cart-outline";
-        }
+          iconName = "food";
+        } 
 
         return (
           <IconTextBar
@@ -39,10 +37,9 @@ const HomeTabGroup = () => (
       tabBarInactiveTintColor: "gray",
     })}
   >
-    <Tab.Screen name="Restaurants" component={RestaurantStack} />
-    <Tab.Screen name="Profile" component={Profile} />
-    <Tab.Screen name="Cart" component={Cart} />
+    <Tab.Screen name="Menu" component={AddMenu} />
+    <Tab.Screen name="Order" component={Food} />
   </Tab.Navigator>
 );
 
-export default HomeTabGroup;
+export default RestaurantHomeTabGroup;

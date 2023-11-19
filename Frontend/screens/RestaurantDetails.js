@@ -113,7 +113,7 @@ const RestaurantDetails = ({ route }) => {
       <View style={styles.restaurantCard}>
         <View style={styles.restaurantImageContainer}>
           <Image
-            source={require("../assets/images/placeholder.png")}
+            src={restaurant.restaurantImage}
             style={styles.restaurantImage}
           />
         </View>

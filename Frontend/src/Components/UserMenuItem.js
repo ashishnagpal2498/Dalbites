@@ -1,25 +1,31 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { useDispatch } from "react-redux";
 import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import tw from "twrnc";
+import { addCartItem, deleteCartItem } from '../../redux/actions/RestaurantAction';
 
 const UserMenuItem = ({cardData}) => {
-
+  const dispatch = useDispatch();
     const [quantity, setQuantity] = useState(1);
-    
+        
     const increaseQuantity = () => {
+      if (quantity < 15) {
         setQuantity(quantity + 1);
+      }
     };
     
     const decreaseQuantity = () => {
-        if (quantity > 1) {
-            setQuantity(quantity - 1);
-        }
+      if (quantity > 1) {
+        setQuantity(quantity - 1);
+      }
     };
     
-    const addToCart = () => {
-        console.log(`Added ${quantity} ${cardData.name}(s) to the cart.`);
-    };
+  const addToCart = () => {
+    
+    // dispatch(deleteCartItem(cardData.id))
+    dispatch(addCartItem({ item: {...cardData, quantity }}))
+  };
 
     return(
         <View style={styles.itemCard}>
