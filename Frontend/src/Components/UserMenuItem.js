@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useDispatch } from "react-redux";
-import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import tw from "twrnc";
-import { addCartItem, deleteCartItem } from '../../redux/actions/RestaurantAction';
+import { addCartItem } from '../../redux/actions/RestaurantAction';
 
 const UserMenuItem = ({cardData}) => {
   const dispatch = useDispatch();
@@ -22,8 +22,6 @@ const UserMenuItem = ({cardData}) => {
     };
     
   const addToCart = () => {
-    
-    // dispatch(deleteCartItem(cardData.id))
     dispatch(addCartItem({ item: {...cardData, quantity }}))
   };
 
