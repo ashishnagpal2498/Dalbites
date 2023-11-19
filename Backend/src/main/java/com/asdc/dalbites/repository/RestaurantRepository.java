@@ -21,8 +21,8 @@ public interface RestaurantRepository extends JpaRepository<RestaurantDao, Long>
 
     @Modifying
     @Transactional
-    @Query(value = "update restaurant_owner set restaurant_name = ?1, restaurant_description = ?2, building_id = ?3, restaurant_image = ?4 where restaurant_id = ?5", nativeQuery = true)
-    void setupRestaurant(String name, String description, Long buildingId, String image, Long id);
+    @Query(value = "update restaurant_owner set restaurant_name = ?1, restaurant_description = ?2, building_id = ?3, restaurant_image = ?4, estimated_delivery_time = ?6 where restaurant_id = ?5", nativeQuery = true)
+    void setupRestaurant(String name, String description, Long buildingId, String image, Long id, String estimatedDeliveryTime);
 
     @Query(value = "select * from restaurant_owner where building_id in (:ids)", nativeQuery = true)
     public List<RestaurantDao> getAll(List<Long> ids);

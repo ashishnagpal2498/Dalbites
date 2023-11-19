@@ -66,7 +66,7 @@ public class RestaurantServiceImplTest {
         RestaurantDTO restaurantDTO = new RestaurantDTO(1L, "name", 1L, "description", "fileName.png", "deliveryTime");
         
         when(firebaseFileService.uploadFile(file)).thenReturn("test-file.txt");
-        doNothing().when(restaurantRepository).setupRestaurant("name", "Description", 1L, "testfile.png", 1L);
+        doNothing().when(restaurantRepository).setupRestaurant("name", "Description", 1L, "testfile.png", 1L, "10 minutes");
         when(restaurantRepository.findById(1L)).thenReturn(Optional.of(new RestaurantDao("name", "address")));
 
         RestaurantDao result = restaurantService.setupRestaurantAccount(file, restaurantDTO);

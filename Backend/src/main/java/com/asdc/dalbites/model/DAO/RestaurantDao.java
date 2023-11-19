@@ -116,8 +116,11 @@ public class RestaurantDao {
 	@Column(name="restaurant_name", nullable = true)
 	private String restaurantName;
 
-	@Column(name="restaurant_description", nullable = true)
-	private String restaurantDescription;
+    @Column(name="restaurant_description", nullable = true)
+    private String restaurantDescription;
+    
+    @Column(name="estimated_delivery_time", nullable = true)
+    private String estimatedDeliveryTime;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "building_id", referencedColumnName = "id")
@@ -134,11 +137,43 @@ public class RestaurantDao {
 	@JsonIgnore
 	private List<OrderDao> orders;
 
-	public RestaurantDao() {
+    public RestaurantDao(String name, String address) {
+        this.address = address;
+        this.name = name;
+    }
+
+	public String getRestaurantName() {
+		return restaurantName;
 	}
 
-	public RestaurantDao(String name, String address) {
-		this.address = address;
-		this.name = name;
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
+	}
+
+	public String getRestaurantDescription() {
+		return restaurantDescription;
+	}
+
+	public void setRestaurantDescription(String restaurantDescription) {
+		this.restaurantDescription = restaurantDescription;
+	}
+
+	public String getRestaurantImage() {
+		return restaurantImage;
+	}
+
+	public void setRestaurantImage(String restaurantImage) {
+		this.restaurantImage = restaurantImage;
+	}
+
+	public String getEstimatedDeliveryTime() {
+		return estimatedDeliveryTime;
+	}
+
+	public void setEstimatedDeliveryTime(String estimatedDeliveryTime) {
+		this.estimatedDeliveryTime = estimatedDeliveryTime;
+	}
+        
+	public RestaurantDao() {
 	}
 }
