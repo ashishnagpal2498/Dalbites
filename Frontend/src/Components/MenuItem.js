@@ -65,7 +65,7 @@ const MenuItem = ({cardData, onUpdateCard, onDeleteCard}) => {
         <Card style={{borderColor: 'transparent', backgroundColor: 'white', borderBottomColor: 'white', width: '98%', alignSelf: "center", paddingBottom: '10px'}}>
             <Card.Content>
             {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} style={{width: '100%', alignSelf: "center"}}/> */}
-            {isNew ? (<></>) : (<Card.Cover source={{uri: `https://firebasestorage.googleapis.com/v0/b/dalbites-4237e.appspot.com/o/${file}?alt=media&token=${file}`}} style={{width: '100%', alignSelf: "center"}}/>)}
+            {isNew ? (<></>) : (<Card.Cover source={{uri: file}} style={{width: '100%', alignSelf: "center"}}/>)}
             {/* <Card.Cover source={file} style={{width: '100%', alignSelf: "center"}}/> */}
                 {isNew ? 
                 (

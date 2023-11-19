@@ -1,11 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import IconTextBar from "../Layouts/IconTextBar";
-import Home from "../../screens/Home";
-import Food from "../../screens/Food";
-import Restaurants from "../../screens/Restaurants";
-import Notifications from "../../screens/Notifications";
-import RestaurantStack from "./RestaurantStack";
 import AddMenu from "../../screens/AddMenu";
 
 const Tab = createBottomTabNavigator();
@@ -22,7 +17,7 @@ const RestaurantHomeTabGroup = () => (
         } else if (route.name === "Order") {
           iconType = "Mci";
           iconName = "food";
-        } 
+        }
 
         return (
           <IconTextBar
@@ -38,7 +33,7 @@ const RestaurantHomeTabGroup = () => (
     })}
   >
     <Tab.Screen name="Menu" component={AddMenu} />
-    <Tab.Screen name="Order" component={Food} />
+    {/* <Tab.Screen name="Order" component={Food} /> --> Restaurant Orders Screen Here*/}
   </Tab.Navigator>
 );
 

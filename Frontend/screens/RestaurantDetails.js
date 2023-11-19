@@ -12,6 +12,7 @@ import {
 import tw from "twrnc";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getAllRestaurantReviews,
   getRestaurantById,
   getRestaurantMenu,
 } from "../redux/actions/RestaurantAction";
@@ -26,6 +27,9 @@ const RestaurantDetails = ({ route }) => {
   const restaurantMenu = useSelector(
     (store) => store.restaurant.restaurantMenu
   );
+  const restaurantReviews = useSelector(
+    (store) => store.restaurant.restaurantReviews
+  );
   const loading = useSelector((store) => store.restaurant.restaurantLoading);
   const dispatch = useDispatch();
 
@@ -33,82 +37,19 @@ const RestaurantDetails = ({ route }) => {
     // payload - id and token
     dispatch(getRestaurantById({ id, token }));
     dispatch(getRestaurantMenu({ id, token }));
+    dispatch(getAllRestaurantReviews({ id, token }));
   }, []);
 
-  const itemData = [
-    {
-      id: 1,
-      name: "Item 1",
-      price: "$10",
-      preparationTime: "20 mins",
-      description: "This description length will be fixed.",
-      image: require("../assets/images/Placeholder_Food_Item.png"),
-    },
-    {
-      id: 2,
-      name: "Item 2",
-      price: "$15",
-      preparationTime: "25 mins",
-      description: "A delicious item from our menu.",
-      image: require("../assets/images/Placeholder_Food_Item.png"),
-    },
-    {
-      id: 3,
-      name: "Item 3",
-      price: "$15",
-      preparationTime: "25 mins",
-      description: "A delicious item from our menu.",
-      image: require("../assets/images/Placeholder_Food_Item.png"),
-    },
-  ];
-
-  const reviewData = [
-    {
-      id: 1,
-      name: "John Doe",
-      date: "October 10, 2023",
-      rating: "4.5",
-      review: "If Required The Review UI will be improved in later stages ",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      date: "October 12, 2023",
-      rating: "4.5",
-      review: "I had a wonderful dining experience here.",
-    },
-    {
-      id: 3,
-      name: "wdcwcwcw",
-      date: "October 12, 2023",
-      rating: "4.5",
-      review: "I had a wonderful dining experience here.",
-    },
-    {
-      id: 4,
-      name: "wcvwv",
-      date: "October 12, 2023",
-      rating: "4.5",
-      review: "I had a wonderful dining experience here.",
-    },
-    {
-      id: 5,
-      name: "nk kr lvle",
-      date: "October 12, 2023",
-      rating: "4.5",
-      review: "I had a wonderful dining experience here.",
-    },
-  ];
   if (loading) {
     return <Loading />;
   }
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <View style={styles.extraheader}>
           <Text style={styles.restaurantName}>{restaurant.name}</Text>
         </View>
-      </View>
+      </View> */}
 
       <View style={styles.restaurantCard}>
         <View style={styles.restaurantImageContainer}>
@@ -190,20 +131,26 @@ const RestaurantDetails = ({ route }) => {
               </Text>
             </View>
           ))}
-        {activeTab === "reviews" && (
-          <FlatList
-            data={reviewData}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.reviewCard}>
-                <Text style={styles.reviewName}>{item.name}</Text>
-                <Text style={styles.reviewDate}>{item.date}</Text>
-                <Text style={styles.reviewRating}>Rating: {item.rating}</Text>
-                <Text style={styles.reviewText}>{item.review}</Text>
-              </View>
-            )}
-          />
-        )}
+        {activeTab === "reviews" &&
+          (restaurantReviews.length > 0 ? (
+            <FlatList
+              data={restaurantReviews}
+              keyExtractor={(item) => item.reviewId.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.reviewCard}>
+                  <Text style={styles.reviewName}>{item.name}</Text>
+                  <Text style={styles.reviewRating}>Rating: {item.rating}</Text>
+                  <Text style={styles.reviewText}>{item.reviewComment}</Text>
+                </View>
+              )}
+            />
+          ) : (
+            <View>
+              <Text style={tw`text-green-500 font-bold `}>
+                No restaurant reviews
+              </Text>
+            </View>
+          ))}
       </View>
     </View>
   );
@@ -237,13 +184,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     elevation: 5,
-    marginLeft: 10,
-    marginRight: 8,
+    marginLeft: 5,
+    marginRight: 5,
   },
   restaurantImageContainer: {
     width: "100%",
     height: 150,
-
+    marginTop: 5,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
@@ -370,7 +317,8 @@ const styles = StyleSheet.create({
   },
 
   reviewCard: {
-    height: "auto",
+    height: 100,
+    width: 150,
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     elevation: 5,

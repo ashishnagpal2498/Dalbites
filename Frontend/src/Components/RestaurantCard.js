@@ -8,7 +8,7 @@ const RestaurantCard = ({ navigation, item }) => {
 
   const handleCardPress = (item) => {
     dispatch(selectedRestaurantForCart(item))
-    navigation.navigate("RestaurantDetail", { id: item.id });
+    navigation.navigate("RestaurantDetail", { id: item.id, title: item.name });
   };
   return (
     <TouchableOpacity onPress={() => handleCardPress({ name: item.name, id: item.id })}>
