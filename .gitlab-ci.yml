@@ -101,8 +101,10 @@ deploy_backend:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SERVER_USER@$SERVER_IP "
         docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD docker.io &&
         docker pull docker.io/$DOCKER_LOGIN_USERNAME/dalbites:04ba1020 &&
+        docker images &&
         docker container rm -f dalbites-app || true &&
-        docker run -d -p 8080:8080 --name dalbites-app $DOCKER_LOGIN_USERNAME/dalbites:04ba1020"
+        docker run -d -p 8080:8080 --name dalbites-app docker.io/$DOCKER_LOGIN_USERNAME/dalbites:04ba1020 &&
+        docker ps"
   only:
     - develop
     - staging
