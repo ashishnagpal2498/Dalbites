@@ -29,7 +29,7 @@ public class MenuServiceImpl implements MenuService {
     private RestaurantRepository restaurantRepository;
 
     @Autowired
-    private FirebaseFileService firebaseFileService;
+    private FirebaseFileServiceImpl firebaseFileService;
 
     /*
     Redundant Service Impl
