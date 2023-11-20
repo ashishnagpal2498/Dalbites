@@ -14,20 +14,21 @@ import {
   FORGET_PASSWORD_SUCCESS,
   FORGET_PASSWORD_FAILURE,
   SETUP_RESTAURANT_ACCOUNT_SUCCESS,
-  SETUP_RESTAURANT_ACCOUNT_FAILURE
+  SETUP_RESTAURANT_ACCOUNT_FAILURE,
 } from "../Types/AuthenticationTypes";
 
 const initialState = {
   loading: true,
   isAuth: false,
   error: null,
+  errorCode: null,
   tempToken: null,
   tempUser: {},
   user: {},
   successMessage: "",
   redirect: "",
   token: "",
-  restaurantId: ""
+  restaurantId: "",
 };
 
 export default (state = initialState, action) => {
@@ -67,8 +68,9 @@ export default (state = initialState, action) => {
         loading: false,
         isAuth: true,
         error: null,
+        errorCode: null,
         redirect: "",
-        ...payload
+        ...payload,
       };
     case LOGIN_FAILURE:
       return {
@@ -83,7 +85,7 @@ export default (state = initialState, action) => {
         isAuth: false,
         isRestaurant: false,
         restaurantId: "",
-        redirect: ""
+        redirect: "",
       };
     case LOGOUT_FAILURE:
       return {
