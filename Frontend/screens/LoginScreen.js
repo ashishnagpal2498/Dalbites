@@ -11,7 +11,7 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const error = useSelector((store) => store.authentication.error);
-
+  const errorCode = useSelector((store) => store.authentication.errorCode);
   const [userIdError, setUserIdError] = useState("");
 
   const validateCredentials = () => {
@@ -35,7 +35,7 @@ const LoginScreen = ({ navigation }) => {
     <View style={tw`flex-1 justify-center items-center bg-white`}>
       <Text style={tw`text-black text-4xl font-bold mb-4`}>Login</Text>
       <Text style={{ color: "red" }}>
-        {error && "Invalid Credentials Entered"}
+        {error && `Error - ${error} ErrorCode - ${errorCode}`}
       </Text>
       <Text style={tw`text-red-600 mb-1`}> {userIdError}</Text>
       <TextInput
