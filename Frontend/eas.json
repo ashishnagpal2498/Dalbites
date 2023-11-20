@@ -3,7 +3,9 @@
     "version": ">= 5.7.0"
   },
   "build": {
-    "image": "latest",
+    "image": {
+      "node": "18.18.0" 
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal"
