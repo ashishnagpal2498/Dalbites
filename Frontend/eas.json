@@ -3,6 +3,7 @@
     "version": ">= 5.7.0"
   },
   "build": {
+    "image": "latest",
     "development": {
       "developmentClient": true,
       "distribution": "internal"
