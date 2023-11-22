@@ -3,6 +3,7 @@ package com.asdc.dalbites.controller;
 import com.asdc.dalbites.exception.ResourceNotFoundException;
 import com.asdc.dalbites.model.DAO.MenuItemDao;
 import com.asdc.dalbites.model.DTO.MenuItemDTO;
+import com.asdc.dalbites.model.REQUEST.AddMenuItemRequest;
 import com.asdc.dalbites.repository.MenuItemRepository;
 import com.asdc.dalbites.service.MenuService;
 
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,20 +47,19 @@ public class MenuItemController {
     }
 
     @PostMapping("/{restaurantId}/add-menu-item")
-    public ResponseEntity<?> addMenuItem(@RequestParam("file") MultipartFile file, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("price") String price, @RequestParam("time") String time, @RequestParam("is_available") String is_available, @RequestParam("restaurant_id") String restaurant_id) throws Exception{
+    public ResponseEntity<?> addMenuItem(@ModelAttribute AddMenuItemRequest request) throws Exception {
         try {
-            Boolean isAvailable;
-            if(is_available.equals("true")) isAvailable = true;
-            else isAvailable = false;
+            Boolean isAvailable = request.getIsAvailable().equals("1") ? true : false;
+            Long restaurantId = Long.parseLong(request.getRestaurantId());
+            Double price = Double.parseDouble(request.getPrice());
+            Double time = Double.parseDouble(request.getTime());
+            String fileName = request.getFile().getOriginalFilename();
+            String description = request.getDescription();
+            String name = request.getName();
 
-            Long restaurantId = Long.parseLong(restaurant_id);
-            Double Price = Double.parseDouble(price);
-            Double Time = Double.parseDouble(time);
-            String file_name = file.getOriginalFilename();
+            MenuItemDTO menuItemDTO = new MenuItemDTO(name, description, price, time, isAvailable, fileName, restaurantId);
 
-            MenuItemDTO menuItemDTO = new MenuItemDTO(name, description, Price, Time, isAvailable , file_name, restaurantId);
-
-            List<MenuItemDao> result = menuService.addMenuItem(restaurantId, file, menuItemDTO);
+            List<MenuItemDao> result = menuService.addMenuItem(restaurantId, request.getFile(), menuItemDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (Exception error) {
             return ResponseEntity.internalServerError().body(error);
