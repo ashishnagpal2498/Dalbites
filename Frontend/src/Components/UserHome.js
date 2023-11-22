@@ -6,6 +6,7 @@ import Colors from "../Utils/Colors";
 import OrderReviewStack from "./OrderReviewStack";
 import ProfileStack from "./ProfileStack";
 import Cart from "../../screens/Cart";
+import CartStack from "./CartStack";
 const Tab = createBottomTabNavigator();
 
 const UserHome = () => (
@@ -21,7 +22,7 @@ const UserHome = () => (
         } else if (route.name === "RestaurantsStack") {
           iconType = "Ini";
           iconName = focused ? "restaurant" : "restaurant-outline";
-        } else if (route.name === "Cart") {
+        } else if (route.name === "CartStack") {
           iconType = "Ini";
           iconName = focused ? "cart" : "cart-outline";
         } else if (route.name === "Profile") {
@@ -48,7 +49,11 @@ const UserHome = () => (
       component={RestaurantStack}
     />
     <Tab.Screen name="Orders" component={OrderReviewStack} />
-    <Tab.Screen name="Cart" component={Cart} />
+    <Tab.Screen
+      name="CartStack"
+      options={{ title: "Cart" }}
+      component={CartStack}
+    />
     <Tab.Screen name="Profile" component={ProfileStack} />
   </Tab.Navigator>
 );
