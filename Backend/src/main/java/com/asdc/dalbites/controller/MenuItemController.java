@@ -2,13 +2,10 @@ package com.asdc.dalbites.controller;
 
 import com.asdc.dalbites.exception.ResourceNotFoundException;
 import com.asdc.dalbites.model.DAO.MenuItemDao;
-import com.asdc.dalbites.model.DAO.RestaurantDao;
 import com.asdc.dalbites.model.DTO.MenuItemDTO;
 import com.asdc.dalbites.repository.MenuItemRepository;
-import com.asdc.dalbites.repository.RestaurantRepository;
 import com.asdc.dalbites.service.MenuService;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,35 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
 @RequestMapping("/api/restaurants")
 public class MenuItemController {
     @Autowired
-    private RestaurantRepository restaurantRepository;
-    @Autowired
     private MenuItemRepository menuItemRepository;
     @Autowired
     private MenuService menuService;
-
-    /*
-    Redundant API's (for View Menu User Story)
-
-    @GetMapping("/{restaurantId}/menu")
-    public List<MenuItem> getMenuItemsForRestaurant(@PathVariable Long restaurantId){
-        return menuItemRepository.findByRestaurantId(restaurantId);
-    }
-    @PostMapping("/{restaurantId}/item")
-    public MenuItem createMenuItemForRestaurant(@PathVariable Long restaurantId, @RequestBody MenuItem menuItem) {
-        RestaurantDao restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found"));
-        menuItem.setRestaurant(restaurant);
-        return menuItemRepository.save(menuItem);
-    }
-    */
 
     @GetMapping("/{restaurantId}/menu")
     public ResponseEntity<?> getMenu(@PathVariable Long restaurantId) throws Exception{
@@ -68,12 +47,18 @@ public class MenuItemController {
     @PostMapping("/{restaurantId}/add-menu-item")
     public ResponseEntity<?> addMenuItem(@RequestParam("file") MultipartFile file, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("price") String price, @RequestParam("time") String time, @RequestParam("is_available") String is_available, @RequestParam("restaurant_id") String restaurant_id) throws Exception{
         try {
-            Boolean is_available_boolean;
-            if(is_available.equals("true")) is_available_boolean = true;
-            else is_available_boolean = false;
+            Boolean isAvailable;
+            if(is_available.equals("true")) isAvailable = true;
+            else isAvailable = false;
 
-            //HashMap<String, Object> result = menuService.addMenuItem(Long.parseLong(restaurant_id), file, new MenuItemDTO(name, description, Double.parseDouble(price), Double.parseDouble(time), is_available_boolean , file.getOriginalFilename(), Long.parseLong(restaurant_id)));
-            List<MenuItemDao> result = menuService.addMenuItem(Long.parseLong(restaurant_id), file, new MenuItemDTO(name, description, Double.parseDouble(price), Double.parseDouble(time), is_available_boolean , file.getOriginalFilename(), Long.parseLong(restaurant_id)));
+            Long restaurantId = Long.parseLong(restaurant_id);
+            Double Price = Double.parseDouble(price);
+            Double Time = Double.parseDouble(time);
+            String file_name = file.getOriginalFilename();
+
+            MenuItemDTO menuItemDTO = new MenuItemDTO(name, description, Price, Time, isAvailable , file_name, restaurantId);
+
+            List<MenuItemDao> result = menuService.addMenuItem(restaurantId, file, menuItemDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (Exception error) {
             return ResponseEntity.internalServerError().body(error);
@@ -83,24 +68,24 @@ public class MenuItemController {
     @PutMapping("/{restaurantId}/update-menu-item")
     public ResponseEntity<?> updateMenuItem(@PathVariable Long restaurantId, @RequestBody MenuItemDTO menuItemDTO) throws Exception{
         try {
-            MenuItemDao menuItem =
-                menuItemRepository
-                        .findById(menuItemDTO.getId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Menu item not found on :: " + menuItemDTO.getId()));
+            Optional<MenuItemDao> tempMenuItem = menuItemRepository.findById(menuItemDTO.getId());
+            if(tempMenuItem.isPresent()){
+                
+                MenuItemDao menuItem = tempMenuItem.get();
+                menuItem.setName(menuItemDTO.getName());
+                menuItem.setDescription(menuItemDTO.getDescription());
+                menuItem.setTime(menuItemDTO.getTime());
+                menuItem.setPrice(menuItemDTO.getPrice());
+                menuItem.setIs_available(menuItemDTO.getIs_available());
+                menuItem.setUpdated_at(new Date());
 
-            menuItem.setName(menuItemDTO.getName());
-            menuItem.setDescription(menuItemDTO.getDescription());
-            menuItem.setTime(menuItemDTO.getTime());
-            menuItem.setPrice(menuItemDTO.getPrice());
-            menuItem.setIs_available(menuItemDTO.getIs_available());
-            menuItem.setUpdated_at(new Date());
+                final MenuItemDao updatedMenuItem = menuItemRepository.save(menuItem);
+                List<MenuItemDao> result = menuService.getMenu(restaurantId);
+                return ResponseEntity.status(HttpStatus.CREATED).body(result);
 
-            final MenuItemDao updatedMenuItem = menuItemRepository.save(menuItem);
-            List<MenuItemDao> result = menuService.getMenu(restaurantId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(result);
-
-            // HashMap<String, Object> result = menuService.updateMenuItem(restaurantId, menuItemDTO);
-            // return ResponseEntity.status(HttpStatus.CREATED).body(result);
+            } else{
+                throw new ResourceNotFoundException("Menu item not found on :: " + menuItemDTO.getId());
+            }
         } catch (Exception error) {
             System.out.println(error);
             return ResponseEntity.internalServerError().body(error);
@@ -110,19 +95,16 @@ public class MenuItemController {
     @DeleteMapping("/{restaurantId}/delete-menu-item/{menuId}")
     public ResponseEntity<?> deleteMenuItem(@PathVariable(value="restaurantId") Long restaurantId, @PathVariable(value="menuId") Long menuId) throws Exception{
         try {
-
-            MenuItemDao menuItem =
-                menuItemRepository
-                        .findById(menuId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Menu item not found on :: " + menuId));
-
-            menuItem.setIs_deleted((short)1);
-            final MenuItemDao updatedMenuItem = menuItemRepository.save(menuItem);
-            List<MenuItemDao> result = menuService.getMenu(restaurantId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(result);
-            
-            // HashMap<String, Object> result = menuService.deleteMenuItem(menuId, restaurantId);
-            // return ResponseEntity.status(HttpStatus.CREATED).body(result);
+            Optional<MenuItemDao> menuItem = menuItemRepository.findById(menuId);
+            if(menuItem.isPresent()){
+                MenuItemDao menuItemDao = menuItem.get();
+                menuItemDao.setIs_deleted((short)1);
+                final MenuItemDao updatedMenuItem = menuItemRepository.save(menuItemDao);
+                List<MenuItemDao> result = menuService.getMenu(restaurantId);
+                return ResponseEntity.status(HttpStatus.CREATED).body(result);
+            } else{
+                throw new ResourceNotFoundException("Menu item not found on :: " + menuId);
+            }
         } catch (Exception error) {
             return ResponseEntity.internalServerError().body(error);
         }
