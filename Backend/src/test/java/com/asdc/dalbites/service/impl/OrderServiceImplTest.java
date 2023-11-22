@@ -118,8 +118,30 @@ class OrderServiceImplTest {
 
     @Test
     void testCreateOrder_Success() {
-        OrderDTO order = orderService.createOrder(null,"abc");
-        assertNull(order);
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setRestaurantId(1L);
+        orderDTO.setOrderItems(Collections.emptyList());
+
+        String token = "userToken";
+        Claims tokenClaims = mock(Claims.class);
+        when(tokenClaims.get("user_id")).thenReturn("1");
+        when(jwtUtil.getAllClaimsFromToken(token.substring(7))).thenReturn(tokenClaims);
+
+        UserDao user = new UserDao();
+        when(userRepository.findByUserId(1L)).thenReturn(user);
+
+        RestaurantDao restaurantDao = new RestaurantDao();
+        when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurantDao));
+
+        OrderDao savedOrderDao = new OrderDao();
+        when(orderRepository.save(any(OrderDao.class))).thenReturn(savedOrderDao);
+
+        when(orderMapper.toOrderDTO(savedOrderDao)).thenReturn(orderDTO);
+
+        OrderDTO result = orderService.createOrder(orderDTO, token);
+
+        assertNotNull(result);
+        assertEquals(orderDTO, result);
     }
 
     private Principal createPrincipal(String username, int roleId) {
