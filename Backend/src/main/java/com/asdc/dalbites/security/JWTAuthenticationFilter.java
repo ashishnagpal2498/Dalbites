@@ -22,6 +22,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.asdc.dalbites.service.LoginService;
 import com.asdc.dalbites.util.JwtTokenUtil;
 
+/**
+ * Filter to handle JWT authentication for each incoming request.
+ * This class extends {@link OncePerRequestFilter} and is responsible for
+ * extracting the JWT token from the request, validating it, and setting
+ * the authentication details in the Spring Security context.
+ * @see Component
+ * @see OncePerRequestFilter
+ */
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
@@ -31,6 +39,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private LoginService userDetailsService;
 
+    /**
+     * Performs the actual filtering logic for each incoming request.
+     *
+     * @param request     the HttpServletRequest representing the incoming request
+     * @param response    the HttpServletResponse representing the outgoing response
+     * @param filterChain the FilterChain for executing the next filters in the chain
+     * @throws ServletException if a servlet-specific error occurs during the processing of the request
+     * @throws IOException      if an I/O error occurs during the processing of the request
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 

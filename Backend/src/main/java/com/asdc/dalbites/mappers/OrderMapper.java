@@ -8,9 +8,19 @@ import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+
+/**
+ * Class responsible for mapping between OrderDao and OrderDTO.
+ */
 @Component
 public class OrderMapper {
 
+    /**
+     * Converts OrderDao to OrderDTO.
+     *
+     * @param orderDao The OrderDao object to be converted.
+     * @return The corresponding OrderDTO object.
+     */
     public OrderDTO toOrderDTO(OrderDao orderDao) {
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setOrderId(orderDao.getOrderId());
@@ -26,6 +36,12 @@ public class OrderMapper {
         return orderDTO;
     }
 
+    /**
+     * Converts OrderDTO to OrderDao.
+     *
+     * @param orderDTO The OrderDTO object to be converted.
+     * @return The corresponding OrderDao object.
+     */
     public OrderDao toOrderDao(OrderDTO orderDTO){
         OrderDao orderDao = new OrderDao();
         orderDao.setOrderId(orderDTO.getOrderId());

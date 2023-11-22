@@ -25,31 +25,48 @@ import com.google.cloud.storage.StorageOptions;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Implementation of the {@link FirebaseFileService} interface providing methods to interact with Firebase Cloud Storage for file upload.
+ */
 @Service
 public class FirebaseFileServiceImpl implements FirebaseFileService {
     private Storage storage;
 
     @Autowired
     ResourceLoader resourceLoader;
-    
+
     @Autowired
     UtilityFunctions utilityFunctions;
 
+    /**
+     * Initializes the Firebase Cloud Storage connection upon application startup.
+     *
+     * @param event The {@link ApplicationReadyEvent} indicating that the application has started.
+     */
     @EventListener
     public void init(ApplicationReadyEvent event) {
         try {
             File file = ResourceUtils.getFile("classpath:dalbites-4237e-firebase-adminsdk-35gtm-5fb454d097.json");
             InputStream in = new FileInputStream(file);
-            storage = StorageOptions.newBuilder().
-                    setCredentials(GoogleCredentials.fromStream(in)).
-                    setProjectId("dalbites-4237e").build().getService();
+            storage = StorageOptions.newBuilder()
+                    .setCredentials(GoogleCredentials.fromStream(in))
+                    .setProjectId("dalbites-4237e")
+                    .build()
+                    .getService();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
+    /**
+     * Uploads a file to Firebase Cloud Storage.
+     *
+     * @param file The {@link MultipartFile} representing the file to be uploaded.
+     * @return The URL of the uploaded file in Firebase Cloud Storage.
+     * @throws IOException If an I/O exception occurs during the file upload.
+     */
     @Override
-    public String uploadFile(MultipartFile file) throws IOException{
+    public String uploadFile(MultipartFile file) throws IOException {
         String imageName = generateFileName(file.getOriginalFilename());
         Map<String, String> map = new HashMap<>();
         map.put("firebaseStorageDownloadTokens", imageName);
@@ -61,11 +78,23 @@ public class FirebaseFileServiceImpl implements FirebaseFileService {
         storage.create(blobInfo, file.getBytes());
         return utilityFunctions.getFirebaseStorageURL(imageName);
     }
-    
+
+    /**
+     * Generates a unique filename for the uploaded file.
+     *
+     * @param originalFileName The original filename of the uploaded file.
+     * @return A unique filename generated using a UUID and the original file extension.
+     */
     private String generateFileName(String originalFileName) {
         return UUID.randomUUID().toString() + "." + getExtension(originalFileName);
     }
 
+    /**
+     * Retrieves the file extension from the original filename.
+     *
+     * @param originalFileName The original filename of the uploaded file.
+     * @return The file extension.
+     */
     private String getExtension(String originalFileName) {
         return StringUtils.getFilenameExtension(originalFileName);
     }

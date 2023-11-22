@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Represents a restaurant entity in the database.
+ */
 @Entity
 @Getter
 @Data
@@ -137,6 +140,12 @@ public class RestaurantDao {
 	@JsonIgnore
 	private List<OrderDao> orders;
 
+	/**
+	 * Constructs a new RestaurantDao with the specified name and address.
+	 *
+	 * @param name    the name of the restaurant
+	 * @param address the address of the restaurant
+	 */
     public RestaurantDao(String name, String address) {
         this.address = address;
         this.name = name;
@@ -173,7 +182,10 @@ public class RestaurantDao {
 	public void setEstimatedDeliveryTime(String estimatedDeliveryTime) {
 		this.estimatedDeliveryTime = estimatedDeliveryTime;
 	}
-        
+
+	/**
+	 * Default constructor for RestaurantDao.
+	 */
 	public RestaurantDao() {
 	}
 }

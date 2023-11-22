@@ -25,6 +25,11 @@ import com.asdc.dalbites.model.DTO.VerifyAccountDTO;
 import com.asdc.dalbites.service.LoginService;
 import com.asdc.dalbites.service.impl.EmailServiceImpl;
 
+/**
+ * Controller class for handling authentication-related operations.
+ * This class provides endpoints for user signup, login, account verification, forget password requests,
+ * and forget password verification.
+ */
 @RestController
 @RequestMapping("/api")
 public class AuthenticationController {
@@ -38,6 +43,12 @@ public class AuthenticationController {
 	@Autowired
 	private EmailServiceImpl emailService;
 
+	/**
+	 * Handles user signup.
+	 *
+	 * @param userSignUpDTO The data transfer object containing user signup information.
+	 * @return ResponseEntity with the result of the signup operation.
+	 */
     @PostMapping("/signup")
     public ResponseEntity<?> doSignup(@RequestBody UserSignUpDTO userSignUpDTO) throws Exception {
 		try {
@@ -51,6 +62,12 @@ public class AuthenticationController {
 		}
     }
 
+	/**
+	 * Handles user login.
+	 *
+	 * @param userLoginDTO The data transfer object containing user login information.
+	 * @return ResponseEntity with the result of the login operation.
+	 */
     @PostMapping("/login")
 	public ResponseEntity<?> doLogin(@RequestBody UserLoginDTO userLoginDTO) throws Exception {
 		try {
@@ -65,6 +82,13 @@ public class AuthenticationController {
 		}
 	}
 
+	/**
+	 * Handles account verification.
+	 *
+	 * @param bearerToken    The authorization token in the request header.
+	 * @param verifyAccountDTO The data transfer object containing verification information.
+	 * @return ResponseEntity with the result of the account verification operation.
+	 */
 	@PostMapping("/verify-account")
 	public ResponseEntity<?> verifyAccount(@RequestHeader("Authorization") String bearerToken, @RequestBody VerifyAccountDTO verifyAccountDTO) throws Exception {
 		try {
@@ -74,6 +98,12 @@ public class AuthenticationController {
 		}
 	}
 
+	/**
+	 * Handles forget password request.
+	 *
+	 * @param forgetPasswordDTO The data transfer object containing forget password request information.
+	 * @return ResponseEntity with the result of the forget password request operation.
+	 */
 	@PostMapping("/forget-password-request")
 	public ResponseEntity<?> forgetPasswordRequest(@RequestBody ForgetPasswordDTO forgetPasswordDTO) throws Exception {
 		try {
@@ -88,6 +118,13 @@ public class AuthenticationController {
 		}
 	}
 
+	/**
+	 * Handles forget password verification.
+	 *
+	 * @param bearerToken        The authorization token in the request header.
+	 * @param forgetPasswordDTO The data transfer object containing forget password verification information.
+	 * @return ResponseEntity with the result of the forget password verification operation.
+	 */
 	@PostMapping("/forget-password-verification")
 	public ResponseEntity<?> forgetPasswordVerification(@RequestHeader("Authorization") String bearerToken, @RequestBody ForgetPasswordDTO forgetPasswordDTO) throws Exception {
 		try {
@@ -97,6 +134,13 @@ public class AuthenticationController {
 		}
 	}
 
+	/**
+	 * Authenticates a user based on the provided username and password.
+	 *
+	 * @param username The username of the user.
+	 * @param password The password of the user.
+	 * @throws Exception If authentication fails, an exception is thrown.
+	 */
 	private void authenticate(String username, String password) throws Exception {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

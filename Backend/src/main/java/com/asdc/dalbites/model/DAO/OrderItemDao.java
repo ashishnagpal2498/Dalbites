@@ -9,6 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
+/**
+ * Represents an order item entity in the database.
+ */
 @Entity
 @Getter
 @Setter

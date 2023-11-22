@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the {@link MenuService} interface providing methods for managing restaurant menus.
+ */
 @Service
 public class MenuServiceImpl implements MenuService {
     @Autowired
@@ -65,6 +68,13 @@ public class MenuServiceImpl implements MenuService {
     }
     */
 
+    /**
+     * Retrieves the menu for a specific restaurant.
+     *
+     * @param restaurantId The ID of the restaurant for which the menu is retrieved.
+     * @return A list of {@link MenuItemDao} representing the menu items for the restaurant.
+     * @throws Exception If there is a failure in fetching the menu.
+     */
     @Override
     public List<MenuItemDao> getMenu(Long restaurantId) throws Exception{
         try {
@@ -74,6 +84,15 @@ public class MenuServiceImpl implements MenuService {
         }
     }
 
+    /**
+     * Adds a new menu item to the restaurant's menu.
+     *
+     * @param restaurantId The ID of the restaurant to which the menu item is added.
+     * @param file         The image file associated with the menu item.
+     * @param menuItemDTO  The data transfer object containing menu item information.
+     * @return A list of {@link MenuItemDao} representing the updated menu items for the restaurant.
+     * @throws Exception If there is a failure in adding the menu item.
+     */
     @Override
     public List<MenuItemDao> addMenuItem(Long restaurantId, MultipartFile file, MenuItemDTO menuItemDTO) throws Exception{
     //public HashMap<String, Object> addMenuItem(MenuItemDTO menuItemDTO) throws Exception{

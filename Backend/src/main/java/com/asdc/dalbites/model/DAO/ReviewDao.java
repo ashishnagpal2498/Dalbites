@@ -8,6 +8,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
+/**
+ * Represents a review entity in the database.
+ */
 @Entity
 @Getter
 @Setter
