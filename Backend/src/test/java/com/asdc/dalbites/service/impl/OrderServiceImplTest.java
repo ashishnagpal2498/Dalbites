@@ -117,8 +117,9 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void createOrder_Success() throws ResourceNotFoundException {
-
+    void testCreateOrder_Success() {
+        OrderDTO order = orderService.createOrder(null,"abc");
+        assertNull(order);
     }
 
     private Principal createPrincipal(String username, int roleId) {
