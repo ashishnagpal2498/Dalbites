@@ -9,8 +9,11 @@ import com.asdc.dalbites.model.ENUMS.OrderStatusEnum;
 import com.asdc.dalbites.repository.LoginRepository;
 import com.asdc.dalbites.repository.OrderRepository;
 import com.asdc.dalbites.repository.RestaurantRepository;
+import com.asdc.dalbites.repository.UserRepository;
 import com.asdc.dalbites.service.EmailService;
 import com.asdc.dalbites.service.impl.OrderServiceImpl;
+import com.asdc.dalbites.util.JwtTokenUtil;
+import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -40,6 +43,12 @@ class OrderServiceImplTest {
 
     @Mock
     private OrderMapper orderMapper;
+
+    @Mock
+    private JwtTokenUtil jwtUtil;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private OrderServiceImpl orderService;
@@ -106,6 +115,12 @@ class OrderServiceImplTest {
         when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> orderService.getOrder(orderId));
     }
+
+    @Test
+    void createOrder_Success() throws ResourceNotFoundException {
+
+    }
+
     private Principal createPrincipal(String username, int roleId) {
         return new Principal() {
             @Override
