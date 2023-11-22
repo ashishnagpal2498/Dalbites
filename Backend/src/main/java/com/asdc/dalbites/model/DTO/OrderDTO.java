@@ -2,12 +2,16 @@ package com.asdc.dalbites.model.DTO;
 
 import com.asdc.dalbites.model.ENUMS.OrderStatusEnum;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Data
+@Getter
+@Setter
 public class OrderDTO {
     private Long orderId;
     private List<OrderItemDTO> orderItems;

@@ -34,7 +34,7 @@ public class OrderItemDao {
     private OrderDao order;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "menu_item_id", referencedColumnName = "id")
     @JsonIgnore
     private  MenuItemDao item;
 }

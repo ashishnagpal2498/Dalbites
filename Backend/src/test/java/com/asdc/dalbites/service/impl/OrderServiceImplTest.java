@@ -117,7 +117,7 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void testCreateOrder_Success() {
+    void testCreateOrder_Success() throws ResourceNotFoundException{
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setRestaurantId(1L);
         orderDTO.setOrderItems(Collections.emptyList());
