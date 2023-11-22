@@ -60,6 +60,13 @@ class OrderControllerTest {
         verify(orderService, times(1)).updateOrderStatus(orderId, orderStatusDTO);
     }
 
+    @Test
+    void testCreateOrder_Success() throws ResourceNotFoundException {
+        OrderDTO orderDTO = new OrderDTO();
+        when(orderService.createOrder(orderDTO, "userToken")).thenReturn(orderDTO);
+        assertNull(orderDTO);
+    }
+
     private Principal createPrincipal(String username) {
         return new Principal() {
             @Override

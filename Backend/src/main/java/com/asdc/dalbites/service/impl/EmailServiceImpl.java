@@ -11,7 +11,7 @@ import com.asdc.dalbites.service.EmailService;
 public class EmailServiceImpl implements EmailService {
     
     @Autowired
-    private JavaMailSender javaMailSender;
+    protected JavaMailSender javaMailSender;
 
     @Override
     public void sendEmail(String to, String subject, String text) {
