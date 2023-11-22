@@ -53,6 +53,8 @@ build_frontend:
   before_script:
     - node --version
     - cd Frontend
+    - echo "---- Display API Credentials file for Hostname ----"
+    - cat ./src/Utils/Api-Cred.js 
     - npm install -g expo-cli
     - echo "Expo CLI installed"
     - npm install -g eas-cli 
