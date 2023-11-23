@@ -7,13 +7,14 @@ import { authSaga } from "./sagas/AuthenticationSaga"; // Import your sagas
 import { restaurantSaga } from "./sagas/RestaurantSaga";
 import { userSaga } from "./sagas/UserSaga";
 import { orderSaga } from "./sagas/OrderSaga";
+import { cartSaga } from "./sagas/CartSaga";
 
 const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
 
 function* rootSaga() {
-  yield all([authSaga(), restaurantSaga(), userSaga(), orderSaga()]);
+  yield all([authSaga(), restaurantSaga(), userSaga(), orderSaga(), cartSaga()]);
 }
 
 sagaMiddleware.run(rootSaga);

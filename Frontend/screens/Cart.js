@@ -3,37 +3,25 @@ import CardItem from "../src/Components/CartItem";
 import tw from "twrnc";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getCartItem } from "../redux/actions/RestaurantAction";
+import { getCartItem, updateCartTotal } from "../redux/actions/CartAction";
 import { useIsFocused } from "@react-navigation/native";
 
-const Cart = () => {
-    let [subTotal, setSubTotal] = useState(0)
-    let [maxWaitTime, setMaxWaitTime] = useState(0)
+const Cart = ({ navigation }) => {
+    const dispatch = useDispatch()
+    const subTotal = useSelector((store) => store.cart.subTotal) || 0;
+    const maxWaitTime = useSelector((store) => store.cart.maxPreparationTime) || 0;
     const isFocused = useIsFocused();
     
-    const data = useSelector((store) => store.restaurant.cartItems) || [];
-    const restaurantData = useSelector((store) => store.restaurant.selectedRestaurantForCart) || [];
-
-    const calculateCartTotal = () => {
-        let total = 0;
-        data.forEach((item) => total += (+item.price * +item.quantity))
-        setSubTotal(total)
-        if (data.length == 0) {
-            setMaxWaitTime(0)
-        }
-        data.forEach((item) => {
-            if (+item.time > maxWaitTime)
-                setMaxWaitTime(+item.time)
-        })
-    }
+    const data = useSelector((store) => store.cart.cartItems) || [];
+    const restaurantData = useSelector((store) => store.cart.selectedRestaurantForCart) || [];
 
     const placeOrder = () => {
-        //place order login here
+        navigation.navigate('Payment', { amount: Number(subTotal * 1.15).toPrecision(2) })
     }
 
     useEffect(() => {
         if (isFocused) {
-            calculateCartTotal()
+            dispatch(updateCartTotal())
         }
     }, [isFocused, data]);
 

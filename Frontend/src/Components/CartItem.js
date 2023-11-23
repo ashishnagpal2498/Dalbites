@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import tw from "twrnc";
-import { deleteCartItem, updateCartItem } from '../../redux/actions/RestaurantAction';
+import { deleteCartItem, updateCartItem } from '../../redux/actions/CartAction';
 
 const CartItem = ({cardData}) => {
   const [quantity, setQuantity] = useState(cardData.quantity || 1);
@@ -35,7 +35,7 @@ const CartItem = ({cardData}) => {
     <View style={styles.card}>
       <View style={styles.itemHolder}>
         <Image
-          source={require("../../assets/images/placeholder.png")}
+          src={cardData.menu_image}
           style={styles.menuItemImage}
         />
         <View style={styles.itemDetailsHolder}>
@@ -68,10 +68,10 @@ const styles = StyleSheet.create({
       margin: 3,
       marginBottom: 16,
       elevation: 3,
-      overflow: 'hidden', // Clip child Image component to border-radius
+      overflow: 'hidden',
     },
     coverImage: {
-      height: 200, // Adjust the height as needed
+      height: 200,
       width: '100%',
       resizeMode: 'cover',
     },
