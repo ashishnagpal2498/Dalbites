@@ -16,4 +16,5 @@ public interface OrderService {
     List<OrderDTO> getAllOrdersByRestaurantId(Long restaurantId);
     OrderDTO getOrder(Long orderId) throws ResourceNotFoundException;
     OrderDTO updateOrderStatus(Long orderId, OrderStatusDTO orderStatusDTO) throws ResourceNotFoundException;
+    OrderDTO createOrder(OrderDTO orderDTO, String token) throws ResourceNotFoundException;
 }
