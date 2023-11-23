@@ -7,6 +7,7 @@ import java.util.Collections;
 import com.asdc.dalbites.exception.ResourceNotFoundException;
 import com.asdc.dalbites.model.DAO.RestaurantDao;
 import com.asdc.dalbites.model.DTO.RestaurantDTO;
+import com.asdc.dalbites.model.REQUEST.SetupRestaurantRequest;
 import com.asdc.dalbites.repository.RestaurantRepository;
 import com.asdc.dalbites.service.RestaurantService;
 import com.asdc.dalbites.util.JwtTokenUtil;
@@ -99,23 +100,26 @@ public class RestaurantController {
     }
 
     @PostMapping("/restaurant/setup")
-    public ResponseEntity<?> setupRestaurantAccount(@RequestHeader("Authorization") String bearerToken, @RequestParam("file") MultipartFile file, @RequestPart("building") String buildingId, @RequestPart("name") String name, @RequestPart("description") String description, @RequestPart("delivery_time") String deliveryTime) throws Exception {
+    public ResponseEntity<?> setupRestaurantAccount(@RequestHeader("Authorization") String bearerToken, @ModelAttribute SetupRestaurantRequest request) throws Exception {
         try {
-        	Claims claims = jwtTokenUtil.getAllClaimsFromToken(bearerToken.substring(Constants.TOKEN_START_INDEX));
-        	Long id = Long.valueOf((Integer) claims.get("restaurant_id"));
+            Claims claims = jwtTokenUtil.getAllClaimsFromToken(bearerToken.substring(Constants.TOKEN_START_INDEX));
+            Long id = Long.valueOf((Integer) claims.get("restaurant_id"));
 
-            Long building_id = Long.parseLong(buildingId);
-            String file_name = file.getOriginalFilename();
-            RestaurantDTO restaurantDTO = new RestaurantDTO(id, name, building_id, description, file_name, deliveryTime);
-            RestaurantDao restaurant = restaurantService.setupRestaurantAccount(file, restaurantDTO);
+            Long buildingId = Long.parseLong(request.getBuilding());
+            String fileName = request.getFile().getOriginalFilename();
+            String name = request.getName();
+            String description = request.getDescription();
+            String time = request.getDeliveryTime();
+
+            RestaurantDTO restaurantDTO = new RestaurantDTO(id, name, buildingId, description, fileName, time);
+            RestaurantDao restaurant = restaurantService.setupRestaurantAccount(request.getFile(), restaurantDTO);
             return ResponseEntity.ok(restaurant);
-        } catch (ResourceNotFoundException exception) {
-            exception.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception);
+         } catch (ResourceNotFoundException exception) {
+             exception.printStackTrace();
+             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception);
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseEntity.internalServerError().body(exception);
         }
     }
-
 }
