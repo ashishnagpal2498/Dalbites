@@ -123,7 +123,15 @@ public class MenuItemDao {
     @Column(name="is_available")
     private Boolean is_available;
 
-    public RestaurantDao getRestaurant() {
+    public String getMenu_image() {
+		return menu_image;
+	}
+
+	public void setMenu_image(String menu_image) {
+		this.menu_image = menu_image;
+	}
+
+	public RestaurantDao getRestaurant() {
         return restaurant;
     }
 
