@@ -70,7 +70,6 @@ function* getRestaurantByIdSaga(action) {
         payload: { restaurant: response.data },
       });
     }
-    console.log("Restaurant --> ", response.data);
   } catch (error) {
     yield put({
       type: GET_RESTAURANT_BY_ID_FAILURE,
@@ -430,90 +429,6 @@ function* deleteRestaurantMenuItem({ payload }) {
   }
 }
 
-function* getCartItemsSaga({ payload }) {
-  try {
-    yield put({
-      type: GET_CART_ITEM,
-      payload
-    })
-  } catch (error) {
-    console.log('get cart item saga error ->', error)
-  }
-}
-
-function* addCartItemSaga({ payload }) {
-  try {
-    if (payload.item) {
-      let cartItems = yield select((state) => state.restaurant.cartItems) || []
-      cartItems = cartItems.filter(item => item.id !== payload);
-      cartItems.push(payload.item)
-      yield put({
-        type: ADD_CART_ITEM,
-        payload: { cartItems }
-      })
-    }
-  } catch (error) {
-    console.log('add cart item saga error ->', error)
-  }
-}
-
-function* deleteCartItemSaga({ payload }) {
-  try {
-    if (payload.id) {
-      let cartItems = yield select((state) => state.restaurant.cartItems) || []
-      cartItems = cartItems.filter(item => item.id !== payload.id);
-      yield put({
-        type: DELETE_CART_ITEM,
-        payload: { cartItems }
-      })
-    }
-  } catch (error) {
-    console.log('delete cart item saga error ->', error)
-  }
-}
-
-function* deleteCartItemsSaga({ payload }) {
-  try {
-    if (payload.item) {
-      yield put({
-        type: DELETE_CART_ITEMS,
-        payload: {}
-      })
-    }
-  } catch (error) {
-    console.log('delete cart items saga error ->', error)
-  }
-}
-
-function* updateCartItemSaga({ payload }) {
-  try {
-    if (payload.item) {
-      let cartItems = yield select((state) => state.restaurant.cartItems) || []
-      cartItems = cartItems.filter(item => item.id !== payload.item.id);
-      cartItems.push(payload.item)
-      yield put({
-        type: UPDATE_CART_ITEM,
-        payload: { cartItems }
-      })
-    }
-  } catch (error) {
-    console.log('update cart item saga error ->', error)
-  }
-}
-
-function* selectRestaurantForCartSaga ({ payload }) {
-  try {
-    if (payload.id) {
-      yield put({
-        type: SELECT_RESTAURANT_FOR_CART,
-        payload: { selectedRestaurantForCart: payload }
-      })
-    }
-  } catch (error) {
-    console.log('select restaurant for cart saga error ->', error)
-  }
-}
-
 export function* restaurantSaga() {
   yield takeEvery(GET_RESTAURANT, getRestaurantsSaga);
   yield takeEvery(GET_BUILDING, getBuildingSaga);
@@ -524,10 +439,4 @@ export function* restaurantSaga() {
   yield takeEvery(SET_RESTAURANT_MENUITEM, addRestaurantMenuItem);
   yield takeEvery(UPDATE_RESTAURANT_MENUITEM, updateRestaurantMenuItem);
   yield takeEvery(DELETE_RESTAURANT_MENUITEM, deleteRestaurantMenuItem);
-  yield takeEvery(GET_CART_ITEM, getCartItemsSaga);
-  yield takeEvery(ADD_CART_ITEM, addCartItemSaga);
-  yield takeEvery(DELETE_CART_ITEM, deleteCartItemSaga);
-  yield takeEvery(DELETE_CART_ITEMS, deleteCartItemsSaga);
-  yield takeEvery(UPDATE_CART_ITEM, updateCartItemSaga);
-  yield takeEvery(SELECT_RESTAURANT_FOR_CART, selectRestaurantForCartSaga)
 }
