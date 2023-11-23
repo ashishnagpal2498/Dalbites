@@ -94,31 +94,6 @@ const RestaurantDetails = ({ route }) => {
               numColumns={2} // Set the number of columns to 2
               renderItem={({ item }) => (
                 <UserMenuItem cardData={item}></UserMenuItem>
-                // <View style={styles.itemCard}>
-                //   <View style={styles.itemImageConatainer}>
-                //     <Image
-                //       style={styles.itemImage}
-                //       source={require("../assets/images/Placeholder_Food_Item.png")}
-                //     />
-                //     <View style={styles.itemTextContainer}>
-                //       <Text style={styles.itemName}>{item.name}</Text>
-                //       <View style={styles.itemRowContainer}>
-                //         <Text style={styles.itemPrice}>{item.price}</Text>
-                //         <Text style={styles.itemPreparationTime}>
-                //           {item.time}
-                //         </Text>
-                //       </View>
-                //     </View>
-                //   </View>
-                //   <ScrollView style={styles.itemDescriptionConatainer}>
-                //     <Text style={styles.itemDescription}>
-                //       {item.description}
-                //     </Text>
-                //   </ScrollView>
-                //   <TouchableOpacity style={styles.itemButtonAddToCart}>
-                //     <Text style={styles.addToCart}>Add to Cart</Text>
-                //   </TouchableOpacity>
-                // </View>
               )}
             />
           ) : (

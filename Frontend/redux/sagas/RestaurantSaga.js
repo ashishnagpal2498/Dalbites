@@ -289,13 +289,14 @@ function* addRestaurantMenuItem({ payload }) {
       "Content-Type": "multipart/form-data",
     };
     console.log("Headers - ", headers);
+    let is_available = payload.is_available == true ? "1" : "0";
     let formData = new FormData();
     formData.append("name", payload.name);
     formData.append("description", payload.description);
     formData.append("price", payload.price);
     formData.append("time", payload.time);
-    formData.append("is_available", payload.is_available);
-    formData.append("restaurant_id", payload.restaurant_id);
+    formData.append("isAvailable", is_available);
+    formData.append("restaurantId", payload.restaurant_id);
     formData.append("file", payload.fileObj);
 
     const response = yield call(
