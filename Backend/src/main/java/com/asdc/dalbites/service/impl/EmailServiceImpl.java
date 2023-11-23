@@ -47,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
         emailText.append("\nTotal Cost: $")
                 .append(order.getTotalAmount())
                 .append("\n");
-        emailText.append("\nPayment Method: ")
+        emailText.append("\nPayment Method: Online ")
                 .append("\n\n");
 
         emailText.append("Thank you for choosing Dalbites! We appreciate your business.\n\n")

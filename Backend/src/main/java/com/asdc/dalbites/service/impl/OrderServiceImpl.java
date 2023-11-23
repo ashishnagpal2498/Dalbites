@@ -128,9 +128,9 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orderRepository.save(orderDao);
-
-        emailService.sendOrderConfirmationEmail(orderDTO, menuItems, (String) tokenClaims.get("email"));
-        return orderMapper.toOrderDTO(orderDao);
+        OrderDTO result = orderMapper.toOrderDTO(orderDao);
+        emailService.sendOrderConfirmationEmail(result, menuItems, (String) tokenClaims.get("email"));
+        return result;
     }
 
     private void sendReadyToPickupEmail(String userEmail) {
