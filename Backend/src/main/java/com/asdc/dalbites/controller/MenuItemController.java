@@ -37,7 +37,6 @@ public class MenuItemController {
 
     @GetMapping("/{restaurantId}/menu")
     public ResponseEntity<?> getMenu(@PathVariable Long restaurantId) throws Exception{
-        //return menuItemRepository.getMenu(restaurantId);
         try {
             List<MenuItemDao> result = menuService.getMenu(restaurantId);
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
