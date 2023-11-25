@@ -28,11 +28,15 @@ const Orders = ({ navigation }) => {
       <SafeAreaView>
         <View style={styles.ordercontainer}>
           {orders.map((order, index) => (
-            <View style={styles.ordercard} key={index}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("OrderDetails", { order })}
+              style={styles.ordercard}
+              key={index}
+            >
               <View style={styles.row1}>
                 <Text style={styles.row1text}>Order ID: {order.orderId}</Text>
                 <Text style={styles.row1text}>
-                  Date: {new Date(order.createdAt).toLocaleString("en-US")}
+                  Date: {new Date(order.createdAt).toLocaleDateString()}
                 </Text>
               </View>
 
@@ -61,7 +65,7 @@ const Orders = ({ navigation }) => {
                   <Text style={styles.reviewtext}>Review restaurant</Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
       </SafeAreaView>

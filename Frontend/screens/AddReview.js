@@ -38,16 +38,18 @@ const AddReview = ({ route, navigation }) => {
     dispatch(
       postReview({ token, restaurantId, rating, reviewComment, review })
     );
+  };
+
+  if (successMessage) {
     setTimeout(() => {
       dispatch(setSuccessMessage({ successMessage: null }));
       navigation.navigate("OrderHistory");
-    }, 4000);
-  };
-  var date = moment().utcOffset("-04:00").format("DD-MM-YYYY hh:mm a");
+    }, 2000);
+  }
 
   const starRatings = [1, 2, 3, 4, 5];
 
-  const [rating, setRating] = useState(null);
+  const [rating, setRating] = useState(0);
 
   const handleStarPress = (index) => {
     setRating(index);
@@ -76,7 +78,11 @@ const AddReview = ({ route, navigation }) => {
     <ScrollView style={styles.reviewScreenContainer}>
       <View style={styles.reviewInfoContainer}>
         <Text style={styles.infoText}>{restaurant.name}</Text>
-        <Text style={styles.infoText}>{date}</Text>
+        <Text style={styles.infoText}>
+          {review &&
+            new Date(review.createdAt).toLocaleDateString() +
+              new Date(review.createdAt).toLocaleTimeString()}
+        </Text>
       </View>
 
       <View style={styles.reviewContainer}>
@@ -121,7 +127,7 @@ const AddReview = ({ route, navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
-        <Text style={tw`text-green-600`}>
+        <Text style={tw`text-green-600 mt-4`}>
           {successMessage && successMessage}
         </Text>
       </View>
