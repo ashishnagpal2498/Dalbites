@@ -57,7 +57,8 @@ const Orders = ({ navigation }) => {
                 </Text>
               </View>
 
-              <View style={styles.addreviewbuttoncontainer}>
+              <View style={styles.buttonsContainer}>
+                <Text> Status: {order.status.split("_").join(" ")} </Text>
                 <TouchableOpacity
                   style={styles.reviewButton}
                   onPress={() => handlereview(order.restaurantId)}
@@ -150,9 +151,11 @@ const styles = StyleSheet.create({
   row3text: {
     fontSize: 16,
   },
-  addreviewbuttoncontainer: {
+  buttonsContainer: {
     marginTop: 10,
-    alignSelf: "flex-end",
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
   reviewButton: {
     paddingVertical: 5,

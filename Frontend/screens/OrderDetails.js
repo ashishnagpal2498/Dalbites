@@ -1,63 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
-import { useDispatch, useSelector } from "react-redux";
-
-const restaurantData = {
-  id: 1,
-  name: "Starbucks",
-  photo: require("../assets/images/placeholder.png"),
-};
-
-const orderItemsData = [
-  {
-    orderItemId: 1,
-    name: "Burger",
-    cost: 8,
-    quantity: 2,
-    photo: require("../assets/images/Placeholder_Food_Item.png"),
-  },
-  {
-    orderItemId: 2,
-    name: "Fries",
-    cost: 5,
-    quantity: 3,
-    photo: require("../assets/images/Placeholder_Food_Item.png"),
-  },
-  {
-    orderItemId: 3,
-    name: "Pizza",
-    cost: 11,
-    quantity: 1,
-    photo: require("../assets/images/Placeholder_Food_Item.png"),
-  },
-  {
-    orderItemId: 4,
-    name: "Coffee",
-    cost: 2,
-    quantity: 4,
-    photo: require("../assets/images/Placeholder_Food_Item.png"),
-  },
-  {
-    orderItemId: 5,
-    name: "Cold Drink",
-    cost: 3,
-    quantity: 2,
-    photo: require("../assets/images/Placeholder_Food_Item.png"),
-  },
-];
-
-const orderData = {
-  orderId: 1,
-  date: "14-Nov-2023",
-  time: "5:49pm",
-  subTotal: 25,
-  taxes: 5,
-  grandTotal: 30,
-  estimatedWaitTime: 15,
-  orderStatus: "Accepted",
-  photo: require("../assets/images/placeholder.png"),
-};
 
 const OrderDetails = ({ route }) => {
   const order = route.params.order;
@@ -65,9 +8,12 @@ const OrderDetails = ({ route }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.restaurantContainer}>
-        <Image style={styles.restaurantImage} source={restaurantData.photo} />
+        <Image
+          style={styles.restaurantImage}
+          source={{ uri: order.restaurantImage }}
+        />
         <View style={styles.restaurantNameContainer}>
-          <Text style={styles.restaurantName}>{restaurantData.name}</Text>
+          <Text style={styles.restaurantName}>{order.restaurantName}</Text>
         </View>
       </View>
 
@@ -139,7 +85,7 @@ const OrderDetails = ({ route }) => {
         <View style={styles.orderRow2}>
           <Text style={styles.orderRow2Text}>Status: {order.status}</Text>
           <Text style={styles.orderRow2Text}>
-            Estimated waiting time: {orderData.estimatedWaitTime}{" "}
+            Estimated waiting time: 15 mins{" "}
           </Text>
         </View>
       </View>
