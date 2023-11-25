@@ -5,10 +5,11 @@ import Restaurants from "../../screens/Restaurants";
 import RestaurantDetails from "../../screens/RestaurantDetails";
 import FilterScreen from "../../screens/FilterScreen";
 import SearchScreen from "../../screens/SearchScreen";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { TouchableOpacity } from "react-native";
 import tw from "twrnc";
 import IconTextBar from "../Layouts/IconTextBar";
+import { setSelectedBuildingRedux } from "../../redux/actions/RestaurantAction";
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,10 @@ const RestaurantStack = ({ navigation }) => {
       backgroundColor: "#EAB308",
     },
   };
+  const buildingIds = useSelector(
+    (store) => store.restaurant.selectedBuildings
+  );
+  const dispatch = useDispatch();
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
@@ -31,6 +36,23 @@ const RestaurantStack = ({ navigation }) => {
               <IconTextBar iconType="Fai" iconName="filter" iconOnly={true} />
             </TouchableOpacity>
           ),
+          headerRight: () => {
+            return (
+              buildingIds.length > 0 && (
+                <TouchableOpacity
+                  style={tw`mt-2 rounded-lg mr-3 `}
+                  onPress={() => dispatch(setSelectedBuildingRedux([]))}
+                >
+                  <IconTextBar
+                    iconType="Ati"
+                    iconColor="black"
+                    iconName="close"
+                    iconOnly={true}
+                  />
+                </TouchableOpacity>
+              )
+            );
+          },
         }}
         component={Restaurants}
       />
