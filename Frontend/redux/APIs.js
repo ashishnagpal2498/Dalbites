@@ -43,3 +43,5 @@ export const deleteRestaurantMenuItemAPI = `${API_URL}api/restaurants`;
 export const getAllUserReviewAPI = `${API_URL}api/review`;
 
 export const getUserDetailsAPI = `${API_URL}api/user`;
+
+export const createOrderAPI = `${API_URL}api/order/create`;

@@ -54,7 +54,7 @@ function* postOrUpdateReviewSaga({ payload }) {
         axios.post,
         postReviewAPI,
         {
-          restaurantId,
+          restaurantId: payload.restaurantId,
           rating: parseInt(payload.rating),
           reviewComment: payload.reviewComment,
         },
