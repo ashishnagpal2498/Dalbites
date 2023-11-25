@@ -64,6 +64,9 @@ const AddReview = ({ route, navigation }) => {
     if (review) {
       setReviewComment(review.reviewComment);
       setRating(review.rating);
+    } else {
+      setReviewComment("");
+      setRating(0);
     }
   }, [review]);
 

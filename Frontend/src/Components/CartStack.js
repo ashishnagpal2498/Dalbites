@@ -25,11 +25,6 @@ const CartStack = () => {
       <Stack.Screen
         name="OrderDetails"
         options={{
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
-              <Text>Go to Cart</Text>
-            </TouchableOpacity>
-          ),
           title: "Order Details",
         }}
         component={OrderDetails}
