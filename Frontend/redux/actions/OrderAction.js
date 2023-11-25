@@ -1,4 +1,14 @@
-import { GET_USER_ORDER, ORDER_LOADING } from "../Types/OrderTypes";
+import {
+  GET_USER_ORDER,
+  ORDER_LOADING,
+  POST_USER_ORDER,
+  SET_SUCCESS_MESSAGE,
+} from "../Types/OrderTypes";
+
+export const setSuccessMessage = (payload) => ({
+  type: SET_SUCCESS_MESSAGE,
+  payload,
+});
 
 export const setOrderLoading = (payload) => ({
   type: ORDER_LOADING,
@@ -10,4 +20,9 @@ export const getUserOrders = (token) => ({
   payload: {
     token,
   },
+});
+
+export const createUserOrder = (payload) => ({
+  type: POST_USER_ORDER,
+  payload,
 });
