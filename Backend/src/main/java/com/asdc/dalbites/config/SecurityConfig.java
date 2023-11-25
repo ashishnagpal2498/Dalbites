@@ -50,8 +50,8 @@ public class SecurityConfig {
         httpSecurity
             .csrf(c -> c.disable())
             .cors(Customizer.withDefaults())
-            .authorizeHttpRequests(auth->auth.requestMatchers("/api/users/**").authenticated()
-            .requestMatchers("/api/signup", "/api/login", "/api/forget-password-request").permitAll().anyRequest()
+            .authorizeHttpRequests(auth->auth.requestMatchers("/api/user/**").authenticated()
+            .requestMatchers("/api/signup", "/api/login", "/api/forget-password-request", "/api/payments/**").permitAll().anyRequest()
             .authenticated())
             .exceptionHandling(ex->ex.authenticationEntryPoint(point))
             .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
