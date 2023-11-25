@@ -23,6 +23,8 @@ public class OrderMapper {
         orderDTO.setCreatedAt(orderDao.getCreatedAt());
         orderDTO.setUserId(orderDao.getUser().getUserId());
         orderDTO.setRestaurantId(orderDao.getRestaurant().getId());
+        orderDTO.setRestaurantName(orderDao.getRestaurant().getName());
+        orderDTO.setRestaurantImage(orderDao.getRestaurant().getRestaurantImage());
         return orderDTO;
     }
 
