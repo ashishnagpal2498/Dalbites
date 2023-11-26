@@ -120,6 +120,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>asdc-dalbites-backend</finalName>
 	</build>
 
 </project>
