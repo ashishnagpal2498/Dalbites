@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useDispatch } from "react-redux";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View , ToastAndroid } from 'react-native';
 import tw from "twrnc";
-import { addCartItem } from '../../redux/actions/RestaurantAction';
+import { addCartItem } from '../../redux/actions/CartAction';
 
 const UserMenuItem = ({cardData}) => {
   const dispatch = useDispatch();
     const [quantity, setQuantity] = useState(1);
-        
     const increaseQuantity = () => {
       if (quantity < 15) {
         setQuantity(quantity + 1);
@@ -23,12 +22,13 @@ const UserMenuItem = ({cardData}) => {
     
   const addToCart = () => {
     dispatch(addCartItem({ item: {...cardData, quantity }}))
+    ToastAndroid.show(`Item added to cart`, ToastAndroid.SHORT);
   };
 
     return(
         <View style={styles.itemCard}>
             <View style={styles.itemImageConatainer}>
-                {cardData.menu_image ? <Image style={styles.itemImage} source={{uri: cardData.menu_image}}/> : <Image style={styles.itemImage} source={require("../../assets/images/Placeholder_Food_Item.png")}/>}
+                <Image style={styles.itemImage} src={cardData.menu_image}/>
                 <View style={styles.itemTextContainer}>
                     <Text style={styles.itemName}>{cardData.name}</Text>
                     <View style={styles.itemRowContainer}>

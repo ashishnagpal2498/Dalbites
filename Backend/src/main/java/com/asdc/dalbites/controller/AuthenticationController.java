@@ -52,8 +52,10 @@ public class AuthenticationController {
     @PostMapping("/signup")
     public ResponseEntity<?> doSignup(@RequestBody UserSignUpDTO userSignUpDTO) throws Exception {
 		try {
+			String subject = "Verify your account - DalBites";
+			String body = "Your OTP for account verification is: ";
 			HashMap<String, Object> claims = loginService.create(userSignUpDTO);
-			emailService.sendEmail((String) claims.get("email"), "Verify your account - DalBites", "Yout OTP for account verification is: " + claims.get("otp"));
+			emailService.sendEmail((String) claims.get("email"), subject, body + claims.get("otp"));
 			return ResponseEntity.status(HttpStatus.CREATED).body(claims);
 		} catch(DuplicateEntryException error) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
@@ -107,8 +109,10 @@ public class AuthenticationController {
 	@PostMapping("/forget-password-request")
 	public ResponseEntity<?> forgetPasswordRequest(@RequestBody ForgetPasswordDTO forgetPasswordDTO) throws Exception {
 		try {
+			String subject = "Forget Password Request - DalBites";
+			String body = "Your OTP for forget password is: ";
 			HashMap<String, Object> tokenClaims = loginService.forgetPasswordRequest(forgetPasswordDTO);
-			emailService.sendEmail((String) tokenClaims.get("email"), "Forget Password Request - DalBites", "Your OTP for forget password is: " + tokenClaims.get("otp"));
+			emailService.sendEmail((String) tokenClaims.get("email"), subject, body+ tokenClaims.get("otp"));
 			HashMap<String, Object> responseClaims = new HashMap<String, Object>();
 			responseClaims.put("token", tokenClaims.get("token"));
 			responseClaims.put("email", tokenClaims.get("email"));

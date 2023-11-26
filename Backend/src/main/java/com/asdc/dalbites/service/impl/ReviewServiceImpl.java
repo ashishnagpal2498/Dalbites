@@ -10,6 +10,7 @@ import com.asdc.dalbites.repository.ReviewRepository;
 import com.asdc.dalbites.repository.UserRepository;
 import com.asdc.dalbites.service.ReviewService;
 import com.asdc.dalbites.util.JwtTokenUtil;
+import com.asdc.dalbites.util.Constants;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDTO createReview(String token, ReviewDTO reviewDTO){
         RestaurantDao restaurant = restaurantRepository.findById(reviewDTO.getRestaurantId()).orElse(null);
-        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));
         Long userId = Long.parseLong(tokenClaims.get("user_id").toString());
         UserDao user = userRepository.findByUserId(userId);
 
@@ -82,7 +83,7 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public List<ReviewDTO> getAllUserReviews(String token){
-        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));
         Long userId = Long.parseLong(tokenClaims.get("user_id").toString());
         List<ReviewDao> reviewDaos = reviewRepository.findByUser_UserId(userId);
         return reviewDaos.stream()
@@ -99,7 +100,7 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public ReviewDTO getRestaurantReviewByUser(String token, Long restaurantId){
-        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));
         Long userId = Long.parseLong(tokenClaims.get("user_id").toString());
         Optional<ReviewDao> reviewDao = reviewRepository.findByUser_UserIdAndRestaurant_Id(userId,restaurantId);
         return reviewDao.map(dao -> reviewMapper.toReviewDTO(dao)).orElse(null);

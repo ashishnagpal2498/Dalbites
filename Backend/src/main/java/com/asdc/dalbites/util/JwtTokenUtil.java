@@ -110,7 +110,7 @@ public class JwtTokenUtil implements Serializable {
 	 */
 	public String generateFifteenMinuteExpiryToken(Map<String, Object> claims) {
 		LocalDateTime localDate = LocalDateTime.now();
-    	localDate = localDate.plusMinutes(15);
+    	localDate = localDate.plusMinutes(Constants.TEMP_TOKEN_EXPIRY_TIME);
 		Date date = Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
 		return Jwts.builder()
 			.setClaims(claims)

@@ -1,5 +1,6 @@
 package com.asdc.dalbites.service.impl;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +23,7 @@ import com.asdc.dalbites.repository.UserRepository;
 import com.asdc.dalbites.service.LoginService;
 import com.asdc.dalbites.util.JwtTokenUtil;
 import com.asdc.dalbites.util.UtilityFunctions;
+import com.asdc.dalbites.util.Constants;
 
 import io.jsonwebtoken.Claims;
 
@@ -76,8 +78,8 @@ public class LoginServiceImpl implements LoginService {
         if (loginDao == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
-        return org.springframework.security.core.userdetails.User.builder()
-            .username(loginDao.getUsername())
+        
+        return User.builder().username(loginDao.getUsername())
             .password(loginDao.getPassword())
             .build();
     }
@@ -123,7 +125,7 @@ public class LoginServiceImpl implements LoginService {
             claims.put("login_id", loginDao.getId());
             claims.put("name", userSignUpDTO.getName());
             claims.put("role", userSignUpDTO.getRole());
-            int otp = (int) Math.floor(100000 + Math.random() * 900000);
+            int otp = (int) Math.floor(Constants.RANDOM_NUMBER_START + Math.random() * Constants.RANDOM_NUMBER_END);
             claims.put("otp", otp);
             String jwtToken = jwtUtil.generateToken(claims);
             claims.put("token", jwtToken);
@@ -201,7 +203,7 @@ public class LoginServiceImpl implements LoginService {
      */
     @Override
     public Object verifyAccount(String token, VerifyAccountDTO verifyAccountDTO) throws Exception {
-        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));
         String otp = tokenClaims.get("otp").toString();
         if(otp.equalsIgnoreCase(verifyAccountDTO.getOtp())) {
             loginRepository.setIsVerified((String) tokenClaims.get("username"));
@@ -257,11 +259,14 @@ public class LoginServiceImpl implements LoginService {
      */
     @Override
     public HashMap<String, Object> forgetPasswordVerification(String token, ForgetPasswordDTO forgetPasswordDTO)  throws Exception {
-        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));
         String otp = tokenClaims.get("otp").toString();
         if(otp.equalsIgnoreCase(forgetPasswordDTO.getOtp())) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            loginRepository.setPassword((String) tokenClaims.get("username"), passwordEncoder.encode(forgetPasswordDTO.getPassword()));
+            String username = (String) tokenClaims.get("username");
+            String password = forgetPasswordDTO.getPassword();
+            String encodedPassword = passwordEncoder.encode(password);
+            loginRepository.setPassword(username, encodedPassword);
             HashMap<String, Object> claims = new HashMap<>();
             claims.put("message", "Password changed successfully");
             return claims;

@@ -28,11 +28,15 @@ const Orders = ({ navigation }) => {
       <SafeAreaView>
         <View style={styles.ordercontainer}>
           {orders.map((order, index) => (
-            <View style={styles.ordercard} key={index}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("OrderDetails", { order })}
+              style={styles.ordercard}
+              key={index}
+            >
               <View style={styles.row1}>
                 <Text style={styles.row1text}>Order ID: {order.orderId}</Text>
                 <Text style={styles.row1text}>
-                  Date: {new Date(order.createdAt).toLocaleString("en-US")}
+                  Date: {new Date(order.createdAt).toLocaleDateString()}
                 </Text>
               </View>
 
@@ -53,7 +57,8 @@ const Orders = ({ navigation }) => {
                 </Text>
               </View>
 
-              <View style={styles.addreviewbuttoncontainer}>
+              <View style={styles.buttonsContainer}>
+                <Text> Status: {order.status.split("_").join(" ")} </Text>
                 <TouchableOpacity
                   style={styles.reviewButton}
                   onPress={() => handlereview(order.restaurantId)}
@@ -61,7 +66,7 @@ const Orders = ({ navigation }) => {
                   <Text style={styles.reviewtext}>Review restaurant</Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
       </SafeAreaView>
@@ -146,9 +151,11 @@ const styles = StyleSheet.create({
   row3text: {
     fontSize: 16,
   },
-  addreviewbuttoncontainer: {
+  buttonsContainer: {
     marginTop: 10,
-    alignSelf: "flex-end",
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
   reviewButton: {
     paddingVertical: 5,

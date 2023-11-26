@@ -15,7 +15,7 @@ public class UtilityFunctions {
      * @return A randomly generated six-digit OTP.
      */
     public int generateOTP() {
-        return (int) Math.floor(100000 + Math.random() * 900000);
+        return (int) Math.floor(Constants.RANDOM_NUMBER_START + Math.random() * Constants.RANDOM_NUMBER_END);
     }
 
     /**

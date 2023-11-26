@@ -37,7 +37,7 @@ public class ReviewDao {
     @CreationTimestamp
     private Date updatedAt;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private UserDao user;
 

@@ -50,9 +50,17 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public RestaurantDao setupRestaurantAccount(MultipartFile file, RestaurantDTO setupRestaurantAccountDTO) throws Exception {
         try {
-            String fileName = firebaseFileService.uploadFile(file);
-            setupRestaurantAccountDTO.setFileName(fileName);
-            restaurantRepository.setupRestaurant(setupRestaurantAccountDTO.getName(), setupRestaurantAccountDTO.getDescription(), setupRestaurantAccountDTO.getBuilding_id(), setupRestaurantAccountDTO.getFileName(), setupRestaurantAccountDTO.getId(), setupRestaurantAccountDTO.getDeliveryTime());
+            String filename = firebaseFileService.uploadFile(file);
+            setupRestaurantAccountDTO.setFileName(filename);
+
+            String name = setupRestaurantAccountDTO.getName();
+            String description = setupRestaurantAccountDTO.getDescription();
+            Long buildingId = setupRestaurantAccountDTO.getBuilding_id();
+            String fileName = setupRestaurantAccountDTO.getFileName();
+            Long id = setupRestaurantAccountDTO.getId();
+            String time = setupRestaurantAccountDTO.getDeliveryTime();
+
+            restaurantRepository.setupRestaurant(name, description, buildingId, fileName, id, time);
             Optional<RestaurantDao> restaurantDao = restaurantRepository.findById(setupRestaurantAccountDTO.getId());
             if (restaurantDao.isPresent()) {
                 return restaurantDao.get();

@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { selectedRestaurantForCart } from "../../redux/actions/RestaurantAction";
+import { selectedRestaurantForCart } from "../../redux/actions/CartAction";
 
 const RestaurantCard = ({ navigation, item }) => {
   const dispatch = useDispatch();

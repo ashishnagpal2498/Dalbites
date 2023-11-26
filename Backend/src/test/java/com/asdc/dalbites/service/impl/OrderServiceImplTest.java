@@ -1,16 +1,19 @@
 package com.asdc.dalbites.service.impl;
 
 import com.asdc.dalbites.exception.ResourceNotFoundException;
+import com.asdc.dalbites.mappers.OrderItemMapper;
 import com.asdc.dalbites.mappers.OrderMapper;
 import com.asdc.dalbites.model.DAO.*;
 import com.asdc.dalbites.model.DTO.OrderDTO;
+import com.asdc.dalbites.model.DTO.OrderItemDTO;
 import com.asdc.dalbites.model.DTO.OrderStatusDTO;
 import com.asdc.dalbites.model.ENUMS.OrderStatusEnum;
-import com.asdc.dalbites.repository.LoginRepository;
-import com.asdc.dalbites.repository.OrderRepository;
-import com.asdc.dalbites.repository.RestaurantRepository;
+import com.asdc.dalbites.repository.*;
 import com.asdc.dalbites.service.EmailService;
 import com.asdc.dalbites.service.impl.OrderServiceImpl;
+import com.asdc.dalbites.util.JwtTokenUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,7 +43,16 @@ class OrderServiceImplTest {
     private RestaurantRepository restaurantRepository;
 
     @Mock
+    private MenuItemRepository menuItemRepository;
+
+    @Mock
     private OrderMapper orderMapper;
+
+    @Mock
+    private JwtTokenUtil jwtUtil;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private OrderServiceImpl orderService;
@@ -106,6 +119,47 @@ class OrderServiceImplTest {
         when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> orderService.getOrder(orderId));
     }
+
+    @Test
+    void testCreateOrder_Success() throws ResourceNotFoundException {
+        String token = "valid_token";
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setUserId(1L);
+        orderDTO.setRestaurantId(2L);
+        List<OrderItemDTO> orderItemsDTO = new ArrayList<>();
+
+        orderDTO.setOrderItems(orderItemsDTO);
+
+        Claims tokenClaims = new DefaultClaims();
+        tokenClaims.put("user_id", orderDTO.getUserId().toString());
+        tokenClaims.put("email", "user@example.com");
+        when(jwtUtil.getAllClaimsFromToken(anyString())).thenReturn(tokenClaims);
+
+        UserDao mockUser = new UserDao();
+        mockUser.setUserId(orderDTO.getUserId());
+        when(userRepository.findByUserId(orderDTO.getUserId())).thenReturn(mockUser);
+
+        RestaurantDao mockRestaurant = new RestaurantDao();
+        mockRestaurant.setId(orderDTO.getRestaurantId());
+        when(restaurantRepository.findById(orderDTO.getRestaurantId())).thenReturn(Optional.of(mockRestaurant));
+
+        MenuItemDao mockMenuItem = new MenuItemDao();
+        mockMenuItem.setId(1L);
+        when(menuItemRepository.findById(anyLong())).thenReturn(Optional.of(mockMenuItem));
+
+        OrderDao mockOrderDao = new OrderDao();
+        when(orderMapper.toOrderDao(orderDTO)).thenReturn(mockOrderDao);
+
+        when(orderRepository.save(mockOrderDao)).thenReturn(mockOrderDao);
+
+        doNothing().when(emailService).sendOrderConfirmationEmail(any(), any(), any());
+
+            OrderDTO result = orderService.createOrder(orderDTO, token);
+
+            System.out.println("Result: " + result);
+    }
+
+
     private Principal createPrincipal(String username, int roleId) {
         return new Principal() {
             @Override
@@ -114,5 +168,4 @@ class OrderServiceImplTest {
             }
         };
     }
-
 }

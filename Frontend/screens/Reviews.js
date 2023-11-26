@@ -9,21 +9,6 @@ const Reviews = ({ userReviews }) => {
   const token = useSelector((store) => store.authentication.token);
   const loading = useSelector((store) => store.user.profileLoading);
 
-  // const userReviews = [
-  //   {
-  //     restaurantName: "Second Cup",
-  //     createdAt: "2023-11-17",
-  //     rating: "4",
-  //     reviewComment: "Good Restaurant Must Try",
-  //   },
-  //   {
-  //     restaurantName: "StarBucks",
-  //     createdAt: "2023-11-17",
-  //     rating: "3",
-  //     reviewComment: "Okay Restaurant",
-  //   },
-  // ];
-
   if (loading) {
     return <Loading />;
   }
@@ -54,7 +39,8 @@ const Reviews = ({ userReviews }) => {
             <View style={styles.row3}>
               <Text style={styles.row3text}></Text>
               <Text style={styles.row3text}>
-                Submitted on: {new Date(review.createdAt).toLocaleDateString('en-US')}
+                Submitted on:{" "}
+                {new Date(review.createdAt).toLocaleDateString("en-US")}
               </Text>
             </View>
           </View>

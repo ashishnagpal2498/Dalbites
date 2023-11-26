@@ -71,4 +71,14 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/create")
+    public ResponseEntity<OrderDTO> createOrder(@RequestHeader("Authorization") String bearerToken, @RequestBody OrderDTO orderDTO) {
+        try {
+            OrderDTO createdOrder = orderService.createOrder(orderDTO, bearerToken);
+            return ResponseEntity.ok(createdOrder);
+        } catch (ResourceNotFoundException exception) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

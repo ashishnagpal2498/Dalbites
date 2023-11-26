@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,6 +59,21 @@ class OrderControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertSame(mockUpdatedOrder, response.getBody());
         verify(orderService, times(1)).updateOrderStatus(orderId, orderStatusDTO);
+    }
+
+    @Test
+    void testCreateOrder_Success() throws ResourceNotFoundException {
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setUserId(1L);
+        orderDTO.setRestaurantId(2L);
+        orderDTO.setOrderItems(new ArrayList<>());
+
+        when(orderService.createOrder(orderDTO, "userToken")).thenReturn(orderDTO);
+
+        ResponseEntity<OrderDTO> response = orderController.createOrder("userToken", orderDTO);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertSame(orderDTO, response.getBody());
     }
 
     private Principal createPrincipal(String username) {

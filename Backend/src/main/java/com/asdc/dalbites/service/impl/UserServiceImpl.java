@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.asdc.dalbites.model.DAO.UserDao;
 import com.asdc.dalbites.repository.UserRepository;
 
+import com.asdc.dalbites.util.Constants;
+
 /**
  * Implementation of the {@link UserService} interface providing methods for managing user information.
  */
@@ -42,7 +44,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDao getUserById(String token){
-        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));
         String userId = tokenClaims.get("user_id").toString();
         Optional<UserDao> user = userRepository.findById(userId);
         return user.orElse(null);

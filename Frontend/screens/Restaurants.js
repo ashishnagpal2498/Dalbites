@@ -34,9 +34,13 @@ const Restaurants = ({ navigation }) => {
   if (loading) {
     return <Loading />;
   }
+
+  const onRefresh = () =>
+    dispatch(getRestaurants({ id: buildingIds ? buildingIds : [], token }));
+
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <TouchableOpacity
           style={tw`mt-2 ml-3 rounded-lg py-2 `}
           onPress={
@@ -56,11 +60,13 @@ const Restaurants = ({ navigation }) => {
             </Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <View style={{ flex: 1 }}>
         <FlatList
           style={styles.flatlistConatiner}
           data={restaurants}
+          refreshing={loading}
+          onRefresh={onRefresh}
           renderItem={({ item, index }) => (
             <RestaurantCard item={item} index={index} navigation={navigation} />
           )}

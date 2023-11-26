@@ -57,4 +57,5 @@ public interface OrderService {
      * @throws ResourceNotFoundException If the order with the specified ID is not found.
      */
     OrderDTO updateOrderStatus(Long orderId, OrderStatusDTO orderStatusDTO) throws ResourceNotFoundException;
+    OrderDTO createOrder(OrderDTO orderDTO, String token) throws ResourceNotFoundException;
 }

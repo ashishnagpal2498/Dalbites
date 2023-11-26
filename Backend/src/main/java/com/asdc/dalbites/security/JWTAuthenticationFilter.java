@@ -21,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.asdc.dalbites.service.LoginService;
 import com.asdc.dalbites.util.JwtTokenUtil;
+import com.asdc.dalbites.util.Constants;
 
 /**
  * Filter to handle JWT authentication for each incoming request.
@@ -56,7 +57,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         String token = null;
 
         if (requestHeader != null && requestHeader.startsWith("Bearer")) {
-            token = requestHeader.substring(7);
+            token = requestHeader.substring(Constants.TOKEN_START_INDEX);
             try {
                 username = this.jwtHelper.getUsernameFromToken(token);
             } catch (IllegalArgumentException e) {
