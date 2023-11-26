@@ -37,11 +37,11 @@ const AppStack = () => {
     checkAuth();
   }, []);
   const screenOptions = {
-    headerTitle: "",
+    headerShown: false,
   };
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={screenOptions}>
         {loading ? (
           <Stack.Screen name="Loading" component={Loading} />
         ) : isAuth && isRestaurant ? (
