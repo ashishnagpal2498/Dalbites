@@ -3,6 +3,9 @@ package com.asdc.dalbites.model.DTO;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Data Transfer Object (DTO) for representing menu items.
+ */
 @Getter
 @Setter
 public class MenuItemDTO {

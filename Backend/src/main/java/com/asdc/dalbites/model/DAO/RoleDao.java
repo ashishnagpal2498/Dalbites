@@ -15,6 +15,9 @@ import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Represents a role entity in the database.
+ */
 @Entity
 @Getter
 @Setter
@@ -70,9 +73,17 @@ public class RoleDao {
     @CreationTimestamp
     private Date updated_at;
 
+	/**
+	 * Default constructor for RoleDao.
+	 */
     public RoleDao() {
     }
 
+	/**
+	 * Constructor for RoleDao with a specified name.
+	 *
+	 * @param name The name of the role.
+	 */
     public RoleDao(String name) {
         this.name = name;
     }
