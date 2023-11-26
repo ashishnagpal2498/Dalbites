@@ -14,7 +14,9 @@ import com.asdc.dalbites.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import com.asdc.dalbites.util.Constants;
 
 import java.security.Principal;
 import java.util.List;
@@ -111,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO createOrder(OrderDTO orderDTO, String token) throws ResourceNotFoundException {
-        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));
         Long userId = Long.parseLong(tokenClaims.get("user_id").toString());
 
         List<Optional<MenuItemDao>> menuItems = orderDTO.getOrderItems().stream()
@@ -121,8 +123,12 @@ public class OrderServiceImpl implements OrderService {
         UserDao user = userRepository.findByUserId(userId);
         OrderDao orderDao = orderMapper.toOrderDao(orderDTO);
         orderDao.setUser(user);
-        RestaurantDao restaurantDao = restaurantRepository.findById(orderDTO.getRestaurantId()).orElseThrow(() -> new ResourceNotFoundException("Order not found on :: " + orderDTO.getRestaurantId()));
-        orderDao.setRestaurant(restaurantDao);
+        Optional<RestaurantDao> restaurantDao = restaurantRepository.findById(orderDTO.getRestaurantId());
+        if (restaurantDao.isPresent()) {
+            orderDao.setRestaurant(restaurantDao.get());
+        } else{
+            throw new ResourceNotFoundException("Order not found on :: " + orderDTO.getRestaurantId());
+        }
 
         for (OrderItemDao orderItemDao : orderDao.getOrderItems()) {
             MenuItemDao menuItem = menuItemRepository.findById(orderItemDao.getItem().getId()).get();
@@ -138,7 +144,7 @@ public class OrderServiceImpl implements OrderService {
 
     private void sendReadyToPickupEmail(String userEmail) {
         String subject = "Your Order is Ready for Pickup";
-        String text = "Dear Customer,\n\nYour order is now ready for pickup. Please visit the restaurant to collect your order.";
+        String text = Constants.ORDER_READY_BODY;
         emailService.sendEmail(userEmail, subject, text);
     }
 }
