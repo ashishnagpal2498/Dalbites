@@ -4,13 +4,16 @@ import IconTextBar from "../Layouts/IconTextBar";
 import AddMenu from "../../screens/AddMenu";
 import ReceivedOrder from "../../screens/ReceivedOrder";
 import Colors from "../Utils/Colors";
+import RestaurantProfile from "../../screens/RestaurantProfile";
 
 const Tab = createBottomTabNavigator();
 
 const RestaurantHome = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
-      headerShown: false,
+      headerStyle: {
+        backgroundColor: "#EAB308",
+      },
       tabBarIcon: ({ focused, color }) => {
         let iconName;
         if (route.name === "Menu") {
@@ -19,6 +22,9 @@ const RestaurantHome = () => (
         } else if (route.name === "Orders") {
           iconType = "Mci";
           iconName = "food";
+        } else if (route.name === "Profile") {
+          iconType = "Fai";
+          iconName = focused ? "user-alt" : "user";
         }
 
         return (
@@ -36,6 +42,7 @@ const RestaurantHome = () => (
   >
     <Tab.Screen name="Menu" component={AddMenu} />
     <Tab.Screen name="Orders" component={ReceivedOrder} />
+    <Tab.Screen name="Profile" component={RestaurantProfile} />
   </Tab.Navigator>
 );
 
