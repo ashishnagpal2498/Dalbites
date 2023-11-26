@@ -259,7 +259,7 @@ function* setupRestaurantAccountSaga(action) {
     formdata.append("name", action.payload.restaurantName);
     formdata.append("description", action.payload.restaurantDescription);
     formdata.append("building", action.payload.buildingId);
-    formdata.append("delivery_time", action.payload.estimatedDeliveryTime);
+    formdata.append("deliveryTime", action.payload.estimatedDeliveryTime);
     formdata.append("file", {
       uri: action.payload.restaurantImage.uri,
       name: "image.jpg",
