@@ -18,15 +18,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * Controller class for handling restaurant menu item operations.
+ * This class provides endpoints for retrieving a menu, adding a menu item,
+ * updating a menu item, and deleting a menu item.
+ */
 @RestController
 @RequestMapping("/api/restaurants")
 public class MenuItemController {
@@ -35,6 +37,12 @@ public class MenuItemController {
     @Autowired
     private MenuService menuService;
 
+    /**
+     * Retrieves the menu for a specific restaurant.
+     *
+     * @param restaurantId The ID of the restaurant.
+     * @return ResponseEntity with the result of the getMenu operation.
+     */
     @GetMapping("/{restaurantId}/menu")
     public ResponseEntity<?> getMenu(@PathVariable Long restaurantId) throws Exception{
         try {
@@ -45,6 +53,18 @@ public class MenuItemController {
         }
     }
 
+    /**
+     * Adds a new menu item to the specified restaurant.
+     *
+     * @param file The image file for the menu item.
+     * @param name The name of the menu item.
+     * @param description The description of the menu item.
+     * @param price The price of the menu item.
+     * @param time The preparation time of the menu item.
+     * @param is_available The availability status of the menu item.
+     * @param restaurant_id The ID of the restaurant.
+     * @return ResponseEntity with the result of the addMenuItem operation.
+     */
     @PostMapping("/{restaurantId}/add-menu-item")
     public ResponseEntity<?> addMenuItem(@ModelAttribute AddMenuItemRequest request) throws Exception {
         try {
@@ -65,6 +85,13 @@ public class MenuItemController {
         }
     }
 
+    /**
+     * Updates an existing menu item for the specified restaurant.
+     *
+     * @param restaurantId The ID of the restaurant.
+     * @param menuItemDTO The data transfer object containing updated menu item information.
+     * @return ResponseEntity with the result of the updateMenuItem operation.
+     */
     @PutMapping("/{restaurantId}/update-menu-item")
     public ResponseEntity<?> updateMenuItem(@PathVariable Long restaurantId, @RequestBody MenuItemDTO menuItemDTO) throws Exception{
         try {
@@ -92,6 +119,13 @@ public class MenuItemController {
         }
     }
 
+    /**
+     * Deletes a menu item from the specified restaurant.
+     *
+     * @param restaurantId The ID of the restaurant.
+     * @param menuId The ID of the menu item to be deleted.
+     * @return ResponseEntity with the result of the deleteMenuItem operation.
+     */
     @DeleteMapping("/{restaurantId}/delete-menu-item/{menuId}")
     public ResponseEntity<?> deleteMenuItem(@PathVariable(value="restaurantId") Long restaurantId, @PathVariable(value="menuId") Long menuId) throws Exception{
         try {

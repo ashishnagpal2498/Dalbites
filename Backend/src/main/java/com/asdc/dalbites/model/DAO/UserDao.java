@@ -10,6 +10,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Represents a user entity in the database.
+ */
 @Entity
 @Getter
 @Setter
@@ -104,9 +107,18 @@ public class UserDao {
 	@JsonIgnore
 	private List<OrderDao> orders;
 
+	/**
+	 * Default constructor for UserDao.
+	 */
 	public UserDao() {
 	}
 
+	/**
+	 * Constructor for UserDao with specified name and email.
+	 *
+	 * @param name  The name of the user.
+	 * @param email The email of the user.
+	 */
 	public UserDao(String name, String email) {
 		this.name = name;
 		this.email = email;

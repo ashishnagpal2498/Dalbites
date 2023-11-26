@@ -109,6 +109,40 @@ publish-backend:
     - develop
     - staging
 
+#Publish Android Application Bundle
+publish_frontend:
+  stage: publish_image
+  image: $FRONTEND_IMAGE
+  before_script:
+    - node --version
+    - cd Frontend
+    - echo "---- Display API Credentials file for Hostname ----"
+    - cat ./src/Utils/Api-Cred.js
+    - npm install -g expo-cli
+    - echo "Expo CLI installed"
+    - npm install -g eas-cli
+    - echo "EAS Cli installed"
+  script:
+    - echo "Username-$EAS_LOGIN_USERNAME"
+    - echo "Password-$EAS_LOGIN_PASSWORD"
+    - apk add --no-cache expect # Adding expect
+    - apk add --no-cache git #Adding git
+    - >
+      expect -c "
+        spawn eas login
+        expect \"Email or username\"
+        send \"$EAS_LOGIN_USERNAME\r\"
+        expect \"Password\"
+        send \"$EAS_LOGIN_PASSWORD\r\"
+        expect \"Logged in\"
+        expect eof
+      "
+    - eas whoami
+    - git --version
+    - eas build --platform android --non-interactive
+
+  only:
+    - staging
 #---------------------- Deploy Stage -------------------------------
 
 deploy_backend:

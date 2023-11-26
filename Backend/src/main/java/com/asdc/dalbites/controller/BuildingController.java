@@ -16,6 +16,10 @@ import com.asdc.dalbites.model.DAO.BuildingDao;
 import com.asdc.dalbites.model.DTO.BuildingDTO;
 import com.asdc.dalbites.service.BuildingService;
 
+/**
+ * Controller class for handling building-related operations.
+ * This class provides endpoints for adding a building and retrieving a list of buildings.
+ */
 @RestController
 @RequestMapping("/api")
 public class BuildingController {
@@ -23,6 +27,12 @@ public class BuildingController {
     @Autowired
     private BuildingService buildingService;
 
+    /**
+     * Handles the addition of a new building.
+     *
+     * @param buildingDTO The data transfer object containing building information.
+     * @return ResponseEntity with the result of the add-building operation.
+     */
     @PostMapping("/add-building")
     public ResponseEntity<?> addBuilding(@RequestBody BuildingDTO buildingDTO) throws Exception {
         try {
@@ -33,6 +43,11 @@ public class BuildingController {
 		}
     }
 
+    /**
+     * Handles the retrieval of a list of buildings.
+     *
+     * @return List of BuildingDao objects representing the buildings.
+     */
     @GetMapping("/get-buildings")
     public List<BuildingDao> getBuildings(){
         return buildingService.getBuildings();
