@@ -40,7 +40,7 @@ const UserHome = () => (
         );
       },
       tabBarActiveTintColor: Colors.primaryButton,
-      tabBarInactiveTintColor: "gray",
+      tabBarInactiveTintColor: Colors.black,
     })}
   >
     <Tab.Screen
