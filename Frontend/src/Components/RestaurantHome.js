@@ -2,10 +2,12 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import IconTextBar from "../Layouts/IconTextBar";
 import AddMenu from "../../screens/AddMenu";
+import ReceivedOrder from "../../screens/ReceivedOrder";
+import Colors from "../Utils/Colors";
 
 const Tab = createBottomTabNavigator();
 
-const RestaurantHomeTabGroup = () => (
+const RestaurantHome = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       headerShown: false,
@@ -13,8 +15,8 @@ const RestaurantHomeTabGroup = () => (
         let iconName;
         if (route.name === "Menu") {
           iconType = "Ini";
-          iconName = focused ? "home" : "home-outline";
-        } else if (route.name === "Order") {
+          iconName = focused ? "menu" : "menu-outline";
+        } else if (route.name === "Orders") {
           iconType = "Mci";
           iconName = "food";
         }
@@ -24,17 +26,17 @@ const RestaurantHomeTabGroup = () => (
             iconName={iconName}
             iconType={iconType}
             iconOnly={true}
-            color={color}
+            iconColor={color}
           />
         );
       },
-      tabBarActiveTintColor: "tomato",
-      tabBarInactiveTintColor: "gray",
+      tabBarActiveTintColor: Colors.primaryButton,
+      tabBarInactiveTintColor: Colors.black,
     })}
   >
     <Tab.Screen name="Menu" component={AddMenu} />
-    {/* <Tab.Screen name="Order" component={Food} /> --> Restaurant Orders Screen Here*/}
+    <Tab.Screen name="Orders" component={ReceivedOrder} />
   </Tab.Navigator>
 );
 
-export default RestaurantHomeTabGroup;
+export default RestaurantHome;

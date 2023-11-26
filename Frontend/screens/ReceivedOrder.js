@@ -40,6 +40,7 @@ const ReceivedOrder = () => {
     dispatch(getOrder({ queryType: "all", token }));
   };
 
+  console.log("Orders", orders);
   const getOrderStatusText = (status) => {
     switch (status) {
       case "ACCEPTED":
@@ -64,28 +65,31 @@ const ReceivedOrder = () => {
     let payload = {
       id: id,
       body: { status: status },
-      token
+      token,
     };
+    console.log(payload, "---> Payload");
     dispatch(updateOrderStatus(payload));
   };
 
-  const renderItem = ({ item, index }) => {
+  const renderOrderItem = ({ item, index }) => {
+    const orderItem = { ...item };
+    console.log("OrderItem ---> ", orderItem);
     return (
       <View style={localStyles.itemCard}>
         <View style={[localStyles.txtContainer]}>
           <Text numberOfLines={1} style={localStyles.itemName}>
-            {item.item.name}
+            {orderItem.item.name}
           </Text>
         </View>
         <View style={[localStyles.txtContainer, { alignItems: "center" }]}>
           <Text numberOfLines={1} style={localStyles.itemQuantity}>
             {"Qty : "}
-            {item.quantity}
+            {orderItem.quantity}
           </Text>
         </View>
         <View style={[localStyles.txtContainer, { alignItems: "flex-end" }]}>
           <Text numberOfLines={1} style={localStyles.itemPrice}>
-            {item.quantity} {"  "}x{"  "} $ {item.item.price}
+            {orderItem.quantity} {"  "}x{"  "} $ {orderItem.item.price}
           </Text>
         </View>
       </View>
@@ -93,6 +97,8 @@ const ReceivedOrder = () => {
   };
 
   const renderFooter = (item, index) => {
+    const order = { ...item };
+    console.log("Render Footer --> order ", order);
     return (
       <View style={localStyles.footerContaier}>
         <View style={{ flexDirection: "row", gap: 5 }}>
@@ -108,66 +114,61 @@ const ReceivedOrder = () => {
         </View>
         <View style={{ alignSelf: "center", flexDirection: "row" }}>
           <Text style={localStyles.idText}> Total : </Text>
-          <Text style={localStyles.dataText}>
-            {item.orderItems.reduce(
-              (accumulator, currentValue) =>
-                accumulator + currentValue.item.price * currentValue.quantity,
-              0
-            )}
-          </Text>
+          <Text style={localStyles.dataText}>{order.totalAmount}</Text>
         </View>
       </View>
     );
   };
 
-  const renderOrder = ({ item, index, navigation }) => {
+  const renderOrder = ({ item, index }) => {
+    const order = { ...item };
+    console.log("Order --> here --", order);
     return (
       <View style={localStyles.card}>
         <View style={localStyles.header}>
           <View style={localStyles.headerContainer}>
             <View style={localStyles.userNameCircle}>
               <Text style={localStyles.userTitleText}>
-                {item?.name[0].toUpperCase()}
+                {order?.userName?.[0].toUpperCase()}
               </Text>
             </View>
             <View>
-              <Text style={localStyles.userNameText}>{item?.name}</Text>
+              <Text style={localStyles.userNameText}>{order?.userName}</Text>
               <Text style={localStyles.orderTimeText}>
-                {moment(item?.createdAt).format("LL")}
+                {moment(order?.createdAt).format("LL")}
               </Text>
               <Text style={localStyles.orderTimeText}>
-                {moment(item?.createdAt).format("LT")}
-                {/* {moment(item.createdAt).add(1, "days").calendar()} */}
+                {moment(order?.createdAt).format("LT")}
               </Text>
             </View>
           </View>
           <View style={localStyles.detailContainer}>
             <Text style={localStyles.idText}>Order ID : </Text>
-            <Text style={localStyles.dataText}> {item.orderId}</Text>
+            <Text style={localStyles.dataText}> {order.orderId}</Text>
           </View>
         </View>
         <FlatList
-          data={item.orderItems}
-          renderItem={renderItem}
-          ListFooterComponent={() => renderFooter(item, index)}
-          keyExtractor={(item) => item.item.id.toString()}
+          data={order.orderItems}
+          renderItem={renderOrderItem}
+          ListFooterComponent={() => renderFooter(order, index)}
+          keyExtractor={(orderItem) => orderItem.orderItemId.toString()}
         />
-        {item?.status == "DECLINED" || item?.status == "PICKED_UP" ? (
+        {order?.status == "DECLINED" || order?.status == "PICKED_UP" ? (
           <View style={localStyles.textContainer}>
             <Text>Order Status :</Text>
             <Text
               style={{
                 textAlign: "center",
                 fontWeight: "bold",
-                color: item?.status == "DECLINED" ? "#FF6666" : "#006400",
+                color: order?.status == "DECLINED" ? "#FF6666" : "#006400",
               }}
             >
-              Order {getOrderStatusText(item?.status)}
+              Order {getOrderStatusText(order?.status)}
             </Text>
           </View>
         ) : (
           <View style={localStyles.btnContainer}>
-            {item.status == "PENDING" && (
+            {order.status == "PENDING" && (
               <TouchableOpacity
                 style={[
                   localStyles.btnStyle,
@@ -176,7 +177,7 @@ const ReceivedOrder = () => {
                     borderWidth: 2,
                   },
                 ]}
-                onPress={() => changeOrderStatus(item.orderId, "ACCEPTED")}
+                onPress={() => changeOrderStatus(order.orderId, "ACCEPTED")}
               >
                 <Text
                   style={[
@@ -190,15 +191,15 @@ const ReceivedOrder = () => {
                 </Text>
               </TouchableOpacity>
             )}
-            {(item.status == "ACCEPTED" ||
-              item.status == "IN_QUEUE" ||
-              item.status == "PREPARING" ||
-              item.status == "READY_TO_PICKUP") && (
+            {(order.status == "ACCEPTED" ||
+              order.status == "IN_QUEUE" ||
+              order.status == "PREPARING" ||
+              order.status == "READY_TO_PICKUP") && (
               <View style={localStyles.pickerContainer}>
                 <Picker
-                  selectedValue={item.status}
+                  selectedValue={order.status}
                   onValueChange={(itemValue, itemIndex) => {
-                    changeOrderStatus(item.orderId, itemValue);
+                    changeOrderStatus(order.orderId, itemValue);
                   }}
                   style={localStyles.dropDownStyle}
                   mode={"dropdown"}
@@ -214,7 +215,7 @@ const ReceivedOrder = () => {
                 </Picker>
               </View>
             )}
-            {item.status !== "READY_TO_PICKUP" && (
+            {order.status === "IN_QUEUE" && (
               <TouchableOpacity
                 style={[
                   localStyles.btnStyle,
@@ -222,7 +223,7 @@ const ReceivedOrder = () => {
                     backgroundColor: "#FF6666",
                   },
                 ]}
-                onPress={() => changeOrderStatus(item.orderId, "DECLINED")}
+                onPress={() => changeOrderStatus(order.orderId, "DECLINED")}
               >
                 <Text style={localStyles.btnText}>Cancel Order</Text>
               </TouchableOpacity>
@@ -243,7 +244,7 @@ const ReceivedOrder = () => {
         onRefresh={onRefresh}
         data={orders}
         renderItem={renderOrder}
-        keyExtractor={(item) => item.orderId.toString()}
+        keyExtractor={(order) => order.orderId.toString()}
       />
     </View>
   );
