@@ -33,6 +33,9 @@ const RestaurantDetails = ({ route }) => {
   const loading = useSelector((store) => store.restaurant.restaurantLoading);
   const dispatch = useDispatch();
 
+  const onRefresh = () =>
+  dispatch(getAllRestaurantReviews({ id, token }));
+
   useEffect(() => {
     // payload - id and token
     dispatch(getRestaurantById({ id, token }));
@@ -40,6 +43,7 @@ const RestaurantDetails = ({ route }) => {
     dispatch(getAllRestaurantReviews({ id, token }));
   }, []);
 
+  console.log(restaurant, "restau view")
   if (loading) {
     return <Loading />;
   }
@@ -58,11 +62,19 @@ const RestaurantDetails = ({ route }) => {
             style={styles.restaurantImage}
           />
         </View>
-        <View style={styles.restaurantDescriptionContainer}>
+        {/* <View style={styles.restaurantDescriptionContainer}>
           <Text style={styles.restaurantDescription}>
             {restaurant.description}
           </Text>
-        </View>
+        </View> */}
+
+        {restaurant.restaurantDescription && (
+            <View style={styles.restaurantDescriptionContainer}>
+              <Text style={styles.restaurantDescription}>
+                {restaurant.restaurantDescription}
+              </Text>
+            </View>
+        )}
       </View>
 
       <View style={styles.tabs}>
@@ -86,46 +98,47 @@ const RestaurantDetails = ({ route }) => {
       </View>
 
       <View style={styles.content}>
-        {activeTab === "items" &&
-          (restaurantMenu.length > 0 ? (
+        <View style={styles.contentContainer}>
+          {activeTab === "items" && (restaurantMenu.length > 0 ? (
             <FlatList
               data={restaurantMenu}
               keyExtractor={(item) => item.id}
               numColumns={2} // Set the number of columns to 2
-              renderItem={({ item }) => (
-                <UserMenuItem cardData={item}></UserMenuItem>
-              )}
+              renderItem={({ item }) => (<UserMenuItem cardData={item}></UserMenuItem>)}
             />
           ) : (
             <View>
-              <Text style={tw`text-red-600 text-xl font-bold `}>
+              <Text style={styles.TabText}>
                 Ooops ! Restaurant hasn't setup its menu yet.{" "}
               </Text>
-              <Text style={tw`text-green-500 font-bold `}>
+              <Text style={styles.TabText}>
                 Please try to order from someother restaurant
               </Text>
             </View>
           ))}
-        {activeTab === "reviews" &&
-          (restaurantReviews.length > 0 ? (
-            <FlatList
-              data={restaurantReviews}
-              keyExtractor={(item) => item.reviewId.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.reviewCard}>
-                  <Text style={styles.reviewName}>{item.name}</Text>
-                  <Text style={styles.reviewRating}>Rating: {item.rating}</Text>
-                  <Text style={styles.reviewText}>{item.reviewComment}</Text>
-                </View>
-              )}
-            />
-          ) : (
-            <View>
-              <Text style={tw`text-green-500 font-bold `}>
-                No restaurant reviews
-              </Text>
-            </View>
-          ))}
+          {activeTab === "reviews" &&
+            (restaurantReviews.length > 0 ? (
+              <FlatList
+                data={restaurantReviews}
+                refreshing={loading}
+                onRefresh={onRefresh}
+                keyExtractor={(item) => item.reviewId.toString()}
+                renderItem={({ item }) => (
+                  <View style={styles.reviewCard}>
+                    <Text style={styles.reviewName}>User name not fetched</Text>
+                    <Text style={styles.reviewRating}>Rating: {item.rating}</Text>
+                    <Text style={styles.reviewText}>{item.reviewComment}</Text>
+                  </View>
+                )}
+              />
+            ) : (
+              <View>
+                <Text style={styles.TabText}>
+                  No restaurant reviews
+                </Text>
+              </View>
+            ))}
+          </View>
       </View>
     </View>
   );
@@ -157,15 +170,17 @@ const styles = StyleSheet.create({
   restaurantCard: {
     height: "auto",
     backgroundColor: "#FFFFFF",
+    padding:7,
+    paddingBottom:3,
     borderRadius: 10,
     elevation: 5,
-    marginLeft: 5,
-    marginRight: 5,
+    margin:10,
+    marginBottom:0,
+
   },
   restaurantImageContainer: {
     width: "100%",
     height: 150,
-    marginTop: 5,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
@@ -187,10 +202,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabs: {
-    marginVertical: 5,
+    marginTop: 7,
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
     padding: 7,
     backgroundColor: "#fff",
     elevation: 5,
@@ -216,18 +231,21 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    alignSelf:"center",
+    width:"100%",
+  },
+  contentContainer:{
+    width:"96%",
     padding: 5,
-    alignItems: "center",
+    alignSelf:"center",
   },
   itemCard: {
     height: 250,
-    width: 160,
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     elevation: 5,
     margin: 5,
     padding: 7,
-    alignSelf: "center",
   },
   itemImageConatainer: {
     height: 150,
@@ -290,15 +308,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlignVertical: "center",
   },
-
   reviewCard: {
-    height: 100,
-    width: 150,
+    width: "95%",
+    alignSelf:"center",
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     elevation: 5,
     margin: 5,
-    padding: 7,
+    padding: 11,
   },
   reviewName: {
     fontSize: 16,
