@@ -86,9 +86,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO getOrder(Long orderId) throws ResourceNotFoundException {
-        OrderDao order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found on :: " + orderId));
-        return orderMapper.toOrderDTO(order);
+        Optional<OrderDao> order = orderRepository.findById(orderId);
+        if(order.isPresent()){
+            return orderMapper.toOrderDTO(order.get());
+        } else{
+            throw new ResourceNotFoundException("Order not found on :: " + orderId);
+        }
     }
 
     @Override
