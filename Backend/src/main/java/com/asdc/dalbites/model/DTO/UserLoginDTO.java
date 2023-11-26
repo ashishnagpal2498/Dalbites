@@ -1,5 +1,8 @@
 package com.asdc.dalbites.model.DTO;
 
+/**
+ * Data Transfer Object (DTO) for representing user login information.
+ */
 public class UserLoginDTO {
     private String username;
 	private String password;

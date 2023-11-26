@@ -4,8 +4,17 @@ import com.asdc.dalbites.model.DAO.OrderDao;
 import com.asdc.dalbites.model.DAO.OrderItemDao;
 import com.asdc.dalbites.model.DTO.OrderItemDTO;
 
+/**
+ * Class responsible for mapping between OrderItemDao and OrderItemDTO.
+ */
 public class OrderItemMapper {
 
+    /**
+     * Converts OrderItemDao to OrderItemDTO.
+     *
+     * @param orderItemDao The OrderItemDao object to be converted.
+     * @return The corresponding OrderItemDTO object.
+     */
     public static OrderItemDTO toOrderItemDTO(OrderItemDao orderItemDao) {
         OrderItemDTO orderItemDTO = new OrderItemDTO();
         orderItemDTO.setOrderItemId(orderItemDao.getOrderItemId());
@@ -16,6 +25,12 @@ public class OrderItemMapper {
         return orderItemDTO;
     }
 
+    /**
+     * Converts OrderItemDTO to OrderItemDao.
+     *
+     * @param orderItemDTO The OrderItemDTO object to be converted.
+     * @return The corresponding OrderItemDao object.
+     */
     public static OrderItemDao toOrderItemDao(OrderItemDTO orderItemDTO) {
         OrderItemDao orderItemDao = new OrderItemDao();
         orderItemDao.setOrderItemId(orderItemDTO.getOrderItemId());

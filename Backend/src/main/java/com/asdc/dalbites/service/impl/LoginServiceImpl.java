@@ -33,6 +33,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 
+
+/**
+ * Implementation of the {@link LoginService} interface providing methods for user authentication,
+ * account management, and password reset.
+ */
 @Service
 public class LoginServiceImpl implements LoginService {
 
@@ -60,6 +65,13 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private UtilityFunctions utilityFunctions;
 
+    /**
+     * Loads user details by username for authentication purposes.
+     *
+     * @param username The username of the user.
+     * @return UserDetails containing user information.
+     * @throws UsernameNotFoundException If the username is not found.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         LoginDao loginDao = loginRepository.findByUsername(username);
@@ -72,6 +84,13 @@ public class LoginServiceImpl implements LoginService {
             .build();
     }
 
+    /**
+     * Creates a new user or restaurant account.
+     *
+     * @param userSignUpDTO The data transfer object containing user or restaurant information for sign-up.
+     * @return A {@code HashMap} containing information about the created account, including a JWT token.
+     * @throws Exception If there is a failure in creating the account.
+     */
     @Override
     public HashMap<String, Object> create(UserSignUpDTO userSignUpDTO) throws Exception {
         try {
@@ -79,7 +98,7 @@ public class LoginServiceImpl implements LoginService {
             userSignUpDTO.setPassword(passwordEncoder.encode(userSignUpDTO.getPassword()));
             userSignUpDTO.setRoleId(roleRepository.findByName(userSignUpDTO.getRole()).getId());
             LoginDao loginDao = new LoginDao(userSignUpDTO.getUsername(), userSignUpDTO.getPassword());
-            roleRepository.findById(userSignUpDTO.getRoleId()).map(roleDao -> { 
+            roleRepository.findById(userSignUpDTO.getRoleId()).map(roleDao -> {
                 loginDao.setRoleDao(roleDao);
                 return true;
             });
@@ -116,6 +135,13 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
+    /**
+     * Retrieves user or restaurant details by username.
+     *
+     * @param username The username of the user or restaurant.
+     * @return User or restaurant details.
+     * @throws UsernameNotFoundException If the user or restaurant is not found.
+     */
     @Override
     public Object getUserByUsername(String username) {
         LoginDao loginDao = loginRepository.findByUsername(username);
@@ -130,6 +156,13 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
+    /**
+     * Authenticates a user and generates a JWT token upon successful login.
+     *
+     * @param userLoginDTO The data transfer object containing user login information.
+     * @return A {@code HashMap} containing information about the user, including a JWT token.
+     * @throws Exception If the account is not verified or other authentication issues occur.
+     */
     @Override
     public Object login(UserLoginDTO userLoginDTO) throws Exception {
         LoginDao loginDao = loginRepository.findByUsername(userLoginDTO.getUsername());
@@ -160,6 +193,14 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
+    /**
+     * Verifies a user's account using the provided token and OTP.
+     *
+     * @param token            The JWT token containing user information.
+     * @param verifyAccountDTO The data transfer object containing the OTP for verification.
+     * @return A {@code HashMap} with a success message and a new JWT token.
+     * @throws Exception If OTP verification fails or other issues occur during the verification process.
+     */
     @Override
     public Object verifyAccount(String token, VerifyAccountDTO verifyAccountDTO) throws Exception {
         Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));
@@ -177,6 +218,13 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
+    /**
+     * Initiates a request for forgetting the user's password and sends an OTP for verification.
+     *
+     * @param forgetPasswordDTO The data transfer object containing the username for password reset.
+     * @return A {@code HashMap} containing a success message and a JWT token for OTP verification.
+     * @throws Exception If there are issues during the password reset request.
+     */
     @Override
     public HashMap<String, Object> forgetPasswordRequest(ForgetPasswordDTO forgetPasswordDTO) throws Exception {
         LoginDao loginDao = loginRepository.findByUsername(forgetPasswordDTO.getUsername());
@@ -201,6 +249,14 @@ public class LoginServiceImpl implements LoginService {
         return claims;
     }
 
+    /**
+     * Verifies the user's identity using the provided token and OTP and resets the password.
+     *
+     * @param token              The JWT token containing user information.
+     * @param forgetPasswordDTO The data transfer object containing the OTP and new password.
+     * @return A {@code HashMap} with a success message.
+     * @throws Exception If OTP verification fails or other issues occur during password reset.
+     */
     @Override
     public HashMap<String, Object> forgetPasswordVerification(String token, ForgetPasswordDTO forgetPasswordDTO)  throws Exception {
         Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));

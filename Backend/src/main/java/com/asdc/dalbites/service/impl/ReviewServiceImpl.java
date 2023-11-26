@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the {@link ReviewService} interface providing methods for managing restaurant reviews.
+ */
 @Service
 public class ReviewServiceImpl implements ReviewService {
     @Autowired
@@ -36,6 +39,13 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private JwtTokenUtil jwtUtil;
 
+    /**
+     * Creates a new review for a restaurant based on the provided information and user authentication token.
+     *
+     * @param token      The authentication token of the user creating the review.
+     * @param reviewDTO  The data transfer object containing review information.
+     * @return A {@link ReviewDTO} representing the newly created review.
+     */
     @Override
     public ReviewDTO createReview(String token, ReviewDTO reviewDTO){
         RestaurantDao restaurant = restaurantRepository.findById(reviewDTO.getRestaurantId()).orElse(null);
@@ -51,6 +61,12 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewMapper.toReviewDTO(createdReview);
     }
 
+    /**
+     * Retrieves all reviews for a specific restaurant.
+     *
+     * @param restuarantId  The ID of the restaurant for which reviews are retrieved.
+     * @return A list of {@link ReviewDTO} representing the reviews for the restaurant.
+     */
     @Override
     public List<ReviewDTO> getAllRestaurantReviews(Long restuarantId){
         List<ReviewDao> reviewDaos = reviewRepository.findByRestaurantId(restuarantId);
@@ -59,6 +75,12 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves all reviews submitted by a specific user.
+     *
+     * @param token  The authentication token of the user for whom reviews are retrieved.
+     * @return A list of {@link ReviewDTO} representing the reviews submitted by the user.
+     */
     @Override
     public List<ReviewDTO> getAllUserReviews(String token){
         Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));
@@ -69,6 +91,13 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a review submitted by a specific user for a particular restaurant.
+     *
+     * @param token         The authentication token of the user.
+     * @param restaurantId  The ID of the restaurant for which the review is retrieved.
+     * @return A {@link ReviewDTO} representing the user's review for the restaurant, or null if not found.
+     */
     @Override
     public ReviewDTO getRestaurantReviewByUser(String token, Long restaurantId){
         Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));
@@ -77,6 +106,12 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewDao.map(dao -> reviewMapper.toReviewDTO(dao)).orElse(null);
     }
 
+    /**
+     * Updates a review submitted by a user for a restaurant based on the provided information.
+     *
+     * @param updatedReviewDTO  The data transfer object containing updated review information.
+     * @return A {@link ReviewDTO} representing the updated review, or null if the review is not found.
+     */
     @Override
     public ReviewDTO updateRestaurantReviewByUser(ReviewDTO updatedReviewDTO) {
         Optional<ReviewDao> existingReviewOptional = reviewRepository.findById(updatedReviewDTO.getReviewId());

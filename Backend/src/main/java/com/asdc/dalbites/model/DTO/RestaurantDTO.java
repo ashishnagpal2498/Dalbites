@@ -3,6 +3,9 @@ package com.asdc.dalbites.model.DTO;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Data Transfer Object (DTO) for representing restaurants.
+ */
 @Getter
 @Setter
 public class RestaurantDTO {
@@ -53,6 +56,15 @@ public class RestaurantDTO {
     private String fileName;
     private String deliveryTime;
 
+	/**
+	 * Constructor for creating a new RestaurantDTO.
+	 *
+	 * @param name          The name of the restaurant.
+	 * @param buildingId    The ID of the building to which the restaurant belongs.
+	 * @param description   The description of the restaurant.
+	 * @param fileName      The file name associated with the restaurant.
+	 * @param deliveryTime  The delivery time of the restaurant.
+	 */
     public RestaurantDTO(String name, Long buildingId, String description, String fileName, String deliveryTime) {
         this.building_id = buildingId;
         this.name = name;
@@ -61,6 +73,16 @@ public class RestaurantDTO {
         this.deliveryTime = deliveryTime;
     }
 
+	/**
+	 * Constructor for creating a new RestaurantDTO with an existing ID.
+	 *
+	 * @param id            The unique identifier of the restaurant.
+	 * @param name          The name of the restaurant.
+	 * @param buildingId    The ID of the building to which the restaurant belongs.
+	 * @param description   The description of the restaurant.
+	 * @param fileName      The file name associated with the restaurant.
+	 * @param deliveryTime  The delivery time of the restaurant.
+	 */
     public RestaurantDTO(Long id, String name, Long buildingId, String description, String fileName, String deliveryTime) {
         this.id = id;
         this.building_id = buildingId;

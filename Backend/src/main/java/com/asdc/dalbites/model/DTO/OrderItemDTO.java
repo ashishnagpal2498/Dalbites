@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * Data Transfer Object (DTO) for order items
+ */
 @Data
 public class OrderItemDTO {
     private Long orderItemId;

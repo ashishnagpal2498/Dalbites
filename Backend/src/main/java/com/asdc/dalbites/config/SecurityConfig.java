@@ -23,7 +23,10 @@ import com.asdc.dalbites.service.LoginService;
 
 import lombok.RequiredArgsConstructor;
 
-
+/**
+ * Configuration class for Spring Security.
+ * This class defines security-related configurations, including authentication, authorization, and CORS.
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -36,7 +39,14 @@ public class SecurityConfig {
 
     @Autowired
 	private LoginService jwtUserDetailsService;
-	
+
+    /**
+     * Configures security filters and policies.
+     *
+     * @param httpSecurity The HttpSecurity object to configure security settings.
+     * @return The configured SecurityFilterChain.
+     * @throws Exception If an error occurs during configuration.
+     */
     @Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -59,11 +69,21 @@ public class SecurityConfig {
         return httpSecurity.build();
 	}
 
+    /**
+     * Provides a PasswordEncoder bean for encoding passwords.
+     *
+     * @return The PasswordEncoder bean.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Provides an AuthenticationProvider bean for authenticating users.
+     *
+     * @return The AuthenticationProvider bean.
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -72,6 +92,13 @@ public class SecurityConfig {
         return authProvider;
     }
 
+    /**
+     * Provides an AuthenticationManager bean for managing authentication.
+     *
+     * @param config The AuthenticationConfiguration object.
+     * @return The AuthenticationManager bean.
+     * @throws Exception If an error occurs while obtaining the AuthenticationManager.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
             throws Exception {

@@ -14,6 +14,10 @@ import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
+
+/**
+ * Represents a building entity in the database.
+ */
 @Entity
 @Getter
 @Setter
@@ -93,11 +97,21 @@ public class BuildingDao {
     @CreationTimestamp
     private Date updated_at;
 
+
+	/**
+	 * Default constructor for BuildingDao.
+	 */
     public BuildingDao() {
 
     }
+	/**
+	 * Parameterized constructor for BuildingDao.
+	 *
+	 * @param name        The name of the building.
+	 * @param description The description of the building.
+	 */
 
-    public BuildingDao(String name, String description) {
+	public BuildingDao(String name, String description) {
         this.name = name;
         this.description = description;
     }
