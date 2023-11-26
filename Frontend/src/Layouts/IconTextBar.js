@@ -8,11 +8,11 @@ import {
 } from "@expo/vector-icons";
 import Colors from "../Utils/Colors";
 
-const NavIcon = ({ iconName, iconType, ...extraProps }) => {
+const NavIcon = ({ iconName, iconType, iconColor, ...extraProps }) => {
   switch (iconType) {
     case "Ini": // IonIcons
       return (
-        <Ionicons name={iconName} size={25} color="black" {...extraProps} />
+        <Ionicons name={iconName} size={25} color={iconColor} {...extraProps} />
       );
 
     case "Mci": // Material Community Icons
@@ -20,25 +20,35 @@ const NavIcon = ({ iconName, iconType, ...extraProps }) => {
         <MaterialCommunityIcons
           name={iconName}
           size={25}
-          color="black"
+          color={iconColor}
           {...extraProps}
         />
       );
 
     case "Fai": // FontAwesomeIcon
       return (
-        <FontAwesome5 name={iconName} size={25} color="black" {...extraProps} />
+        <FontAwesome5
+          name={iconName}
+          size={25}
+          color={iconColor}
+          {...extraProps}
+        />
       );
     case "Ati":
       return (
-        <AntDesign name={iconName} size={25} color="black" {...extraProps} />
+        <AntDesign
+          name={iconName}
+          size={25}
+          color={iconColor}
+          {...extraProps}
+        />
       );
     default:
       return (
         <MaterialCommunityIcons
           name={iconName}
           size={25}
-          color="black"
+          color={iconColor}
           {...extraProps}
         />
       );
@@ -54,7 +64,14 @@ const IconTextBar = ({
   iconProps,
 }) => {
   if (iconOnly)
-    return <NavIcon iconType={iconType} iconName={iconName} {...iconProps} />;
+    return (
+      <NavIcon
+        iconType={iconType}
+        iconName={iconName}
+        iconColor={iconColor}
+        {...iconProps}
+      />
+    );
   else
     return (
       <TouchableHighlight

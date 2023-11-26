@@ -4,8 +4,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "./Loading";
-import { getUserOrders } from "../redux/actions/OrderAction";
-
+import { SafeAreaView } from "react-native-safe-area-context";
+import { logout } from "../redux/actions/Authentication";
+import Reviews from "./Reviews";
+import { getAllUserReviews, getUserDetails } from "../redux/actions/UserAction";
 const userData = {
   id: 1,
   name: "Adam Bills ",
@@ -13,62 +15,21 @@ const userData = {
   email: "abcd@dal.ca",
 };
 
-// const orderHistory = [
-//   {
-//     orderId: "00001",
-//     date: "09-11-2023",
-//     restaurantName: "Starbucks",
-//     items: ["Expresso", "Latte", "Cappuccino", "Donut"],
-//     quantities: [1, 2, 1, 4],
-//     totalCost: 25.99,
-//   },
-//   {
-//     orderId: "00002",
-//     date: "08-11-2023",
-//     restaurantName: "Pizza Pizza",
-//     items: ["Pizza", "Salad"],
-//     quantities: [1, 1],
-//     totalCost: 19.99,
-//   },
-//   {
-//     orderId: "00003",
-//     date: "07-11-2023",
-//     restaurantName: "Tim Hortons",
-//     items: ["Timbits", "French Vanilla"],
-//     quantities: [1, 3],
-//     totalCost: 20.99,
-//   },
-//   {
-//     orderId: "00004",
-//     date: "06-11-2023",
-//     restaurantName: "KFC",
-//     items: ["Burger", "Chicken Bucket"],
-//     quantities: [3, 1],
-//     totalCost: 35.99,
-//   },
-// ];
-
 const Profile = ({ navigation }) => {
   // const handleEditPhoto = () => {
   //   console.log('edit photo button pressed');
   // };
 
   const dispatch = useDispatch();
-  const orders = useSelector((store) => store.order.orders);
   const token = useSelector((store) => store.authentication.token);
-  const loading = useSelector((store) => store.order.orderLoading);
+  const loading = useSelector((store) => store.user.profileLoading);
+  const userReviews = useSelector((store) => store.user.userReviews);
+  const user = useSelector((store) => store.user.user);
+  // const handleChangePassword = () => {
+  //   console.log("change password button pressed");
+  // };
 
-  const handleChangePassword = () => {
-    console.log("change password button pressed");
-  };
-
-  const handleLogout = () => {
-    console.log("logout button pressed");
-  };
-
-  const handlereview = (restaurantId) => {
-    navigation.navigate("Review", { restaurantId });
-  };
+  const handleLogout = () => dispatch(logout());
 
   const [userPhoto, setUserPhoto] = useState(
     require("../assets/images/Dummy_profile_photo.png")
@@ -83,7 +44,9 @@ const Profile = ({ navigation }) => {
         alert("Sorry, we need camera roll permissions to make this work!");
       }
     })();
-    dispatch(getUserOrders(token));
+
+    dispatch(getAllUserReviews({ token }));
+    dispatch(getUserDetails({ token }));
   }, []);
 
   const handleEditPhoto = async () => {
@@ -106,97 +69,53 @@ const Profile = ({ navigation }) => {
   }
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.extramheader}>
-          <Text style={styles.headertext}>Profile</Text>
-        </View>
-      </View>
-
-      <View style={styles.profilebody}>
-        <View style={styles.profileinfocontainer}>
-          <View style={styles.profilephotoContainer}>
-            {/* <View style={styles.photoContainer}>
+      <SafeAreaView>
+        <View style={styles.profilebody}>
+          <View style={styles.profileinfocontainer}>
+            <View style={styles.profilephotoContainer}>
+              {/* <View style={styles.photoContainer}>
               <Image
                 style={styles.photo}
                 source={require("../assets/images/Dummy_profile_photo.png")}
               />
             </View> */}
 
-            <View style={styles.photoContainer}>
-              <Image style={styles.photo} source={userPhoto} />
-            </View>
+              <View style={styles.photoContainer}>
+                <Image style={styles.photo} source={userPhoto} />
+              </View>
 
-            <TouchableOpacity
-              style={styles.photobutton}
-              onPress={handleEditPhoto}
-            >
-              <Text style={styles.phototext}>Edit Photo</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.profileinfo}>
-            <Text style={styles.nametext}>Name : {userData.name}</Text>
-            <Text style={styles.emailtext}>Email : {userData.email}</Text>
-            <Text style={styles.bannertext}>Banner Id : {userData.banner}</Text>
-          </View>
-        </View>
-
-        <View style={styles.profilebuttonscontainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleChangePassword}
-          >
-            <Text style={styles.buttonText}>Change Password</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.button} onPress={handleLogout}>
-            <Text style={styles.buttonText}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View style={styles.header}>
-        <View style={styles.extrahleader}>
-          <Text style={styles.headertext}>Order History</Text>
-        </View>
-      </View>
-
-      <View style={styles.ordercontainer}>
-        {orders.map((order, index) => (
-          <View style={styles.ordercard} key={index}>
-            <View style={styles.row1}>
-              <Text style={styles.row1text}>Order ID: {order.orderId}</Text>
-              <Text style={styles.row1text}>Date: {order.createdAt}</Text>
-            </View>
-
-            <View style={styles.row2}>
-              <Text style={styles.row2text}>{order.restaurantName}</Text>
-              <Text style={styles.row2text}>Cost: ${order.totalAmount}</Text>
-            </View>
-
-            <View style={styles.row3}>
-              <Text style={styles.row3text}>Order: </Text>
-              <Text style={styles.row3text}>
-                {order.orderItems.map(
-                  (menuItem, i) =>
-                    `${menuItem.item.name}(${menuItem.quantity})${
-                      i === order.orderItems.length - 1 ? "" : ", "
-                    }`
-                )}
-              </Text>
-            </View>
-
-            <View style={styles.addreviewbuttoncontainer}>
               <TouchableOpacity
-                style={styles.reviewButton}
-                onPress={() => handlereview(order.restaurantId)}
+                style={styles.photobutton}
+                onPress={handleEditPhoto}
               >
-                <Text style={styles.reviewtext}>Add a Review</Text>
+                <Text style={styles.phototext}>Edit Photo</Text>
               </TouchableOpacity>
             </View>
+
+            <View style={styles.profileinfo}>
+              <Text style={styles.nametext}>Name : {user.name}</Text>
+              <Text style={styles.emailtext}>Email : {user.email}</Text>
+              {/* <Text style={styles.bannertext}>
+                Banner Id : {userData.banner}
+              </Text> */}
+            </View>
           </View>
-        ))}
-      </View>
+
+          <View style={styles.profilebuttonscontainer}>
+            {/* <TouchableOpacity
+              style={styles.button}
+              onPress={handleChangePassword}
+            >
+              <Text style={styles.buttonText}>Change Password</Text>
+            </TouchableOpacity> */}
+
+            <TouchableOpacity style={styles.button} onPress={handleLogout}>
+              <Text style={styles.buttonText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <Reviews userReviews={userReviews} />
+      </SafeAreaView>
     </ScrollView>
   );
 };

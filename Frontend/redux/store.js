@@ -8,6 +8,7 @@ import { restaurantSaga } from "./sagas/RestaurantSaga";
 import { userSaga } from "./sagas/UserSaga";
 import { orderSaga } from "./sagas/OrderSaga";
 import { RestaurantOrderSaga } from "./sagas/RestaurantOrderSaga";
+import { cartSaga } from "./sagas/CartSaga";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -20,6 +21,7 @@ function* rootSaga() {
     userSaga(),
     orderSaga(),
     RestaurantOrderSaga(),
+    cartSaga()
   ]);
 }
 

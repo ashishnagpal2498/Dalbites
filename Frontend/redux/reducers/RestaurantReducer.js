@@ -15,7 +15,7 @@ import {
   SET_SELECTED_BUILDINGS,
   GET_RESTAURANT_REVIEW_SUCCESS,
   GET_RESTAURANT_REVIEW_FAILURE,
-  UPDATE_RESTAURANT_MENUITEM,
+  UPDATE_RESTAURANT_MENUITEM
 } from "../Types/RestaurantTypes";
 
 const initialState = {
@@ -28,6 +28,10 @@ const initialState = {
   restaurantMenu: [{}],
   restaurantReviews: [{}],
   restaurantMenus: [],
+  cartItems: [],
+  cartRestaurantId: null,
+  cart: {},
+  selectedRestaurantForCart: {}
 };
 
 export default (state = initialState, action) => {

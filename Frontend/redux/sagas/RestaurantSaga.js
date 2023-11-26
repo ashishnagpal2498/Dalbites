@@ -1,4 +1,4 @@
-import { put, call, takeEvery, take } from "redux-saga/effects";
+import { put, call, takeEvery, take, takeLatest, select } from "redux-saga/effects";
 import {
   getAllBuildingsAPI,
   getRestaurantByIdAPI,
@@ -35,6 +35,12 @@ import {
   SET_RESTAURANT_LOADING,
   SET_RESTAURANT_MENUITEM,
   UPDATE_RESTAURANT_MENUITEM,
+  GET_CART_ITEM,
+  ADD_CART_ITEM,
+  DELETE_CART_ITEM,
+  DELETE_CART_ITEMS,
+  UPDATE_CART_ITEM,
+  SELECT_RESTAURANT_FOR_CART
 } from "../Types/RestaurantTypes";
 
 function* getRestaurantByIdSaga(action) {
@@ -64,7 +70,6 @@ function* getRestaurantByIdSaga(action) {
         payload: { restaurant: response.data },
       });
     }
-    console.log("Restaurant --> ", response.data);
   } catch (error) {
     yield put({
       type: GET_RESTAURANT_BY_ID_FAILURE,
@@ -283,13 +288,14 @@ function* addRestaurantMenuItem({ payload }) {
       "Content-Type": "multipart/form-data",
     };
     console.log("Headers - ", headers);
+    let is_available = payload.is_available == true ? "1" : "0";
     let formData = new FormData();
     formData.append("name", payload.name);
     formData.append("description", payload.description);
     formData.append("price", payload.price);
     formData.append("time", payload.time);
-    formData.append("is_available", payload.is_available);
-    formData.append("restaurant_id", payload.restaurant_id);
+    formData.append("isAvailable", is_available);
+    formData.append("restaurantId", payload.restaurant_id);
     formData.append("file", payload.fileObj);
 
     const response = yield call(

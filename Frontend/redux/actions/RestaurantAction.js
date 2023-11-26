@@ -9,7 +9,7 @@ import {
   GET_RESTAURANT_MENUS,
   SET_RESTAURANT_MENUITEM,
   UPDATE_RESTAURANT_MENUITEM,
-  DELETE_RESTAURANT_MENUITEM,
+  DELETE_RESTAURANT_MENUITEM
 } from "../Types/RestaurantTypes";
 
 export const getRestaurants = (payload) => ({
@@ -64,4 +64,4 @@ export const updateRestaurantMenuItem = (payload) => ({
 export const deleteRestaurantMenuItem = (payload) => ({
   type: DELETE_RESTAURANT_MENUITEM,
   payload,
-});
+})

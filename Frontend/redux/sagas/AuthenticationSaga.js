@@ -43,12 +43,24 @@ function* loginSaga(action) {
     );
     if (response.status >= 200 && response.status <= 300) {
       yield call(SecureStore.setItemAsync, "token", response.data.token);
-      const isRestaurant = response.data.role.toLowerCase() == "restaurant"
+      const isRestaurant = response.data.role.toLowerCase() == "restaurant";
       if (isRestaurant) {
-        yield call(SecureStore.setItemAsync, "restaurantId", response.data.restaurant_id.toString());
+        yield call(
+          SecureStore.setItemAsync,
+          "restaurantId",
+          response.data.restaurant_id.toString()
+        );
         yield call(SecureStore.setItemAsync, "isRestaurant", "true");
       }
-      yield put({ type: LOGIN_SUCCESS, payload: { isRestaurant, redirect: isRestaurant ? "AddMenu" : "", restaurantId: response.data?.restaurant_id || "" } });
+      yield put({
+        type: LOGIN_SUCCESS,
+        payload: {
+          isRestaurant,
+          redirect: isRestaurant ? "AddMenu" : "",
+          restaurantId: response.data?.restaurant_id || "",
+          token: response.data.token,
+        },
+      });
     } else {
       yield put({
         type: LOGIN_FAILURE,
@@ -56,9 +68,14 @@ function* loginSaga(action) {
       });
     }
   } catch (error) {
+    console.log(JSON.stringify(error));
     yield put({
       type: LOGIN_FAILURE,
-      payload: { error: error.message, redirect: "Login" },
+      payload: {
+        error: error.message,
+        errorCode: error.code,
+        redirect: "Login",
+      },
     });
   } finally {
     yield put({ type: SET_LOADING, payload: { loading: false } });
@@ -98,7 +115,7 @@ function* signUpSaga(action) {
           tempToken: response.data.token,
           tempUser: {
             email: response.data.email,
-            role: response.data.role
+            role: response.data.role,
           },
           redirect: "VerifyAccount",
         },
@@ -158,7 +175,7 @@ function* validateOTP(action) {
         payload: {
           successMessage: response.data.message,
           redirect: "VerifyAccount",
-          ...payload
+          ...payload,
         },
       });
     } else {
@@ -238,21 +255,35 @@ function* setupRestaurantAccountSaga(action) {
 
     let formdata = new FormData();
 
-    formdata.append("name", action.payload.restaurantName)
-    formdata.append("description", action.payload.restaurantDescription)
-    formdata.append("building", action.payload.buildingId)
-    formdata.append("delivery_time", action.payload.estimatedDeliveryTime)
-    formdata.append("file", { uri: action.payload.restaurantImage.uri, name: 'image.jpg', type: 'image/jpg'})
-
-    const response = yield call(axios.post, SetupRestaurantAccountAPI, formdata, {
-      headers: {
-        ...API_HEADERS,
-        Authorization: `Bearer ${action.payload.authToken}`,
-        "Content-Type": "multipart/form-data"
-      },
+    formdata.append("name", action.payload.restaurantName);
+    formdata.append("description", action.payload.restaurantDescription);
+    formdata.append("building", action.payload.buildingId);
+    formdata.append("deliveryTime", action.payload.estimatedDeliveryTime);
+    formdata.append("file", {
+      uri: action.payload.restaurantImage.uri,
+      name: "image.jpg",
+      type: "image/jpg",
     });
+
+    const response = yield call(
+      axios.post,
+      SetupRestaurantAccountAPI,
+      formdata,
+      {
+        headers: {
+          Authorization: `Bearer ${action.payload.authToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     if (response.status >= 200 && response.status <= 300) {
-      yield put({ type: SETUP_RESTAURANT_ACCOUNT_SUCCESS, payload: { redirect: "SetupRestaurantScreen", restaurantId: response.data.id } });
+      yield put({
+        type: SETUP_RESTAURANT_ACCOUNT_SUCCESS,
+        payload: {
+          redirect: "SetupRestaurantScreen",
+          restaurantId: response.data.id,
+        },
+      });
     } else {
       yield put({
         type: SETUP_RESTAURANT_ACCOUNT_FAILURE,
@@ -263,7 +294,10 @@ function* setupRestaurantAccountSaga(action) {
     if (error.response.status == 409) {
       yield put({
         type: SETUP_RESTAURANT_ACCOUNT_FAILURE,
-        payload: { error: "Some error occured, try login", redirect: "SetupRestaurantScreen" },
+        payload: {
+          error: "Some error occured, try login",
+          redirect: "SetupRestaurantScreen",
+        },
       });
     } else
       yield put({

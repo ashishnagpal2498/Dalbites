@@ -18,7 +18,7 @@ import Loading from "./Loading";
 import { getRestaurantById } from "../redux/actions/RestaurantAction";
 import tw from "twrnc";
 
-const Review = ({ route, navigation }) => {
+const AddReview = ({ route, navigation }) => {
   const { restaurantId } = route.params;
   const dispatch = useDispatch();
   const review = useSelector((store) => store.user.review);
@@ -38,16 +38,18 @@ const Review = ({ route, navigation }) => {
     dispatch(
       postReview({ token, restaurantId, rating, reviewComment, review })
     );
-    setTimeout(
-      () => dispatch(setSuccessMessage({ successMessage: null })),
-      4000
-    );
   };
-  var date = moment().utcOffset("-04:00").format("DD-MM-YYYY hh:mm a");
+
+  if (successMessage) {
+    setTimeout(() => {
+      dispatch(setSuccessMessage({ successMessage: null }));
+      navigation.navigate("OrderHistory");
+    }, 2000);
+  }
 
   const starRatings = [1, 2, 3, 4, 5];
 
-  const [rating, setRating] = useState(null);
+  const [rating, setRating] = useState(0);
 
   const handleStarPress = (index) => {
     setRating(index);
@@ -62,6 +64,9 @@ const Review = ({ route, navigation }) => {
     if (review) {
       setReviewComment(review.reviewComment);
       setRating(review.rating);
+    } else {
+      setReviewComment("");
+      setRating(0);
     }
   }, [review]);
 
@@ -76,7 +81,11 @@ const Review = ({ route, navigation }) => {
     <ScrollView style={styles.reviewScreenContainer}>
       <View style={styles.reviewInfoContainer}>
         <Text style={styles.infoText}>{restaurant.name}</Text>
-        <Text style={styles.infoText}>{date}</Text>
+        <Text style={styles.infoText}>
+          {review &&
+            new Date(review.createdAt).toLocaleDateString() +
+              new Date(review.createdAt).toLocaleTimeString()}
+        </Text>
       </View>
 
       <View style={styles.reviewContainer}>
@@ -104,7 +113,7 @@ const Review = ({ route, navigation }) => {
             style={styles.descriptionText}
             multiline={true}
             numberOfLines={4}
-            placeholder="Add a review"
+            placeholder="Add review comment . . ."
             value={reviewComment}
             onChangeText={(text) => handleReviewChange(text)}
           />
@@ -116,10 +125,12 @@ const Review = ({ route, navigation }) => {
             onPress={() => handleSaveReview(rating, reviewComment)}
             disabled={rating === null}
           >
-            <Text style={styles.buttonText}>Save Review</Text>
+            <Text style={styles.buttonText}>
+              {review ? "Update" : "Save"} Review
+            </Text>
           </TouchableOpacity>
         </View>
-        <Text style={tw`text-green-600`}>
+        <Text style={tw`text-green-600 mt-4`}>
           {successMessage && successMessage}
         </Text>
       </View>
@@ -181,8 +192,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   buttonText: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 18,
     textAlign: "center",
   },
   descriptionBox: {
@@ -198,4 +208,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Review;
+export default AddReview;
