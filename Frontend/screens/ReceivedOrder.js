@@ -23,12 +23,13 @@ const ReceivedOrder = () => {
     (store) => store.restaurantOrder.restaurantOrderLoading
   );
   const orders = useSelector((store) => store.restaurantOrder.restaurantOrder);
+  const token = useSelector((store) => store.authentication.token);
   const orderError = useSelector(
     (store) => store.restaurantOrder.restaurantOrderError
   );
 
   useEffect(() => {
-    dispatch(getOrder("all"));
+    dispatch(getOrder({ queryType: "all", token }));
   }, []);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const ReceivedOrder = () => {
   }, [orderError]);
 
   const onRefresh = () => {
-    dispatch(getOrder("all"));
+    dispatch(getOrder({ queryType: "all", token }));
   };
 
   const getOrderStatusText = (status) => {
@@ -63,6 +64,7 @@ const ReceivedOrder = () => {
     let payload = {
       id: id,
       body: { status: status },
+      token
     };
     dispatch(updateOrderStatus(payload));
   };

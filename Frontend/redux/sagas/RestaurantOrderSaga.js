@@ -18,11 +18,11 @@ function* getOrderSaga(action) {
       payload: { restaurantOrderLoading: true },
     });
     const headers = {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUmVzdGF1cmFudCIsImFkZHJlc3MiOm51bGwsInJvbGVfaWQiOjIsIm5hbWUiOiJEYXJzaGl0IiwiZXhwIjoxNzAyNzUxNDAwLCJpYXQiOjE3MDAyMzU2NzIsInVzZXJuYW1lIjoicnVzaGlwYXRlbDE0MDBAZ21haWwuY29tIn0.u0uVQPVRB9ooBOkOfHxIA9YVOjQMewl5Dungup1Wqpo`,
+      Authorization: `Bearer ${payload.token}`,
       ...API_HEADERS,
     };
     console.log("Headers - ", headers);
-    const response = yield call(axios.get, getAllOrdersForRestaurantAPI+payload, {
+    const response = yield call(axios.get, getAllOrdersForRestaurantAPI+payload.queryType, {
       headers: { ...headers },
     });
     if (response.status >= 200 && response.status <= 300) {
@@ -54,7 +54,7 @@ function* updateOrderStatusSaga(action) {
       payload: { restaurantOrderLoading: true },
     });
     const headers = {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUmVzdGF1cmFudCIsImFkZHJlc3MiOm51bGwsInJvbGVfaWQiOjIsIm5hbWUiOiJEYXJzaGl0IiwiZXhwIjoxNzAyNzUxNDAwLCJpYXQiOjE3MDAyMzU2NzIsInVzZXJuYW1lIjoicnVzaGlwYXRlbDE0MDBAZ21haWwuY29tIn0.u0uVQPVRB9ooBOkOfHxIA9YVOjQMewl5Dungup1Wqpo`,
+      Authorization: `Bearer ${payload.token}`,
       ...API_HEADERS,
     };
     console.log("Headers - ", headers);
