@@ -32,6 +32,12 @@ const WelcomeScreen = ({ navigation }) => {
       >
         <Text style={tw`text-black text-lg font-semibold`}>Sign Up</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={tw`mt-4 bg-yellow-500 rounded-lg py-2 px-4`}
+        onPress={() => navigation.navigate("RestaurantOrderStack")}
+      >
+        <Text style={tw`text-black text-lg font-semibold`}>Orders</Text>
+      </TouchableOpacity>
     </View>
   );
 };
