@@ -46,7 +46,7 @@ const OrderDetails = ({ route }) => {
                   Total Cost: ${" "}
                   {Number(
                     orderItemData.item.price * orderItemData.quantity
-                  ).toPrecision(2)}
+                  ).toPrecision(4)}
                 </Text>
               </View>
             </View>
@@ -76,10 +76,10 @@ const OrderDetails = ({ route }) => {
         </Text>
 
         <Text style={styles.orderSummaryText}>
-          Taxes: $ {Number(order.totalAmount * 0.15).toPrecision(2)}
+          Taxes: $ {Number(order.totalAmount * 0.15).toPrecision(4)}
         </Text>
         <Text style={styles.orderSummaryText}>
-          Grand Total: $ {Number(order.totalAmount * 1.15).toPrecision(2)}
+          Grand Total: $ {Number(order.totalAmount * 1.15).toPrecision(4)}
         </Text>
 
         <View style={styles.orderRow2}>

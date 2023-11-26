@@ -175,6 +175,7 @@ function* validateOTP(action) {
         payload: {
           successMessage: response.data.message,
           redirect: "VerifyAccount",
+          token: response.data.token,
           ...payload,
         },
       });

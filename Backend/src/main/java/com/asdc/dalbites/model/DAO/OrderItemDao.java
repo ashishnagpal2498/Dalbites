@@ -9,6 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
+/**
+ * Represents an order item entity in the database.
+ */
 @Entity
 @Getter
 @Setter
@@ -34,7 +37,7 @@ public class OrderItemDao {
     private OrderDao order;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "menu_item_id", referencedColumnName = "id")
     @JsonIgnore
     private  MenuItemDao item;
 }

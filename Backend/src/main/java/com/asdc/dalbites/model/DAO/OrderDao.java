@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
+/**
+ * Represents an order entity in the database.
+ */
 @Entity
 @Getter
 @Setter
@@ -50,6 +54,11 @@ public class OrderDao {
     @JoinColumn(name = "restaurant_id")
     @JsonIgnore
     private RestaurantDao restaurant;
+
+
+    /**
+     * Default constructor for OrderDao.
+     */
     public OrderDao() {
         this.orderItems = new ArrayList<>();
     }

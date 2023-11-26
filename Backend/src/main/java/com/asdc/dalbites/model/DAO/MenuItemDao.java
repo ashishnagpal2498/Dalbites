@@ -11,6 +11,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Represents a menu item entity in the database.
+ */
 @Entity
 @Getter
 @Setter
@@ -123,7 +126,15 @@ public class MenuItemDao {
     @Column(name="is_available")
     private Boolean is_available;
 
-    public RestaurantDao getRestaurant() {
+    public String getMenu_image() {
+		return menu_image;
+	}
+
+	public void setMenu_image(String menu_image) {
+		this.menu_image = menu_image;
+	}
+
+	public RestaurantDao getRestaurant() {
         return restaurant;
     }
 
@@ -143,9 +154,23 @@ public class MenuItemDao {
     @JsonIgnore
     private List<OrderItemDao> orderItems;
 
+    /**
+     * Default constructor for MenuItemDao.
+     */
     public MenuItemDao() {
     }
 
+    /**
+     * Parameterized constructor for MenuItemDao.
+     *
+     * @param name        The name of the menu item.
+     * @param description The description of the menu item.
+     * @param price       The price of the menu item.
+     * @param time        The preparation time of the menu item.
+     * @param is_available The availability status of the menu item.
+     * @param menu_image  The image associated with the menu item.
+     * @param restaurant  The restaurant to which the menu item belongs.
+     */
     public MenuItemDao(String name, String description, Double price, Double time, Boolean is_available, String menu_image, RestaurantDao restaurant) {
         this.name = name;
         this.description = description;

@@ -18,6 +18,9 @@ import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Represents a login entity in the database.
+ */
 @Entity
 @Getter
 @Setter
@@ -119,9 +122,18 @@ public class LoginDao {
     @JsonIgnore
     private RoleDao roleDao;
 
+	/**
+	 * Default constructor for LoginDao.
+	 */
     public LoginDao() {
     }
 
+	/**
+	 * Parameterized constructor for LoginDao.
+	 *
+	 * @param username The username associated with the login.
+	 * @param password The password associated with the login.
+	 */
     public LoginDao(String username, String password) {
         this.username = username;
         this.password = password;

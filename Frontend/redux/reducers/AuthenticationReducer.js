@@ -86,6 +86,7 @@ export default (state = initialState, action) => {
         isRestaurant: false,
         restaurantId: "",
         redirect: "",
+        token: null,
       };
     case LOGOUT_FAILURE:
       return {
