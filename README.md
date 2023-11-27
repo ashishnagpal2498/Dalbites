@@ -14,5 +14,3 @@ Ensure global accessibility by following our [**Build and Deployment Guide**](Do
 
 Check out the [**User Scenarios**](Documentation/User_Scenarios.md) document to discover all the cool things you can do with the application. It explains different ways users can interact with the app, making it easy to understand and use. Whether you're new and looking for guidance or experienced and seeking advanced features, this document is your go-to guide for getting the most out of the application.
 
-
-
