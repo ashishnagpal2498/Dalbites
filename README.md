@@ -1,4 +1,3 @@
-
 # DalBites- One stop destination for ordering food in Dalhousie Campus
 
 ## External Dependencies
