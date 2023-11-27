@@ -8,10 +8,10 @@ const RestaurantCard = ({ navigation, item }) => {
 
   const handleCardPress = (item) => {
     dispatch(selectedRestaurantForCart(item))
-    navigation.navigate("RestaurantDetail", { id: item.id, title: item.name });
+    navigation.navigate("RestaurantDetail", { id: item.id, title: item.name,  });
   };
   return (
-    <TouchableOpacity onPress={() => handleCardPress({ name: item.name, id: item.id })}>
+    <TouchableOpacity onPress={() => handleCardPress({ name: item.name, id: item.id, address: item.address })}>
       <View style={styles.card}>
         <View style={styles.imageConatainer}>
           <Image
@@ -20,16 +20,14 @@ const RestaurantCard = ({ navigation, item }) => {
           />
           <View style={styles.textContainer}>
             <Text style={styles.restaurantName}>{item.name}</Text>
-            <View style={styles.rowContainer}>
-              <Text style={styles.buildingName}>{item.address}</Text>
+            <Text style={styles.buildingName}>{item.address}</Text>
+            {/* <View style={styles.rowContainer}>
               <Text style={styles.rating}>Rating: {item.rating}</Text>
-            </View>
+            </View> */}
           </View>
         </View>
         <View style={styles.moreDetailsContainer}>
-          <Text style={styles.bestSellerText}>
-            Best Seller: {item.bestSeller}
-          </Text>
+        <Text style={styles.bestSellerText}>Rating: {item.rating}</Text>
           <Text style={styles.timeText}>Avg Prep Time: {item.estimatedDeliveryTime}</Text>
         </View>
       </View>
@@ -62,13 +60,18 @@ const styles = StyleSheet.create({
     width: "100%",
     position: "absolute",
     bottom: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   restaurantName: {
     fontSize: 20,
     fontWeight: "bold",
     paddingHorizontal: 10,
     color: "#ecc94b",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    // backgroundColor: "rgba(0, 0, 0, 0.5)",
     textAlign: "left",
   },
   rowContainer: {

@@ -3,6 +3,7 @@ import AuthenticationReducer from "./reducers/AuthenticationReducer";
 import RestaurantReducer from "./reducers/RestaurantReducer";
 import UserReducer from "./reducers/UserReducer";
 import OrderReducer from "./reducers/OrderReducer";
+import RestaurantOrderReducer from "./reducers/RestaurantOrderReducer";
 import CartReducer from "./reducers/CartReducer";
 
 const rootReducer = combineReducers({
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
   restaurant: RestaurantReducer,
   user: UserReducer,
   order: OrderReducer,
+  restaurantOrder: RestaurantOrderReducer,
   cart: CartReducer
 });
 

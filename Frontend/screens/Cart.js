@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CardItem from "../src/Components/CartItem";
 import tw from "twrnc";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View, Image} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getCartItem, updateCartTotal } from "../redux/actions/CartAction";
 import { useIsFocused } from "@react-navigation/native";
@@ -9,8 +9,7 @@ import { useIsFocused } from "@react-navigation/native";
 const Cart = ({ navigation }) => {
   const dispatch = useDispatch();
   const subTotal = useSelector((store) => store.cart.subTotal) || 0;
-  const maxWaitTime =
-    useSelector((store) => store.cart.maxPreparationTime) || 0;
+  const maxWaitTime = useSelector((store) => store.cart.maxPreparationTime) || 0;
   const isFocused = useIsFocused();
 
   const data = useSelector((store) => store.cart.cartItems) || [];
@@ -34,7 +33,7 @@ const Cart = ({ navigation }) => {
     payloadData.restaurantId = restaurantData.id;
 
     navigation.navigate("Payment", {
-      amount: Number(subTotal * 1.15).toPrecision(2),
+      amount: Number(subTotal * 1.15).toPrecision(4),
       payloadData,
     });
   };
@@ -46,74 +45,123 @@ const Cart = ({ navigation }) => {
   }, [isFocused, data]);
 
   return (
-    <View style={tw`justify-center items-center bg-white`}>
-      {data && data.length == 0 ? (
-        <Text
-          style={tw`text-black text-lg font-semibold text-center justify-center content-center my-70`}
-        >
-          Your cart is empty
-        </Text>
-      ) : (
-        <View style={styles.headerContainer}>
-          <View style={styles.header}>
-            <View style={styles.extraheader}>
+    <ScrollView style={styles.screenContainer}>
+
+        {data && data.length == 0 ? (
+          <View>
+            <Text style={styles.emptyText}>
+              Your cart is empty !!
+            </Text>
+          </View>
+        ) : (
+          <View>
+        <View style={styles.restaurantOrderContainer}>
+
+          <View style={styles.restaurantContainer}>
+            <Image
+              style={styles.restaurantImage}
+              source={{ uri: restaurantData.Image}}
+            />
+            <View style={styles.restaurantNameContainer}>
               <Text style={styles.restaurantName}>{restaurantData.name}</Text>
             </View>
           </View>
-          <ScrollView style={styles.scrollViewContainer}>
+          {/* <View style={styles.header}>
+            <View style={styles.extraheader}>
+              <Text style={styles.restaurantName}>{restaurantData.name}</Text>
+            </View>
+          </View> */}
+
+          <View style={styles.allItemsContainer}>
             {data.map((item, index) => (
               <CardItem key={index} cardData={item}></CardItem>
             ))}
-          </ScrollView>
+          </View>
         </View>
-      )}
 
-      <View style={styles.container}>
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ flexDirection: "column", marginLeft: "8px" }}>
-            <Text style={tw`text-black text-lg font-semibold`}>
-              Sub Total: ${subTotal}
-            </Text>
-            <Text style={tw`text-black text-lg font-semibold`}>
-              Tax: ${Number(subTotal * 0.15).toPrecision(2)}
-            </Text>
-            <Text style={tw`text-green-600 text-lg font-semibold`}>
-              Grand Total: ${Number(subTotal * 1.15).toPrecision(2)}
-            </Text>
-          </View>
-          <View style={{ flexDirection: "column" }}>
-            <Pressable
-              style={tw`bg-yellow-500 rounded-lg py-2 pl-12`}
-              onPress={placeOrder}
-            >
-              <Text style={tw`text-black text-lg font-semibold px-6 -pl-9`}>
-                Place Order
-              </Text>
-            </Pressable>
-            <Text style={tw`text-black text-lg font-semibold py-3 pl-12`}>
-              Wait Time: {maxWaitTime} minutes
-            </Text>
-          </View>
+        <View style={styles.orderSummaryContainer}>
+
+        <View style={styles.HeaderContainer}>
+          <Text style={styles.orderHeaderText}>Order Summary</Text>
         </View>
+        
+        <View style={styles.orderSummaryTextContainer}>
+          <Text style={styles.orderSummaryText}>
+            Subtotal: $ {subTotal}
+          </Text>
+          <Text style={styles.orderSummaryText}>
+            Taxes: $ {Number(subTotal * 0.15).toPrecision(4)}
+          </Text>
+          <Text style={styles.orderSummaryText}>
+            Grand Total: $ {Number(subTotal * 1.15).toPrecision(4)}
+          </Text>
+          <Text style={styles.orderSummaryText}>
+            Estimated waiting time: {maxWaitTime} minutes
+          </Text>
+        </View>
+
+        <Pressable style={styles.placeOrderButton} onPress={placeOrder}>
+          <Text style={styles.placeOrderText}>
+            Place Order
+          </Text>
+        </Pressable>
+
       </View>
-    </View>
+
+        </View>
+        )}
+      {/* </View> */}
+
+      
+
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 100,
-    marginTop: 10,
-    textAlign: "center",
+  screenContainer:{
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "white",
   },
-  headerContainer: {
+  emptyText:{
+    textAlignVertical:"center",
+    textAlign:"center",
+    marginTop:300,
+    fontSize: 30,
+  },
+  restaurantOrderContainer:{
+
+  },
+  restaurantContainer: {
+    width: "95%",
+    aspectRatio: 2.2,
+    overflow: "hidden",
+    alignSelf: "center",
+    borderRadius: 10,
+    borderWidth: 3,
+    marginVertical: 5,
+  },
+  restaurantImage: {
     width: "100%",
-    textAlign: "center",
+    height: "100%",
   },
-  scrollViewContainer: {
+  restaurantNameContainer: {
     width: "100%",
-    padding: 10,
+    position: "absolute",
+    bottom: 0,
+    alignSelf: "center",
   },
+  restaurantName: {
+    fontSize: 30,
+    fontWeight: "bold",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    color: "#EAB308",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    textAlign: "left",
+  },
+
   header: {
     padding: 0,
     margin: 7,
@@ -124,11 +172,56 @@ const styles = StyleSheet.create({
     padding: 7,
     borderRadius: 10,
   },
-  restaurantName: {
+
+  allItemsContainer:{
+    flexDirection: "column",
+    width: "93%",
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    backgroundColor: "white",
+  },
+  orderSummaryContainer: {
+    width: "93%",
+    alignSelf: "center",
+    paddingHorizontal: 10,
+    paddingBottom:10,
+  },
+  HeaderContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    paddingHorizontal: 5,
+    borderBottomWidth: 1,
+  },
+  orderHeaderText: {
     fontSize: 20,
     fontWeight: "bold",
-    textAlign: "center",
+    margin: 5,
   },
+  orderSummaryTextContainer:{
+    padding:5,
+  },
+  orderSummaryText: {
+    fontSize: 17,
+    fontWeight: "600",
+    paddingHorizontal: 5,
+  },
+  placeOrderButton:{
+    marginTop: 7,
+    width: "90%",
+    alignSelf: "center",
+    alignItems: "center",
+  },
+  placeOrderText:{
+    backgroundColor: "#EAB308",
+    paddingVertical: 7,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    fontWeight:"bold",
+    fontSize: 21,
+
+  }
 });
 
 export default Cart;

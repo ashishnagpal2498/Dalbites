@@ -6,8 +6,8 @@ import * as SecureStore from "expo-secure-store";
 import Loading from "../../screens/Loading";
 import { setLoading, setToken } from "../../redux/actions/Authentication";
 import AuthStack from "./AuthStack";
-import RestaurantSideDrawer from "./RestaurantSideDrawer";
 import UserHome from "./UserHome";
+import RestaurantHome from "./RestaurantHome";
 
 const Stack = createStackNavigator();
 
@@ -37,17 +37,18 @@ const AppStack = () => {
     checkAuth();
   }, []);
   const screenOptions = {
-    headerTitle: "",
+    headerShown: false,
   };
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator screenOptions={screenOptions}>
         {loading ? (
           <Stack.Screen name="Loading" component={Loading} />
         ) : isAuth && isRestaurant ? (
           <Stack.Screen
-            name="RestaurantSideDrawer"
-            component={RestaurantSideDrawer}
+            name="RestaurantHome"
+            options={{ title: "Restaurant" }}
+            component={RestaurantHome}
           />
         ) : isAuth ? (
           <Stack.Screen name="UserHome" component={UserHome} />
