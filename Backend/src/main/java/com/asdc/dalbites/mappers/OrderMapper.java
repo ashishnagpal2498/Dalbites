@@ -35,6 +35,7 @@ public class OrderMapper {
         orderDTO.setRestaurantId(orderDao.getRestaurant().getId());
         orderDTO.setRestaurantName(orderDao.getRestaurant().getName());
         orderDTO.setRestaurantImage(orderDao.getRestaurant().getRestaurantImage());
+        orderDTO.setUserName(orderDao.getUser().getName());
         return orderDTO;
     }
 
