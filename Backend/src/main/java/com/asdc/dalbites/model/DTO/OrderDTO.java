@@ -26,4 +26,5 @@ public class OrderDTO {
     private Long restaurantId;
     private String restaurantName;
     private String restaurantImage;
+    private String userName;
 }
