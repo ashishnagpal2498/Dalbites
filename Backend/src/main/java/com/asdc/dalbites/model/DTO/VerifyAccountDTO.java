@@ -3,6 +3,9 @@ package com.asdc.dalbites.model.DTO;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Data Transfer Object (DTO) for representing account verification information.
+ */
 @Getter
 @Setter
 public class VerifyAccountDTO {

@@ -14,13 +14,18 @@ import com.asdc.dalbites.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import com.asdc.dalbites.util.Constants;
 
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the {@link OrderService} interface providing methods for managing orders.
+ */
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -53,6 +58,13 @@ public class OrderServiceImpl implements OrderService {
     @Value("${role.restaurant}")
     private int restaurantRole;
 
+    /**
+     * Retrieves all orders for the user or restaurant associated with the provided principal.
+     *
+     * @param principal The principal representing the authenticated user or restaurant.
+     * @return A list of {@link OrderDTO} representing the orders.
+     * @throws ResourceNotFoundException If the user or restaurant is not found.
+     */
     @Override
     public List<OrderDTO> getAllOrders(Principal principal) throws ResourceNotFoundException {
         String username = principal.getName();
@@ -68,6 +80,12 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    /**
+     * Retrieves all orders associated with a specific user.
+     *
+     * @param userId The ID of the user for whom orders are retrieved.
+     * @return A list of {@link OrderDTO} representing the orders for the user.
+     */
     @Override
     public List<OrderDTO> getAllOrdersByUserId(Long userId) {
         return orderRepository.findAllByUser_UserId(userId)
@@ -76,6 +94,12 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves all orders associated with a specific restaurant.
+     *
+     * @param restaurantId The ID of the restaurant for which orders are retrieved.
+     * @return A list of {@link OrderDTO} representing the orders for the restaurant.
+     */
     @Override
     public List<OrderDTO> getAllOrdersByRestaurantId(Long restaurantId) {
         return orderRepository.findAllByRestaurant_Id(restaurantId)
@@ -84,6 +108,14 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     * Retrieves a specific order by its ID.
+     *
+     * @param orderId The ID of the order to retrieve.
+     * @return A {@link OrderDTO} representing the retrieved order.
+     * @throws ResourceNotFoundException If the order is not found.
+     */
     @Override
     public OrderDTO getOrder(Long orderId) throws ResourceNotFoundException {
         Optional<OrderDao> order = orderRepository.findById(orderId);
@@ -94,6 +126,15 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+
+    /**
+     * Updates the status of a specific order.
+     *
+     * @param orderId         The ID of the order to update.
+     * @param orderStatusDTO  The data transfer object containing the new order status.
+     * @return A {@link OrderDTO} representing the updated order.
+     * @throws ResourceNotFoundException If the order is not found.
+     */
     @Override
     public OrderDTO updateOrderStatus(Long orderId, OrderStatusDTO orderStatusDTO) throws ResourceNotFoundException {
         OrderDTO order = getOrder(orderId);
@@ -111,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO createOrder(OrderDTO orderDTO, String token) throws ResourceNotFoundException {
-        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(7));
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(token.substring(Constants.TOKEN_START_INDEX));
         Long userId = Long.parseLong(tokenClaims.get("user_id").toString());
 
         List<Optional<MenuItemDao>> menuItems = orderDTO.getOrderItems().stream()
@@ -121,8 +162,12 @@ public class OrderServiceImpl implements OrderService {
         UserDao user = userRepository.findByUserId(userId);
         OrderDao orderDao = orderMapper.toOrderDao(orderDTO);
         orderDao.setUser(user);
-        RestaurantDao restaurantDao = restaurantRepository.findById(orderDTO.getRestaurantId()).orElseThrow(() -> new ResourceNotFoundException("Order not found on :: " + orderDTO.getRestaurantId()));
-        orderDao.setRestaurant(restaurantDao);
+        Optional<RestaurantDao> restaurantDao = restaurantRepository.findById(orderDTO.getRestaurantId());
+        if (restaurantDao.isPresent()) {
+            orderDao.setRestaurant(restaurantDao.get());
+        } else{
+            throw new ResourceNotFoundException("Order not found on :: " + orderDTO.getRestaurantId());
+        }
 
         for (OrderItemDao orderItemDao : orderDao.getOrderItems()) {
             MenuItemDao menuItem = menuItemRepository.findById(orderItemDao.getItem().getId()).get();
@@ -136,9 +181,14 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
+    /**
+     * Sends an email notification to the user when the order is ready for pickup.
+     *
+     * @param userEmail The email address of the user to notify.
+     */
     private void sendReadyToPickupEmail(String userEmail) {
         String subject = "Your Order is Ready for Pickup";
-        String text = "Dear Customer,\n\nYour order is now ready for pickup. Please visit the restaurant to collect your order.";
+        String text = Constants.ORDER_READY_BODY;
         emailService.sendEmail(userEmail, subject, text);
     }
 }

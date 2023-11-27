@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useMemo, useState } from "react";
 import { FlatList, TouchableOpacity, TextInput } from "react-native";
 import { debounce } from "lodash";
-import RestaurantHeader from "../src/Components/RestaurantHeader";
 import RestaurantCard from "../src/Components/RestaurantCard";
 import BuildingSearchItem from "../src/Components/Search/BuildingSearchItem";
 import tw from "twrnc";
