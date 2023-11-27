@@ -88,7 +88,7 @@ const RestaurantProfile = () => {
           //   keyExtractor={(item) => item.reviewId.toString()}
           renderItem={({ item }) => (
             <View style={styles.reviewCard}>
-              <Text style={styles.reviewName}>User name not fetched</Text>
+              <Text style={styles.reviewName}>Name: {item.userName}</Text>
               <Text style={styles.reviewRating}>Rating: {item.rating}</Text>
               <Text style={styles.reviewText}>{item.reviewComment}</Text>
             </View>
