@@ -1,1 +1,180 @@
+stages: # List of stages for jobs, and their order of execution
+  - test
+  - build
+  - code-quality
+  - publish_image # Add image to DockerHub
+  - deploy
 
+variables:
+  FRONTEND_IMAGE: node:18-alpine3.17 # Base image for the frontend
+  BACKEND_IMAGE: maven:3.8.3-openjdk-17 # Base image for the backend
+
+# ------------ Test Stage ----------------------
+# test_backend
+test_backend:
+  stage: test
+  image: $BACKEND_IMAGE
+  before_script:
+    - cd Backend
+    - echo "List all files"
+    - ls
+    - mvn --version
+    - mvn clean
+  script:
+    - mvn test
+
+# test_frontend
+test_frontend:
+  stage: test
+  image: $FRONTEND_IMAGE
+  before_script:
+    - npm install -g expo-cli
+  script:
+    - cd Frontend
+    - npm install
+
+#---------------- Build Stage -------------------------
+
+# build_backend
+build_backend:
+  stage: build
+  image: $BACKEND_IMAGE
+  script:
+    - cd Backend
+    - mvn clean install
+  only:
+    - develop
+    - staging
+    - backend
+
+#Build
+build_frontend:
+  stage: build
+  image: $FRONTEND_IMAGE
+  before_script:
+    - node --version
+    - cd Frontend
+    - echo "---- Display API Credentials file for Hostname ----"
+    - cat ./src/Utils/Api-Cred.js
+    - npm install -g expo-cli
+    - echo "Expo CLI installed"
+    - npm install -g eas-cli
+    - echo "EAS Cli installed"
+  script:
+    - echo "Username-$EAS_LOGIN_USERNAME"
+    - echo "Password-$EAS_LOGIN_PASSWORD"
+    - apk add --no-cache expect # Adding expect
+    - apk add --no-cache git #Adding git
+    - >
+      expect -c "
+        spawn eas login
+        expect \"Email or username\"
+        send \"$EAS_LOGIN_USERNAME\r\"
+        expect \"Password\"
+        send \"$EAS_LOGIN_PASSWORD\r\"
+        expect \"Logged in\"
+        expect eof
+      "
+    - eas whoami
+    - git --version
+    - eas build --platform android --profile preview --non-interactive
+
+  only:
+    - frontend
+    - develop
+    - staging
+
+#---------------------- Publish Stage -------------------------------
+
+publish-backend:
+  image: docker:latest
+  stage: publish_image
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: "" #certs
+    DOCKER_HOST: "tcp://docker:2375"
+  before_script:
+    - docker --version
+  script:
+    - cd Backend
+    - pwd
+    - echo $SERVER_IP
+    - docker --version
+    - docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD
+    - docker build -t $DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA .
+    - docker push $DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA
+
+  only:
+    - develop
+    - staging
+
+#Publish Android Application Bundle
+publish_frontend:
+  stage: publish_image
+  image: $FRONTEND_IMAGE
+  before_script:
+    - node --version
+    - cd Frontend
+    - echo "---- Display API Credentials file for Hostname ----"
+    - cat ./src/Utils/Api-Cred.js
+    - npm install -g expo-cli
+    - echo "Expo CLI installed"
+    - npm install -g eas-cli
+    - echo "EAS Cli installed"
+  script:
+    - echo "Username-$EAS_LOGIN_USERNAME"
+    - echo "Password-$EAS_LOGIN_PASSWORD"
+    - apk add --no-cache expect # Adding expect
+    - apk add --no-cache git #Adding git
+    - >
+      expect -c "
+        spawn eas login
+        expect \"Email or username\"
+        send \"$EAS_LOGIN_USERNAME\r\"
+        expect \"Password\"
+        send \"$EAS_LOGIN_PASSWORD\r\"
+        expect \"Logged in\"
+        expect eof
+      "
+    - eas whoami
+    - git --version
+    - eas build --platform android --non-interactive
+
+  only:
+    - staging
+#---------------------- Deploy Stage -------------------------------
+
+deploy_backend:
+  stage: deploy
+  before_script:
+    - chmod 400 $SSH_KEY
+  script:
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SERVER_USER@$SERVER_IP "
+      docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD docker.io &&
+      docker pull docker.io/$DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA &&
+      docker images &&
+      docker container rm -f dalbites-app || true &&
+      docker run -d -p 8080:8080 --name dalbites-app docker.io/$DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA &&
+      docker ps"
+  only:
+    - develop
+    - staging
+    - main
+
+#---------------------- Code Quality Stage -------------------------------
+#code_quality
+code_quality:
+  stage: code-quality
+  image: $BACKEND_IMAGE
+  script:
+    - echo "Code quality"
+    - mkdir smells/
+    - java -jar $CI_PROJECT_DIR/.gitlab/DesigniteJava.jar -i $CI_PROJECT_DIR/Backend -o $CI_PROJECT_DIR/smells/ -d
+  artifacts:
+    name: "Code-Smells-$CI_COMMIT_SHORT_SHA"
+    paths:
+      - $CI_PROJECT_DIR/smells/
+  only:
+    - main
+    - staging

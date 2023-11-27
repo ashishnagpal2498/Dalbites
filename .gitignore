@@ -3,9 +3,13 @@ Backend/.classpath
 Backend/.settings/
 Backend/.project
 .metadata/
-
+Backend/.idea
 Backend/.mvn/wrapper/maven-wrapper.jar
 **/src/main/**/target/
 **/src/test/**/target/
 
 Frontend/node_modules/
+node_modules
+.vscode
+logs/
+Frontend/package-lock.json

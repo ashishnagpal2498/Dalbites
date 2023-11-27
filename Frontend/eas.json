@@ -1,0 +1,38 @@
+{
+  "cli": {
+    "version": ">= 5.7.0"
+  },
+  "build": {
+    "base": {
+      "android": {
+        "image": "latest",
+        "env": {
+          "PLATFORM": "android"
+        }
+      }
+    },
+    "development": {
+      "extends": "base",
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "ENVIRONMENT": "development"
+      },
+      "android": {
+        "distribution": "internal",
+        "withoutCredentials": true
+      }
+    },
+    "preview": {
+      "extends": "base",
+      "distribution": "internal"
+    },
+    "production": {
+      "extends": "base"
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
+
