@@ -37,7 +37,7 @@ const UserMenuItem = ({cardData}) => {
                     </View>
                 </View>
             </View>
-            <ScrollView style={styles.itemDescriptionConatainer}>
+            <ScrollView style={styles.itemDescriptionConatainer} persistentScrollbar={true}>
                 <Text style={styles.itemDescription}>{cardData.description}</Text>
             </ScrollView>
             <View style={styles.itemQuantityContainer}>
@@ -58,14 +58,14 @@ const UserMenuItem = ({cardData}) => {
 
 const styles = StyleSheet.create({
     itemCard: {
-      height: 250,
-      width: 160,
+      minHeight: 270,
+      maxHeight:340,
+      width: "47%",
       backgroundColor: "#FFFFFF",
       borderRadius: 10,
       elevation: 5,
       margin: 5,
       padding: 7,
-      alignSelf: "center",
     },
     itemImageConatainer: {
       height: 150,

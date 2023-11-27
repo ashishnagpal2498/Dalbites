@@ -83,7 +83,7 @@ const AddReview = ({ route, navigation }) => {
         <Text style={styles.infoText}>{restaurant.name}</Text>
         <Text style={styles.infoText}>
           {review &&
-            new Date(review.createdAt).toLocaleDateString() +
+            new Date(review.createdAt).toLocaleDateString() +"  "+ 
               new Date(review.createdAt).toLocaleTimeString()}
         </Text>
       </View>
@@ -165,7 +165,6 @@ const styles = StyleSheet.create({
   },
   ratingBox: {
     flexDirection: "row",
-    alignSelf: "center",
     alignSelf: "center",
     margin: 5,
   },

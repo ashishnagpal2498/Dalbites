@@ -1,46 +1,44 @@
 package com.asdc.dalbites.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 
-import java.util.Map;
-import org.junit.jupiter.api.Disabled;
+import com.asdc.dalbites.model.DTO.PaymentIntentRequestDTO;
+import com.stripe.exception.StripeException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import com.asdc.dalbites.model.DTO.PaymentIntentRequestDTO;
-import com.stripe.Stripe;
-import com.stripe.exception.StripeException;
-import com.stripe.model.PaymentIntent;
-import com.stripe.param.PaymentIntentCreateParams;
+import org.mockito.MockitoAnnotations;
 
-@SpringBootTest
-public class PaymentServiceImplTest {
-
-    @Mock
-    private PaymentIntent paymentIntentMock;
-
+class PaymentServiceImplTest {
     @InjectMocks
     private PaymentServiceImpl paymentService;
 
-    @Disabled("Makes external Stripe API call")
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
-    public void testCreatePaymentIntent() throws StripeException {
-    	Stripe.apiKey = "sk_test_dummykey";
-    	PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-    		    .setAmount(1099L)
-    		    .setCurrency("cad")
-    		    .addPaymentMethodType("card")
-    		    .build();
-    	when(PaymentIntent.create(Mockito.any(PaymentIntentCreateParams.class))).thenReturn(paymentIntentMock);
-        when(paymentIntentMock.getClientSecret()).thenReturn("testClientSecret");
-
+    void testCreatePaymentIntent() throws StripeException {
         PaymentIntentRequestDTO paymentIntentRequestDTO = new PaymentIntentRequestDTO();
+        paymentIntentRequestDTO.setAmount("10");
+        paymentIntentRequestDTO.setCurrency("GBP");
+        paymentIntentRequestDTO.setPaymentMethodType("Payment Method Type");
+        paymentService.createPaymentIntent(paymentIntentRequestDTO);
+    }
 
-        Map<String, String> result = paymentService.createPaymentIntent(paymentIntentRequestDTO);
-
-        assertEquals("testClientSecret", result.get("clientSecret"));
+    @Test
+    void testCreatePaymentIntent2() throws StripeException {
+        PaymentIntentRequestDTO paymentIntentRequestDTO = mock(PaymentIntentRequestDTO.class);
+        doNothing().when(paymentIntentRequestDTO).setAmount((String) any());
+        doNothing().when(paymentIntentRequestDTO).setCurrency((String) any());
+        doNothing().when(paymentIntentRequestDTO).setPaymentMethodType((String) any());
+        paymentIntentRequestDTO.setAmount("10");
+        paymentIntentRequestDTO.setCurrency("GBP");
+        paymentIntentRequestDTO.setPaymentMethodType("Payment Method Type");
+        paymentService.createPaymentIntent(paymentIntentRequestDTO);
     }
 }
+

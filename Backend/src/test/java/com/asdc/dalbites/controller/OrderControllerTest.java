@@ -76,6 +76,22 @@ class OrderControllerTest {
         assertSame(orderDTO, response.getBody());
     }
 
+    @Test
+    void testCreateOrder_ResourceNotFoundException() throws ResourceNotFoundException {
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setUserId(1L);
+        orderDTO.setRestaurantId(2L);
+        orderDTO.setOrderItems(new ArrayList<>());
+
+        when(orderService.createOrder(orderDTO, "userToken")).thenThrow(ResourceNotFoundException.class);
+
+        ResponseEntity<OrderDTO> response = orderController.createOrder("userToken", orderDTO);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+        verify(orderService, times(1)).createOrder(orderDTO, "userToken");
+    }
+
     private Principal createPrincipal(String username) {
         return new Principal() {
             @Override

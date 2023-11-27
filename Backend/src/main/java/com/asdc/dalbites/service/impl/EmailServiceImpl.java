@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.asdc.dalbites.service.EmailService;
+import com.asdc.dalbites.util.Constants;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendOrderConfirmationEmail(OrderDTO order, List<Optional<MenuItemDao>> menuItems, String to){
         StringBuilder emailText = new StringBuilder();
         emailText.append("Dear Customer,\n\n")
-                .append("Thank you for placing your order with Dalbites. Here are the details of your order:\n\n");
+                .append(Constants.ORDER_CONFIRMATION_BODY);
 
         emailText.append("Order Items:\n");
         for (int i=0;i<order.getOrderItems().size(); i++) {
