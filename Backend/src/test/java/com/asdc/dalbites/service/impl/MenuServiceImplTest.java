@@ -40,14 +40,19 @@ public class MenuServiceImplTest {
     }
 
     @Test
-    public void testGetMenu() throws Exception {
+    public void testGetMenu_SuccessfulFetch_ReturnsMenu() throws Exception {
         Long restaurantId = 1L;
         List<MenuItemDao> expectedMenu = new ArrayList<>();
         when(menuItemRepository.getMenu(restaurantId)).thenReturn(expectedMenu);
-
         List<MenuItemDao> actualMenu = menuService.getMenu(restaurantId);
-
         assertEquals(expectedMenu, actualMenu);
+    }
+
+    @Test
+    public void testGetMenu_FailedFetch_ThrowsException() {
+        Long restaurantId = 1L;
+        when(menuItemRepository.getMenu(restaurantId)).thenThrow(new RuntimeException("Simulating a fetch failure"));
+        assertThrows(Exception.class, () -> menuService.getMenu(restaurantId));
     }
 
     @Test
@@ -55,16 +60,9 @@ public class MenuServiceImplTest {
         Long restaurantId = 1L;
         MultipartFile file = mock(MultipartFile.class);
         MenuItemDTO menuItemDTO = new MenuItemDTO("name", "description", 7.0D, 25.0D, true, "fileName.jpg", 1L);
-
-        //RestaurantDao restaurant = restaurantRepository.getRestaurant(restaurantId);
-
         when(firebaseFileServiceImpl.uploadFile(file)).thenReturn("testFile.txt");
-        //when(restaurantRepository.getRestaurant(restaurantId)).thenReturn(new RestaurantDao("name", "address"));
-
         List<MenuItemDao> actualMenu = menuService.getMenu(restaurantId);
-
         List<MenuItemDao> result = menuService.addMenuItem(restaurantId, file, menuItemDTO);
-
         Integer actualMenuSize = actualMenu.size();
         Integer resultSize = result.size();
         assertNotNull(result);

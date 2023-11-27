@@ -1,4 +1,11 @@
-import { put, call, takeEvery, take, takeLatest, select } from "redux-saga/effects";
+import {
+  put,
+  call,
+  takeEvery,
+  take,
+  takeLatest,
+  select,
+} from "redux-saga/effects";
 import {
   getAllBuildingsAPI,
   getRestaurantByIdAPI,
@@ -40,7 +47,7 @@ import {
   DELETE_CART_ITEM,
   DELETE_CART_ITEMS,
   UPDATE_CART_ITEM,
-  SELECT_RESTAURANT_FOR_CART
+  SELECT_RESTAURANT_FOR_CART,
 } from "../Types/RestaurantTypes";
 
 function* getRestaurantByIdSaga(action) {
@@ -64,6 +71,7 @@ function* getRestaurantByIdSaga(action) {
         headers: { ...headers },
       }
     );
+    console.log("Response --?", response.data);
     if (response.status >= 200 && response.status <= 300) {
       yield put({
         type: GET_RESTAURANT_BY_ID_SUCCESS,

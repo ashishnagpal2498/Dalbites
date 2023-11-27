@@ -102,8 +102,8 @@ publish-backend:
     - echo $SERVER_IP
     - docker --version
     - docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD
-    - docker build -t $DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA .
-    - docker push $DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA
+    - docker build -t $DOCKER_LOGIN_USERNAME/dalbites:$IMAGE_TAG .
+    - docker push $DOCKER_LOGIN_USERNAME/dalbites:$IMAGE_TAG
 
   only:
     - develop
@@ -152,10 +152,10 @@ deploy_backend:
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SERVER_USER@$SERVER_IP "
       docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD docker.io &&
-      docker pull docker.io/$DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA &&
+      docker pull docker.io/$DOCKER_LOGIN_USERNAME/dalbites:$IMAGE_TAG &&
       docker images &&
       docker container rm -f dalbites-app || true &&
-      docker run -d -p 8080:8080 --name dalbites-app docker.io/$DOCKER_LOGIN_USERNAME/dalbites:$CI_COMMIT_SHORT_SHA &&
+      docker run -d -p 8080:8080 --name dalbites-app docker.io/$DOCKER_LOGIN_USERNAME/dalbites:$IMAGE_TAG &&
       docker ps"
   only:
     - develop

@@ -84,12 +84,12 @@ const Profile = ({ navigation }) => {
                 <Image style={styles.photo} source={userPhoto} />
               </View>
 
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.photobutton}
                 onPress={handleEditPhoto}
               >
                 <Text style={styles.phototext}>Edit Photo</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
             <View style={styles.profileinfo}>
