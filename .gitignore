@@ -13,3 +13,4 @@ node_modules
 .vscode
 logs/
 Frontend/package-lock.json
+.DS_Store
